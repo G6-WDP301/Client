@@ -1,33 +1,40 @@
-import { Header } from "@/layout";
-import { Button } from "@/components";
-import { useSelector, useDispatch } from 'react-redux';
-import { increment, decrement } from '@/store/slices/counterSlice';
+import React, {useEffect} from 'react'
+import { Navbar, Footer  } from "@/layout";
 import { useNavigate } from "react-router-dom";
+import './Home.scss'
+import Popular from "../Popular/Popular.jsx";
+import Offers from "../Offers/Offers.jsx";
+import About from "../About/About.jsx";
+import Blog from "../Blog/Blog.jsx";
+import Header from "../../layout/Header/index.jsx";
+
+import Aos from 'aos';
+import 'aos/dist/aos.css'
+import PopularTour from '../Popular/PopularTour.jsx';
 
 
 const Home = () => {
-  const counterValue = useSelector((state) => state.counter.value);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  useEffect(()=> {
+    Aos.init({duration:2000})
+  }, [])
+
   return (
-    <div className="text-fuchsia-100 bg-gray-500 flex flex-col">
-      <Header />
-      Home Page
-      <Button text={"Go About Page (Control Redux-Toolkit)"} onClick={() => navigate("/about")} />
+    < >
+      <Navbar/>
+      <Header/>
+      <Popular/>
+      <PopularTour/>
+      <Offers/>
+      <About/>
+      <Blog/>
+      <Footer/>
 
-      <div className="flex flex-col">
-        <h2>Counter</h2>
-        <p>Value: {counterValue}</p>
+      {/* <Button onClick={() => navigate("/about")} /> */}
 
-        <Button text={"Increment"} onClick={() => dispatch(increment())} />
-
-        <Button text={"Decrement"} onClick={() => dispatch(decrement())} />
-      </div>
-
-    </div>
+    </>
   )
 }
-
 
 export default Home
