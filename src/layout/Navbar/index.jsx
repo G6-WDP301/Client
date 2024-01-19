@@ -5,9 +5,15 @@ import {AiFillCloseCircle} from 'react-icons/ai'
 import {TbGridDots} from 'react-icons/tb'
 import { useNavigate } from "react-router-dom";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 const Navbar = () => {
 
   const navigate = useNavigate();
+
+  const notify = () => toast("Feature being updated, please come back later!");
 
   // toggle show navbar
   const [active, setActive] = useState('navBar')
@@ -85,11 +91,11 @@ const Navbar = () => {
             </li>
 
             <li className="navItem">
-              <a href="#" className="navLink">List Tour</a>
+              <a href="#" className="navLink" onClick={notify}>List Tour</a>
             </li>
 
             <li className="navItem">
-              <a href="#" className="navLink">Gallery</a>
+              <a href="#" className="navLink" onClick={notify}>Gallery</a>
             </li>
 
             <li className="navItem">
