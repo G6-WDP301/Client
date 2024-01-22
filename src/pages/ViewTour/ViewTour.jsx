@@ -5,12 +5,21 @@ import {
   CardContent,
   Container,
   Grid,
+  ImageList,
+  ImageListItem,
   Paper,
   Typography,
 } from '@mui/material';
 import Navbar from '../../layout/Navbar';
 import img from '../../images/image_hotel(1).jpg';
+import img1 from '../../images/image_hotel(2).jpg';
+import img2 from '../../images/image_hotel(3).jpg';
+import img3 from '../../images/image_hotel(4).jpg';
 import bgImage from '../../images/Ireland.jpg';
+import maldivies from '../../images/maldives1.jpg'
+import canada from '../../images/canada1.jpg';
+import map from '../../images/map.jpg';
+import france from '../../images/france1.jpg';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import React from 'react';
@@ -24,6 +33,7 @@ import {
   timelineItemClasses,
 } from '@mui/lab';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import Footer from '../../layout/Footer';
 
 const tour = [
   {
@@ -76,12 +86,46 @@ const tour = [
           'Quý khách tập trung tại sân bay Tân Sơn Nhất (Ga nội địa), hướng dẫn viên hỗ trợ khách làm thủ tục đáp chuyến bay đi Hà Nội. Đến sân bay Nội Bài, xe và HDV Vietravel đón Quý khách đi Hà Nội nhận phòng khách sạn nghỉ ngơi hoặc tự do đi tham quan.',
       },
     ],
-    panoramaImages: [
-      img, img,img
-    ],
+    panoramaImages: [img, img, img],
     price: '720000',
     Time: '2 ngày 1 đêm',
   },
+];
+
+const itemData = [
+  {
+    img: img,
+    title: 'Bed',
+  },
+  {
+    img: maldivies,
+    title: 'Bed',
+  },
+  {
+    img: map,
+    title: 'Bed',
+  },
+  {
+    img: canada,
+    title: 'Bed',
+  },
+  {
+    img: france,
+    title: 'Bed',
+  },
+  {
+    img: img1,
+    title: 'Bed',
+  },
+  {
+    img: img2,
+    title: 'Bed',
+  },
+  {
+    img: img3,
+    title: 'Bed',
+  },
+  
 ];
 
 const styles = {
@@ -136,7 +180,7 @@ const ViewTour = () => {
           </Typography>
         </div>
       </Paper>
-      <Container style={{ padding: '2px', marginTop: '20px' }}>
+      <Container style={{ padding: '2px', marginTop: '20px', marginBottom:'20px' }}>
         <Grid container spacing={3}>
           {tour.map((tourItem) => (
             <Grid key={tourItem.id} item xs={12} sm={12}>
@@ -192,26 +236,7 @@ const ViewTour = () => {
                   </Button>
                 </Grid>
               </Grid>
-              <Swiper
-        style={{
-          '--swiper-navigation-color': '#fff',
-          '--swiper-pagination-color': '#fff',
-        }}
-        lazy={true}
-        pagination={{
-          clickable: true,
-        }}
-        navigation={true}
-        className="mySwiper"
-      >
-        <SwiperSlide>
-          <img
-            src="https://swiperjs.com/demos/images/nature-1.jpg"
-            loading="lazy"
-          />
-          <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
-        </SwiperSlide>
-      </Swiper>
+
               <Typography
                 variant="h5"
                 sx={{
@@ -317,6 +342,20 @@ const ViewTour = () => {
                       </CardContent>
                     </Card>
                   </Box>
+                  <Box sx={{ width: 500, height: 450, overflowY: 'scroll', marginTop:'20px' }}>
+      <ImageList variant="masonry" cols={3} gap={8} >
+        {itemData.map((item) => (
+          <ImageListItem key={item.img}>
+            <img
+              srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+              src={`${item.img}?w=248&fit=crop&auto=format`}
+              alt={item.title}
+              loading="lazy"
+            />
+          </ImageListItem>
+        ))}
+      </ImageList>
+    </Box>
                 </Grid>
                 <Grid item xs={12} sm={7} sx={{ textAlign: 'left' }}>
                   <Card>
@@ -352,6 +391,7 @@ const ViewTour = () => {
           ))}
         </Grid>
       </Container>
+      <Footer/>
     </>
   );
 };
