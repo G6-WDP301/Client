@@ -11,18 +11,53 @@ import BadgeIcon from '@mui/icons-material/Badge'; import Typography from '@mui/
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import PasswordIcon from '@mui/icons-material/Password';
+import { useRef } from 'react';
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
-export default function SignInSide() {
-  const handleSubmit = (event) => {
+export default function LogIn() {
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+
+    const data = new FormData(formRef.current);
+
+    const formData = {};
+    data.forEach((value, key) => {
+      formData[key] = value;
     });
+
+    try {
+      const response = await fetch('http://localhost:8080/api/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('Login successful:', responseData);
+        localStorage.setItem('token', responseData.token);
+        navigate('/');
+      } else {
+        console.error('Login failed:', response.status);
+        const errorData = await response.json();
+        console.error('Error Data:', errorData);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
+
+
+
+  const formRef = useRef(null);
+
   const [isFocused, setFocused] = useState(false);
 
   const buttonStyle = {
@@ -94,8 +129,14 @@ export default function SignInSide() {
             </Avatar>
             <Typography component="h1" variant="h5">
               LOG IN
-              </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            </Typography>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 1 }}
+              ref={formRef}
+            >
               <TextField
                 margin="normal"
                 required
@@ -116,7 +157,16 @@ export default function SignInSide() {
                 id="password"
                 autoComplete="current-password"
               />
-              <Button className="button-64" style={buttonStyle}>
+
+              <Grid container>
+                <Grid item>
+                  <Link href="/sign-up" style={{ color: "#669966", textDecoration: "none" }}>
+                    {"Forgot password"}
+                  </Link>
+                </Grid>
+              </Grid>
+
+              <Button className="button-64" style={buttonStyle} onClick={handleSubmit}>
                 <span style={spanStyle}>Log In</span>
               </Button>
 
