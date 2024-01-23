@@ -160,7 +160,7 @@ export default function LogIn() {
 
               <Grid container>
                 <Grid item>
-                  <Link href="/sign-up" style={{ color: "#669966", textDecoration: "none" }}>
+                  <Link href="/forgot" style={{ color: "#669966", textDecoration: "none" }}>
                     {"Forgot password"}
                   </Link>
                 </Grid>
