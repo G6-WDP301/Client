@@ -78,7 +78,7 @@ const Navbar = () => {
         <div className='logoDiv'>
           <a href="#" className='logo'>
             <h1 className='flex font-bold text-xl'><SiYourtraveldottv className='icon'/> 
-              TripGo
+              G6Go
             </h1>
           </a>
         </div>
