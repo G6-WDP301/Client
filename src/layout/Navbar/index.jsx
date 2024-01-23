@@ -1,135 +1,171 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import './Navbar.scss'
-import {SiYourtraveldottv} from 'react-icons/si'
-import {AiFillCloseCircle} from 'react-icons/ai'
-import {TbGridDots} from 'react-icons/tb'
+import { SiYourtraveldottv } from 'react-icons/si'
+import { AiFillCloseCircle } from 'react-icons/ai'
+import { TbGridDots } from 'react-icons/tb'
 import { useNavigate } from "react-router-dom";
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
+
 const Navbar = () => {
 
-  const navigate = useNavigate();
+  //
 
-  const notify = () => toast("Feature being updated, please come back later!");
+  // const isLoggedIn = useSelector((state) => state.isAuthenticated);
 
-  // toggle show navbar
-  const [active, setActive] = useState('navBar')
+  // const [user, setUser] = useState([]);
 
-  const showNav = () => {
-    setActive('navBar activeNavbar')
-  }
+  // const [token, setToken] = useState(localStorage.getItem("token"));
 
-  // close navBar 
-  const closeNav = () => {
-    setActive('navBar')
-  }
+  // useEffect(() => {
+  //   axios
+  //     .get("https://api.realworld.io/api/user", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       const userData = response.data.user;
+  //       setUser({
+  //         username: userData.username,
+  //         email: userData.email,
+  //       });
+  //       console.log(userData);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching user data:", error);
+  //     });
 
-  // add background color to the header
-  const [transparent, setTransparent] = useState('header')
-  const addBg = () => {
-    if(window.scrollY >= 10){
-      setTransparent('header activeHeader')
+
+  //   axios.get('https://api.realworld.io/api/user', {
+  //     headers: {
+  //       Authorization: `Token ${token}`,
+  //     },
+  //   })
+
+    //
+
+    const navigate = useNavigate();
+
+    const notify = () => toast("Feature being updated, please come back later!");
+
+    // toggle show navbar
+    const [active, setActive] = useState('navBar')
+
+    const showNav = () => {
+      setActive('navBar activeNavbar')
     }
-    else{
-      setTransparent('header')
+
+    // close navBar 
+    const closeNav = () => {
+      setActive('navBar')
     }
-  }
-  // window.addEventListener('scroll', addBg)
 
-  useEffect(() => {
-    window.addEventListener('scroll', addBg);
-    return () => {
-      window.removeEventListener('scroll', addBg);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 769) {
-        // Hide elements with classes closeNavbar and toggleNavbar
-        document.querySelector('.closeNavbar').style.display = 'none';
-        document.querySelector('.toggleNavbar').style.display = 'none';
-      } else {
-        // Show elements with classes closeNavbar and toggleNavbar
-        document.querySelector('.closeNavbar').style.display = 'block';
-        document.querySelector('.toggleNavbar').style.display = 'block';
+    // add background color to the header
+    const [transparent, setTransparent] = useState('header')
+    const addBg = () => {
+      if (window.scrollY >= 10) {
+        setTransparent('header activeHeader')
       }
-    };
+      else {
+        setTransparent('header')
+      }
+    }
+    // window.addEventListener('scroll', addBg)
 
-    // Initial check on component mount
-    handleResize();
+    useEffect(() => {
+      window.addEventListener('scroll', addBg);
+      return () => {
+        window.removeEventListener('scroll', addBg);
+      };
+    }, []);
 
-    // Event listener for window resize
-    window.addEventListener('resize', handleResize);
+    useEffect(() => {
+      const handleResize = () => {
+        if (window.innerWidth >= 769) {
+          // Hide elements with classes closeNavbar and toggleNavbar
+          document.querySelector('.closeNavbar').style.display = 'none';
+          document.querySelector('.toggleNavbar').style.display = 'none';
+        } else {
+          // Show elements with classes closeNavbar and toggleNavbar
+          document.querySelector('.closeNavbar').style.display = 'block';
+          document.querySelector('.toggleNavbar').style.display = 'block';
+        }
+      };
 
-    // Cleanup on component unmount
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+      // Initial check on component mount
+      handleResize();
 
-  return (
-    <section className='navBarSection'>
-      <div className={transparent}> 
+      // Event listener for window resize
+      window.addEventListener('resize', handleResize);
 
-        <div className='logoDiv'>
-          <a href="#" className='logo'>
-            <h1 className='flex font-bold text-xl'><SiYourtraveldottv className='icon'/> 
-              TripGo
-            </h1>
-          </a>
-        </div>
+      // Cleanup on component unmount
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
 
-        <div className={active}>
-          <ul className="navLists flex">
+    return (
+      <section className='navBarSection'>
+        <div className={transparent}>
 
-            <li className="navItem">
-              <a href="#" className="navLink" onClick={() => navigate("/")}>Home</a>
-            </li>
+          <div className='logoDiv'>
+            <a href="#" className='logo'>
+              <h1 className='flex font-bold text-xl'><SiYourtraveldottv className='icon' />
+                TripGo
+              </h1>
+            </a>
+          </div>
 
-            <li className="navItem">
-              <a href="#" className="navLink" onClick={notify}>List Tour</a>
-            </li>
+          <div className={active}>
+            <ul className="navLists flex">
 
-            <li className="navItem">
-              <a href="#" className="navLink" onClick={notify}>Gallery</a>
-            </li>
+              <li className="navItem">
+                <a href="#" className="navLink" onClick={() => navigate("/")}>Home</a>
+              </li>
 
-            <li className="navItem">
-              <a href="#" className="navLink" onClick={() => navigate("/News")}>News</a>
-            </li>
+              <li className="navItem">
+                <a href="#" className="navLink" onClick={notify}>List Tour</a>
+              </li>
 
-            <li className="navItem">
-              <a href="#" className="navLink" onClick={() => navigate("/AboutUs")}>About Us</a>
-            </li>
+              <li className="navItem">
+                <a href="#" className="navLink" onClick={() => navigate("/gallery")}>Gallery</a>
+              </li>
 
-            <div className="headerBtns flex">
-              <button className='btn loginBtn' onClick={() => navigate("/login")}>
-                <a href="#">Login</a>
-              </button>
-              <button className='btn' onClick={() => navigate("/sign-up")}>
-                <a href="#">Sign Up</a>
-              </button>
+              <li className="navItem">
+                <a href="#" className="navLink" onClick={() => navigate("/News")}>News</a>
+              </li>
+
+              <li className="navItem">
+                <a href="#" className="navLink" onClick={() => navigate("/AboutUs")}>About Us</a>
+              </li>
+
+              <div className="headerBtns flex">
+                <button className='btn loginBtn' onClick={() => navigate("/login")}>
+                  <a href="#">Login</a>
+                </button>
+                <button className='btn' onClick={() => navigate("/sign-up")}>
+                  <a href="#">Sign Up</a>
+                </button>
+              </div>
+
+            </ul>
+
+            <div onClick={closeNav} className='closeNavbar'>
+              <AiFillCloseCircle className='icon' />
             </div>
 
-          </ul>
+          </div>
 
-          <div onClick={closeNav} className='closeNavbar'>
-            <AiFillCloseCircle className='icon'/>
+          <div onClick={showNav} className="toggleNavbar">
+            <TbGridDots className='icon' />
           </div>
 
         </div>
-
-        <div onClick={showNav} className="toggleNavbar">
-          <TbGridDots className='icon'/>
-        </div>
-
-      </div>
-    </section>
-  )
-}
+      </section>
+    )
+  }
 
 export default Navbar
