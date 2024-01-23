@@ -14,18 +14,55 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { InputLabel } from '@mui/material';
 import { useState } from 'react';
+import { useRef } from 'react';
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
-  const handleSubmit = (event) => {
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+
+    const data = new FormData(formRef.current);
+
+    const formData = {};
+
+    data.forEach((value, key) => {
+      formData[key] = value;
     });
+
+    console.log('Form Data:', formData)
+
+    try {
+      const response = await fetch('http://localhost:8080/api/user/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('Data received:', responseData);
+        navigate('/login');
+      } else {
+        console.error('Error:', response.status);
+        const errorData = await response.json();
+        console.error('Error Data:', errorData);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+
+
   };
+
+  const formRef = useRef(null);
+
   const [isFocused, setFocused] = useState(false);
 
   const buttonStyle = {
@@ -106,6 +143,7 @@ export default function SignInSide() {
               noValidate
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
+              ref={formRef}
             >
               <TextField
                 margin="normal"
@@ -121,9 +159,9 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                id="name"
+                id="username"
                 label="Your Name"
-                name="name"
+                name="username"
                 autoFocus
               />
               <TextField
@@ -170,6 +208,7 @@ export default function SignInSide() {
                   onFocus={() => setFocused(true)}
                   onBlur={() => setFocused(false)}
                   displayEmpty
+                  name='gender'
                   style={{ width: '100%' }}
                   autoComplete="Gender"
                 >
@@ -186,11 +225,11 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                name="phone"
+                name="phoneNumber"
                 label="Phone Number"
                 type="number"
                 InputLabelProps={{ shrink: true }}
-                id="phone"
+                id="phoneNumber"
               />
               <TextField
                 placeholder="Your address"
@@ -214,7 +253,7 @@ export default function SignInSide() {
                 InputLabelProps={{ shrink: true }}
                 id="description"
               />
-              <Button className="button-64" style={buttonStyle}>
+              <Button className="button-64" style={buttonStyle} type='submit' onClick={handleSubmit}>
                 <span style={spanStyle}>Sign Up</span>
               </Button>
 
@@ -235,3 +274,4 @@ export default function SignInSide() {
     </ThemeProvider>
   );
 }
+
