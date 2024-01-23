@@ -7,8 +7,12 @@ import france1 from '../../images/france1.jpg'
 import greece1 from '../../images/greece1.jpg'
 import canada1 from '../../images/canada1.jpg'
 import Dubai from '../../images/44-1.jpg'
+import { useNavigate } from "react-router-dom";
 
 export default function PopularTour() {
+
+  const navigate = useNavigate();
+
   return (
     <section className="w-full flex justify-center bg-color7 py-8 ">
       <div className="w-full 2xl:px-36">
@@ -50,6 +54,7 @@ export default function PopularTour() {
                 <a
                   href=""
                   className="underline decoration-color1 text-color6 flex mb-2"
+                  onClick={() => navigate("/tour_detail")}
                 >
                   Tour details
                 </a>
@@ -100,6 +105,7 @@ export default function PopularTour() {
                 <a
                   href="#"
                   className="underline decoration-color1 text-color6 flex mb-2"
+                  onClick={() => navigate("/tour_detail")}
                 >
                   Tour details
                 </a>
@@ -150,6 +156,7 @@ export default function PopularTour() {
                 <a
                   href="#"
                   className="underline decoration-color1 text-color6 flex mb-2"
+                  onClick={() => navigate("/tour_detail")}
                 >
                   Tour details
                 </a>
@@ -199,6 +206,7 @@ export default function PopularTour() {
                 <a
                   href="#"
                   className="underline decoration-color1 text-color6 flex mb-2"
+                  onClick={() => navigate("/tour_detail")}
                 >
                   Tour details
                 </a>
@@ -250,6 +258,7 @@ export default function PopularTour() {
                 <a
                   href="#"
                   className="underline decoration-color1 text-color6 flex mb-2"
+                  onClick={() => navigate("/tour_detail")}
                 >
                   Tour details
                 </a>
@@ -301,6 +310,7 @@ export default function PopularTour() {
                 <a
                   href="#"
                   className="underline decoration-color1 text-color6 flex mb-2"
+                  onClick={() => navigate("/tour_detail")}
                 >
                   Tour details
                 </a>

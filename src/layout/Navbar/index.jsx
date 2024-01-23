@@ -95,7 +95,7 @@ const Navbar = () => {
             </li>
 
             <li className="navItem">
-              <a href="#" className="navLink" onClick={notify}>Gallery</a>
+              <a href="#" className="navLink" onClick={() => navigate("/gallery")}>Gallery</a>
             </li>
 
             <li className="navItem">
