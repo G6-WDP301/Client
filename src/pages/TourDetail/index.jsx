@@ -15,7 +15,7 @@ import img from '../../images/image_hotel(1).jpg';
 import img1 from '../../images/image_hotel(2).jpg';
 import img2 from '../../images/image_hotel(3).jpg';
 import img3 from '../../images/image_hotel(4).jpg';
-import bgImage from '../../images/2.jpg';
+import bgImage from '../../images/Ireland.jpg';
 import maldivies from '../../images/maldives1.jpg'
 import canada from '../../images/canada1.jpg';
 import map from '../../images/map.jpg';
@@ -176,7 +176,7 @@ export default function index() {
         <Navbar />
         <Paper sx={styles.paperContainer}>
           <div style={{ padding: '2rem' }} className="flex-column">
-            <Typography variant="h5" sx={{ color: 'whitesmoke', mt: 2 }}>
+            <Typography variant="h4" sx={{ color: 'whitesmoke', mt: 2 }}>
               Over 2.4 million+ stock Images by our talented community
             </Typography>
           </div>
