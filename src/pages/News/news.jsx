@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Footer  } from "@/layout";
+import { Footer, Navbar } from "@/layout";
 import './news.scss'
 
 import img from '../../images/22.jpeg'
@@ -12,8 +12,22 @@ export default function news() {
 
   return (
     <>
-      <Navbar /> 
+
+      <Navbar/>
+
       <div>
+      <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50">
+        <div className="w-full container flex justify-center items-center flex-col">
+          <p className="text-white font-secondary text-3xl 2xl:text-6xl">
+            News
+          </p>
+          {/* <div classNameName="flex mt-5 gap-5">
+                <div classNameName="flex items-center"><i classNameName="bi bi-geo-alt text-white text-2xl me-2"></i><p classNameName="text-white">Maldives</p></div>
+                <div classNameName="flex items-center"><i classNameName="bi bi-clock text-white text-2xl me-2"></i><p classNameName="text-white"> 4 Days + 3 Nights   </p></div>
+        </div> */}
+        </div>
+      </section>
+
       <section className="w-full flex justify-center bg-color3 py-8 h-auto">
         <div className="w-full 2xl:px-36 h-auto">
           <div style={{marginBottom:'6rem', marginTop:'6rem'}}>
@@ -21,6 +35,130 @@ export default function news() {
             <p className="text-5xl font-secondary text-color4 px-5 mb-5">
               Travel<span className="text-white"> Experience</span>
             </p>
+            <div className="flex flex-wrap justify-center xl:justify-between gap-10 px-6 xl:px-0 py-8 lg:px-3 ">
+              <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative  transition-all duration-1000  group mb-20   ">
+                <div className="w-[100%] h-[100%] overflow-hidden group transition-all duration-1000 relative">
+                  {' '}
+                  <img
+                    src={img}
+                    alt=""
+                    className="w-[100%] h-[100%] object-cover group-hover:brightness-75 group-hover:scale-[1.2] absolute transition-all duration-1000"
+                  />
+                </div>
+                <div className="absolute uppercase text-white bg-color1 px-2 left-3 top-12 flex flex-col items-center ">
+                  <p>Aug</p>
+                  <p className="font-bold">02</p>
+                </div>
+                <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-8 group-hover:bottom-10 transition-all duration-1000 ">
+                  <p className="uppercase text-color4 font-bold">Tours</p>
+                  <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
+                    most popular yacht charter routes{' '}
+                  </p>
+                </figcaption>
+              </figure>
+              <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative  transition-all duration-1000  group mb-20   ">
+                <div className="w-[100%] h-[100%] overflow-hidden group transition-all duration-1000 relative">
+                  {' '}
+                  <img
+                    src={img2}
+                    alt=""
+                    className="w-[100%] h-[100%] object-cover group-hover:brightness-75 group-hover:scale-[1.2] absolute transition-all duration-1000"
+                  />
+                </div>
+                <div className="absolute uppercase text-white bg-color1 px-2 left-3 top-12 flex flex-col items-center ">
+                  <p>Aug</p>
+                  <p className="font-bold">07</p>
+                </div>
+                <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-3 group-hover:bottom-10 transition-all duration-1000 ">
+                  <p className="uppercase text-color4 font-bold">travel</p>
+                  <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
+                    practical information for travelling to egypt
+                  </p>
+                </figcaption>
+              </figure>
+              <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative  transition-all duration-1000  group mb-20   ">
+                <div className="w-[100%] h-[100%] overflow-hidden group transition-all duration-1000 relative">
+                  {' '}
+                  <img
+                    src={img3}
+                    alt=""
+                    className="w-[100%] h-[100%] object-cover group-hover:brightness-75 group-hover:scale-[1.2] absolute transition-all duration-1000"
+                  />
+                </div>
+                <div className="absolute uppercase text-white bg-color1 px-2 left-3 top-12 flex flex-col items-center ">
+                  <p>Aug</p>
+                  <p className="font-bold">02</p>
+                </div>
+                <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-5 group-hover:bottom-10 transition-all duration-1000 ">
+                  <p className="uppercase text-color4 font-bold">Destinations</p>
+                  <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
+                    tips towards a flawless honeymoon{' '}
+                  </p>
+                </figcaption>
+              </figure>
+            </div>
+            <div className="flex flex-wrap justify-center xl:justify-between gap-10 px-6 xl:px-0 py-8 lg:px-3 ">
+              <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative  transition-all duration-1000  group mb-20   ">
+                <div className="w-[100%] h-[100%] overflow-hidden group transition-all duration-1000 relative">
+                  {' '}
+                  <img
+                    src={img}
+                    alt=""
+                    className="w-[100%] h-[100%] object-cover group-hover:brightness-75 group-hover:scale-[1.2] absolute transition-all duration-1000"
+                  />
+                </div>
+                <div className="absolute uppercase text-white bg-color1 px-2 left-3 top-12 flex flex-col items-center ">
+                  <p>Aug</p>
+                  <p className="font-bold">02</p>
+                </div>
+                <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-8 group-hover:bottom-10 transition-all duration-1000 ">
+                  <p className="uppercase text-color4 font-bold">Tours</p>
+                  <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
+                    most popular yacht charter routes{' '}
+                  </p>
+                </figcaption>
+              </figure>
+              <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative  transition-all duration-1000  group mb-20   ">
+                <div className="w-[100%] h-[100%] overflow-hidden group transition-all duration-1000 relative">
+                  {' '}
+                  <img
+                    src={img2}
+                    alt=""
+                    className="w-[100%] h-[100%] object-cover group-hover:brightness-75 group-hover:scale-[1.2] absolute transition-all duration-1000"
+                  />
+                </div>
+                <div className="absolute uppercase text-white bg-color1 px-2 left-3 top-12 flex flex-col items-center ">
+                  <p>Aug</p>
+                  <p className="font-bold">07</p>
+                </div>
+                <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-3 group-hover:bottom-10 transition-all duration-1000 ">
+                  <p className="uppercase text-color4 font-bold">travel</p>
+                  <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
+                    practical information for travelling to egypt
+                  </p>
+                </figcaption>
+              </figure>
+              <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative  transition-all duration-1000  group mb-20   ">
+                <div className="w-[100%] h-[100%] overflow-hidden group transition-all duration-1000 relative">
+                  {' '}
+                  <img
+                    src={img3}
+                    alt=""
+                    className="w-[100%] h-[100%] object-cover group-hover:brightness-75 group-hover:scale-[1.2] absolute transition-all duration-1000"
+                  />
+                </div>
+                <div className="absolute uppercase text-white bg-color1 px-2 left-3 top-12 flex flex-col items-center ">
+                  <p>Aug</p>
+                  <p className="font-bold">02</p>
+                </div>
+                <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-5 group-hover:bottom-10 transition-all duration-1000 ">
+                  <p className="uppercase text-color4 font-bold">Destinations</p>
+                  <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
+                    tips towards a flawless honeymoon{' '}
+                  </p>
+                </figcaption>
+              </figure>
+            </div>
             <div className="flex flex-wrap justify-center xl:justify-between gap-10 px-6 xl:px-0 py-8 lg:px-3 ">
               <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative  transition-all duration-1000  group mb-20   ">
                 <div className="w-[100%] h-[100%] overflow-hidden group transition-all duration-1000 relative">
