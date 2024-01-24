@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import './NavbarLogin.scss'
-import {SiYourtraveldottv} from 'react-icons/si'
-import {AiFillCloseCircle, AiOutlineSetting, AiOutlineUser, AiOutlineLogout} from 'react-icons/ai'
-import {TbGridDots} from 'react-icons/tb'
+import { SiYourtraveldottv } from 'react-icons/si'
+import { AiFillCloseCircle, AiOutlineSetting, AiOutlineUser, AiOutlineLogout } from 'react-icons/ai'
+import { TbGridDots } from 'react-icons/tb'
 import { useNavigate } from "react-router-dom";
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,7 +13,7 @@ import img from '../../images/avatar_login.jpg'
 
 export default function index() {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const notify = () => toast("Feature being updated, please come back later!");
 
@@ -32,10 +32,10 @@ export default function index() {
   // add background color to the header
   const [transparent, setTransparent] = useState('header')
   const addBg = () => {
-    if(window.scrollY >= 10){
+    if (window.scrollY >= 10) {
       setTransparent('header activeHeader')
     }
-    else{
+    else {
       setTransparent('header')
     }
   }
@@ -73,7 +73,7 @@ export default function index() {
     };
   }, []);
 
-  
+
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
@@ -86,84 +86,84 @@ export default function index() {
 
   return (
     <section className='navBarSection'>
-    <div className={transparent}> 
+      <div className={transparent}>
 
-      <div className='logoDiv'>
-        <a href="#" className='logo'>
-          <h1 className='flex font-bold text-xl'><SiYourtraveldottv className='icon'/> 
-            G6Go
-          </h1>
-        </a>
-      </div>
+        <div className='logoDiv'>
+          <a href="#" className='logo'>
+            <h1 className='flex font-bold text-xl'><SiYourtraveldottv className='icon' />
+              G6Go
+            </h1>
+          </a>
+        </div>
 
-      <div className={active}>
-        <ul className="navLists flex">
+        <div className={active}>
+          <ul className="navLists flex">
 
-          <li className="navItem">
-            <a href="#" className="navLink" onClick={() => navigate("/")}>Home</a>
-          </li>
+            <li className="navItem">
+              <a href="#" className="navLink" onClick={() => navigate("/")}>Home</a>
+            </li>
 
-          <li className="navItem">
-            <a href="#" className="navLink" onClick={() => navigate("/list_tour")}>List Tour</a>
-          </li>
+            <li className="navItem">
+              <a href="#" className="navLink" onClick={notify}>List Tour</a>
+            </li>
 
-          <li className="navItem">
-            <a href="#" className="navLink" onClick={() => navigate("/gallery")}>Gallery</a>
-          </li>
+            <li className="navItem">
+              <a href="#" className="navLink" onClick={() => navigate("/gallery")}>Gallery</a>
+            </li>
 
-          <li className="navItem">
-            <a href="#" className="navLink" onClick={() => navigate("/News")}>News</a>
-          </li>
+            <li className="navItem">
+              <a href="#" className="navLink" onClick={() => navigate("/News")}>News</a>
+            </li>
 
-          <li className="navItem">
-            <a href="#" className="navLink" onClick={() => navigate("/AboutUs")}>About Us</a>
-          </li>
+            <li className="navItem">
+              <a href="#" className="navLink" onClick={() => navigate("/AboutUs")}>About Us</a>
+            </li>
 
-          <div className="headerBtns flex items-center relative pl-4">
-            <div className="avatar" onClick={toggleMenu}>
+            <div className="headerBtns flex items-center relative pl-4">
+              <div className="avatar" onClick={toggleMenu}>
                 <img
-                src={img}
-                alt="User Avatar"
-                className="rounded-full h-8 w-8 cursor-pointer hover:animate-bounce"
+                  src={img}
+                  alt="User Avatar"
+                  className="rounded-full h-8 w-8 cursor-pointer hover:animate-bounce"
                 />
+              </div>
+
+              {/* Dropdown menu */}
+              {showMenu && (
+                <div className="flex dropdown-menu absolute top-full right-0 mt-2 bg-white border border-gray-300 rounded-md shadow-md overflow-hidden transform origin-top transition-all duration-300" style={{ border: '1px solid grey', boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.4)' }}>
+                  <ul className="py-3 px-5">
+                    <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={notify}>
+                      <AiOutlineSetting className="menu-icon" />
+                      <span className="ml-4">Settings</span>
+                    </li>
+                    <div className='mt-2 mb-2' style={{ border: '1px solid lightgrey', boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.2)' }}></div>
+                    <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={() => navigate("/profile")}>
+                      <AiOutlineUser className="menu-icon" />
+                      <span className="ml-4">Profile</span>
+                    </li>
+                    <div className='mt-2 mb-2' style={{ border: '1px solid lightgrey', boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.2)' }}></div>
+                    <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={() => navigate("/login")}>
+                      <AiOutlineLogout className="menu-icon" />
+                      <span className="ml-4">Logout</span>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
 
-            {/* Dropdown menu */}
-            {showMenu && (
-                <div className="flex dropdown-menu absolute top-full right-0 mt-2 bg-white border border-gray-300 rounded-md shadow-md overflow-hidden transform origin-top transition-all duration-300" style={{border:'1px solid grey', boxShadow:'2px 4px 4px rgba(0, 0, 0, 0.4)'}}>
-                    <ul className="py-3 px-5">
-                        <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={notify}>
-                            <AiOutlineSetting className="menu-icon"/>
-                            <span className="ml-4">Settings</span>
-                        </li>
-                        <div className='mt-2 mb-2' style={{border:'1px solid lightgrey', boxShadow:'2px 4px 4px rgba(0, 0, 0, 0.2)'}}></div>
-                        <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={() => navigate("/profile")}>
-                            <AiOutlineUser className="menu-icon" />
-                            <span className="ml-4">Profile</span>
-                        </li>
-                        <div className='mt-2 mb-2' style={{border:'1px solid lightgrey', boxShadow:'2px 4px 4px rgba(0, 0, 0, 0.2)'}}></div>
-                        <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={() => navigate("/login")}>
-                            <AiOutlineLogout className="menu-icon" />
-                            <span className="ml-4">Logout</span>
-                        </li>
-                    </ul>
-              </div>
-            )}
+          </ul>
+
+          <div onClick={closeNav} className='closeNavbar'>
+            <AiFillCloseCircle className='icon' />
           </div>
 
-        </ul>
+        </div>
 
-        <div onClick={closeNav} className='closeNavbar'>
-          <AiFillCloseCircle className='icon'/>
+        <div onClick={showNav} className="toggleNavbar">
+          <TbGridDots className='icon' />
         </div>
 
       </div>
-
-      <div onClick={showNav} className="toggleNavbar">
-        <TbGridDots className='icon'/>
-      </div>
-
-    </div>
-  </section>
+    </section>
   )
 }
