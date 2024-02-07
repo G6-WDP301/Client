@@ -3,6 +3,7 @@ import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 import ViewTour from '../pages/ViewTour/ViewTour';
 import ForgotPassword from '../pages/ForgotPassword/ForgotPassword'
 import { Home, Login, SignUp, Error, News, AboutUs, Gallery, ListTour, Profile, TourDetail } from '@/pages';
+import BookingTour from '../pages/BookingTour/BookingTour';
 const Routers = () => {
     return (
         <div>
@@ -20,6 +21,7 @@ const Routers = () => {
                     <Route path="/list_tour" element={<ListTour />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/tour_detail" element={<TourDetail />} />
+                    <Route path="/booking-tour" element={<BookingTour />} />
                 </Routes>
             </Router>
         </div>
