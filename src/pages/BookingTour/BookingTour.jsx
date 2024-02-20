@@ -5,9 +5,11 @@ import {
   CardContent,
   CardMedia,
   Container,
+  FormGroup,
   Grid,
   ImageList,
   ImageListItem,
+  TextField,
   Typography,
 } from '@mui/material';
 import Navbar from '../../layout/Navbar';
@@ -41,6 +43,10 @@ const tour = [
     imgSrc: img,
     destTitle:
       'Đông Bắc: Hà Nội - Hà Giang - Lũng Cú - Đồng Văn - Mã Pí Lèng - Mèo Vạc - Cao Bằng - Thác Bản Giốc - Hồ Ba Bể',
+    type: 'NDSGN307-008-080224VU-F',
+    start_time: '31/1/2024',
+    start_location: 'Hà Nội',
+    number: '3',
     locations: [
       {
         location: 'SB NỘI BÀI – HÀ NỘI',
@@ -127,18 +133,6 @@ const itemData = [
   },
 ];
 
-const styles = {
-  paperContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    background: `url(${bgImage}) no-repeat center center fixed`,
-    height: '400px',
-    backgroundSize: 'cover',
-    backdropFilter: 'blur(5px)',
-  },
-};
-
 const BookingTour = () => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -146,28 +140,6 @@ const BookingTour = () => {
       currency: 'VND',
     }).format(price);
   };
-  const [allPoints, setAllPoints] = React.useState([]);
-  const [points, setTours] = React.useState([]);
-  const [open, setOpen] = React.useState(false);
-
-  const allTourLength = allPoints.length;
-
-  const handleToggle = () => {
-    setOpen(!open);
-  };
-
-  React.useEffect(() => {
-    setAllPoints(tour[0].locations); // Lấy locations từ tour[0] hoặc tour[n] với n là index của tour bạn muốn sử dụng
-  }, []);
-
-  React.useEffect(() => {
-    const newPoints = open
-      ? allPoints
-      : allPoints.filter(
-          (item, index) => index === 0 || index === allTourLength - 1
-        );
-    setTours(newPoints);
-  }, [open, allPoints, allTourLength]);
 
   return (
     <>
@@ -188,11 +160,17 @@ const BookingTour = () => {
                 <Grid item xs={12} sm={4} sx={{ textAlign: 'left' }}>
                   <CardMedia
                     component="img"
-                    image="https://media.travel.com.vn/Tour/tfd_230308105539_996330.jpg"
+                    image={tourItem?.imgSrc}
                     alt="Live from space album cover"
+                    sx={{ borderRadius: '10px 0px 0px 10px' }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={8} sx={{ textAlign: 'left' }}>
+                <Grid
+                  item
+                  xs={12}
+                  sm={8}
+                  sx={{ textAlign: 'left', backgroundColor: '#f2f1ed' }}
+                >
                   <Typography
                     sx={{
                       marginBottom: '8px',
@@ -200,7 +178,7 @@ const BookingTour = () => {
                       fontSize: '20px',
                       fontWeight: 'bold',
                       color: '#fa4807',
-                      paddingLeft: '5px'
+                      paddingLeft: '20px',
                     }}
                   >
                     {tourItem.destTitle}
@@ -209,183 +187,161 @@ const BookingTour = () => {
                     sx={{
                       marginBottom: '8px',
                       fontFamily: 'Arial',
-                      fontWeight: 'bold',
-                      color: '#fa4807',
-                      paddingLeft: '5px'
+                      fontSize: '15px',
+                      color: '#000000',
+                      paddingLeft: '20px',
                     }}
                   >
-                    Mã tour:
+                    Mã tour: <b>{tourItem.type}</b>
                   </Typography>
                   <Typography
                     sx={{
                       marginBottom: '8px',
                       fontFamily: 'Arial',
-                      fontSize: '20px',
-                      fontWeight: 'bold',
-                      color: '#fa4807',
-                      paddingLeft: '5px'
+                      fontSize: '15px',
+                      color: '#000000',
+                      paddingLeft: '20px',
                     }}
                   >
-                    {tourItem.destTitle}
+                    Giá vé: <b>{formatPrice(tourItem.price)}/khách</b>
+                  </Typography>
+                  <Typography
+                    sx={{
+                      marginBottom: '8px',
+                      fontFamily: 'Arial',
+                      fontSize: '15px',
+                      color: '#000000',
+                      paddingLeft: '20px',
+                    }}
+                  >
+                    Khởi hành: <b>{tourItem.start_time}</b>
+                  </Typography>
+                  <Typography
+                    sx={{
+                      marginBottom: '8px',
+                      fontFamily: 'Arial',
+                      fontSize: '15px',
+                      color: '#000000',
+                      paddingLeft: '20px',
+                    }}
+                  >
+                    Nơi khởi hành: <b>{tourItem.start_location}</b>
+                  </Typography>
+                  <Typography
+                    sx={{
+                      marginBottom: '8px',
+                      fontFamily: 'Arial',
+                      fontSize: '15px',
+                      color: '#000000',
+                      paddingLeft: '20px',
+                    }}
+                  >
+                    Số chỗ còn nhận: <b>{tourItem.number}</b>
                   </Typography>
                 </Grid>
               </Grid>
 
-              <Typography
-                variant="h5"
-                sx={{
-                  marginBottom: '8px',
-                  marginTop: '40px',
-                  fontFamily: 'Arial',
-                  fontSize: '30px',
-                  fontWeight: 'bold',
-                  color: 'red',
-                  textAlign: 'center',
-                }}
-              >
-                Lịch trình
-              </Typography>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={5} sx={{ textAlign: 'left' }}>
-                  <Box
-                    display="flex"
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
-                  >
-                    <Card elevation={3}>
-                      <CardContent>
-                        <Timeline
-                          sx={(theme) => ({
-                            m: 0,
-                            pl: 0,
-                            pr: 0,
-                            [`& .${timelineItemClasses.root}`]: {
-                              minHeight: theme.spacing(6),
-                              '&:before': {
-                                flex: 0,
-                                padding: 0,
-                              },
-                            },
-                          })}
-                        >
-                          {points.map((point, index) => {
-                            const isPrimaryPoint =
-                              index === 0 || index === points.length - 1;
-                            const isStart = index === 0;
-                            const isEnd = index === points.length - 1;
-
-                            return (
-                              <React.Fragment key={point}>
-                                <TimelineItem>
-                                  <TimelineSeparator>
-                                    <TimelineDot
-                                      color={
-                                        index === 0
-                                          ? 'success'
-                                          : index === points.length - 1
-                                          ? 'error'
-                                          : 'primary'
-                                      }
-                                    ></TimelineDot>
-                                    {!isEnd && <TimelineConnector />}
-                                  </TimelineSeparator>
-                                  <TimelineContent
-                                    sx={{
-                                      fontWeight: isPrimaryPoint
-                                        ? 'bold'
-                                        : undefined,
-                                    }}
-                                  >
-                                    <Typography variant="body1">
-                                      {point.location}
-                                    </Typography>
-                                    <Typography
-                                      variant="body2"
-                                      color="textSecondary"
-                                    >
-                                      {point.time}
-                                    </Typography>
-                                  </TimelineContent>
-                                </TimelineItem>
-                                {isStart && allTourLength > 2 && (
-                                  <Button
-                                    sx={{
-                                      textTransform: 'none',
-                                      // justifyContent: "flex-start"
-                                    }}
-                                    onClick={handleToggle}
-                                    endIcon={
-                                      open ? (
-                                        <ExpandLessIcon />
-                                      ) : (
-                                        <ExpandMoreIcon />
-                                      )
-                                    }
-                                  >
-                                    {open
-                                      ? 'Thu gọn'
-                                      : `Chi tiết hành trình (+${
-                                          allTourLength - 2
-                                        } chặng)`}
-                                  </Button>
-                                )}
-                              </React.Fragment>
-                            );
-                          })}
-                        </Timeline>
-                      </CardContent>
-                    </Card>
-                  </Box>
-                  <Box
+                <Grid item md={8} xs={12} className="left">
+                  <Typography
+                    variant="h2"
                     sx={{
-                      width: 500,
-                      height: 450,
-                      overflowY: 'scroll',
-                      marginTop: '20px',
+                      marginBottom: '33px',
+                      marginTop: '45px',
+                      fontSize: '30px',
+                      fontWeight: '700',
+                      color: '#2d4271',
+                      lineHeight: '38px',
+                      width: '100%',
                     }}
                   >
-                    <ImageList variant="masonry" cols={3} gap={8}>
-                      {itemData.map((item) => (
-                        <ImageListItem key={item.img}>
-                          <img
-                            srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                            src={`${item.img}?w=248&fit=crop&auto=format`}
-                            alt={item.title}
-                            loading="lazy"
-                          />
-                        </ImageListItem>
-                      ))}
-                    </ImageList>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={7} sx={{ textAlign: 'left' }}>
-                  <Card>
-                    <CardContent>
-                      {tourItem.locations.map((locationItem, index) => (
-                        <div key={index}>
-                          <Typography
-                            component="div"
+                    Tổng quan chuyến đi
+                  </Typography>
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      marginBottom: '33px',
+                      marginTop: '45px',
+                      fontSize: '20px',
+                      lineHeight: '40px',
+                      fontWeight: '700',
+                      color: '#2d4271',
+                      width: '100%',
+                    }}
+                  >
+                    Thông tin liên lạc
+                  </Typography>
+                  <Grid sx={{ textAlign: 'left', backgroundColor: '#f2f1ed', borderRadius: '10px', }}>
+                    <FormGroup
+                      sx={{
+                        alignItems: 'center',
+                        borderRadius: '10px',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-between',
+                        padding:"1rem"
+                      }}
+                    >
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            id="additionalText1"
+                            label="Họ và tên"
+                            fullWidth
                             sx={{
-                              fontFamily: 'Arial',
-                              fontSize: '15px',
-                              background:
-                                '-webkit-linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-                              WebkitBackgroundClip: 'text',
-                              WebkitTextFillColor: 'transparent',
+                              mt: 2,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              marginBottom: '20px',
+                              backgroundColor: '#ffffff'
                             }}
-                          >
-                            <b>{locationItem.location}</b>
-                          </Typography>
-                          <Typography
-                            variant="body1"
-                            sx={{ marginTop: '10px', marginBottom: '15px' }}
-                          >
-                            {locationItem.details}
-                          </Typography>
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            id="email"
+                            label="Emai;"
+                            fullWidth
+                            sx={{
+                              mt: 2,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              marginBottom: '20px',
+                              backgroundColor: '#ffffff'
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            id="sdt"
+                            label="Số điện thoại"
+                            fullWidth
+                            sx={{
+                              mt: 2,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              marginBottom: '20px',
+                              backgroundColor: '#ffffff'
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            id="additionalText4"
+                            label="Địa chỉ"
+                            fullWidth
+                            sx={{
+                              mt: 2,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              marginBottom: '20px',
+                              backgroundColor: '#ffffff'
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </FormGroup>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
