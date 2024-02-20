@@ -24,12 +24,12 @@ const Header = () => {
           <div className="homeCard grid">
 
             <div data-aos="fade-right" data-aos-duration="2000" className="locationDiv">
-              <label htmlFor="location">Start position</label>
+              <label htmlFor="location">Start place</label>
               <input type="text" placeholder="Choose Start Position"/>
             </div>
             
             <div data-aos="fade-right" data-aos-duration="2500" className="distDiv">
-              <label htmlFor="location">End position</label>
+              <label htmlFor="location">End place</label>
               <input type="text" placeholder="Choose End Position"/>
             </div>
 
