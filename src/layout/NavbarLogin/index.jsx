@@ -91,7 +91,7 @@ export default function index() {
         <div className='logoDiv'>
           <a href="#" className='logo'>
             <h1 className='flex font-bold text-xl'><SiYourtraveldottv className='icon' />
-              G6Go
+              TripGo
             </h1>
           </a>
         </div>
@@ -131,7 +131,12 @@ export default function index() {
               {/* Dropdown menu */}
               {showMenu && (
                 <div className="flex dropdown-menu absolute top-full right-0 mt-2 bg-white border border-gray-300 rounded-md shadow-md overflow-hidden transform origin-top transition-all duration-300" style={{ border: '1px solid grey', boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.4)' }}>
-                  <ul className="py-3 px-5">
+                 <ul className="py-3 px-5">
+                    <div className='rounded-full bg-orange-400 text-slate-50 px-3 mb-3 hover:bg-orange-500 hover:cursor-pointer'
+                       style={{boxShadow:'2px 4px 4px rgba(0, 0, 0, 0.3)'}}
+                    >
+                      <span className='flex justify-center text-center font-medium'>User</span>
+                    </div>
                     <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={notify}>
                       <AiOutlineSetting className="menu-icon" />
                       <span className="ml-4">Settings</span>

@@ -15,6 +15,14 @@ export default function index() {
             
           </div>
         </section>
+
+        <section>
+          <div className='container'>
+            <div className='flex flex-wrap y-gap-20 justify-between items-center'>
+
+            </div>
+          </div>
+        </section>
         
       </>
   );
