@@ -7,18 +7,23 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import BadgeIcon from '@mui/icons-material/Badge'; import Typography from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import PasswordIcon from '@mui/icons-material/Password';
 import { useRef } from 'react';
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const defaultTheme = createTheme();
 
 export default function LogIn() {
 
   const navigate = useNavigate();
+
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -29,6 +34,21 @@ export default function LogIn() {
     data.forEach((value, key) => {
       formData[key] = value;
     });
+
+    const requiredFields = ["email", "password"];
+    const newErrors = {};
+
+    requiredFields.forEach(field => {
+      if (!formData[field]) {
+        newErrors[field] = "This field is required";
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
 
     try {
       const response = await fetch('http://localhost:8080/api/user/login', {
@@ -43,11 +63,13 @@ export default function LogIn() {
         const responseData = await response.json();
         console.log('Login successful:', responseData);
         localStorage.setItem('token', responseData.token);
+        toast.success('Login successful ~')
         navigate('/');
       } else {
         console.error('Login failed:', response.status);
         const errorData = await response.json();
         console.error('Error Data:', errorData);
+        toast.error(errorData.error);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -138,6 +160,8 @@ export default function LogIn() {
               ref={formRef}
             >
               <TextField
+                error={errors["email"]}
+                helperText={errors["email"]}
                 margin="normal"
                 required
                 fullWidth
@@ -148,6 +172,8 @@ export default function LogIn() {
                 autoFocus
               />
               <TextField
+                error={errors["password"]}
+                helperText={errors["password"]}
                 margin="normal"
                 required
                 fullWidth
@@ -172,7 +198,7 @@ export default function LogIn() {
 
               <Grid container>
                 <Grid item>
-                  <Link href="/sign-up" style={{ color: "#669966", textDecoration: "none" }}>
+                  <Link href="/register" style={{ color: "#669966", textDecoration: "none" }}>
                     {"Don't have an account? Register here..."}
                   </Link>
                 </Grid>
