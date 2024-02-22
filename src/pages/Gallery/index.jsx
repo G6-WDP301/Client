@@ -63,7 +63,7 @@ export default function index() {
               className="h-auto w-full max-w-full rounded-lg object-cover object-center md:h-[480px]"
               src={active}
               alt=""
-            />z
+            />
           </div>
           <div className="grid grid-cols-5 gap-4">
             {data.map(({ imgelink }, index) => (

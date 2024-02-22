@@ -109,7 +109,7 @@ const Navbar = () => {
         <div className='logoDiv'>
           <a href="#" className='logo'>
             <h1 className='flex font-bold text-xl'><SiYourtraveldottv className='icon'/> 
-              G6Go
+              TripGo
             </h1>
           </a>
         </div>

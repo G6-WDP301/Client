@@ -8,3 +8,4 @@ export { default as Gallery } from "./Gallery";
 export { default as ListTour } from "./ListTour";
 export { default as Profile } from "./Profile";
 export { default as TourDetail } from "./TourDetail";
+export { default as Admin } from "./Admin";

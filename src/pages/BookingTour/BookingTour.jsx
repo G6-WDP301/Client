@@ -1,14 +1,8 @@
 import {
-  Box,
-  Button,
-  Card,
-  CardContent,
   CardMedia,
   Container,
   FormGroup,
   Grid,
-  ImageList,
-  ImageListItem,
   TextField,
   Typography,
 } from '@mui/material';
@@ -17,25 +11,13 @@ import img from '../../images/image_hotel(1).jpg';
 import img1 from '../../images/image_hotel(2).jpg';
 import img2 from '../../images/image_hotel(3).jpg';
 import img3 from '../../images/image_hotel(4).jpg';
-import bgImage from '../../images/Ireland.jpg';
 import maldivies from '../../images/maldives1.jpg';
 import canada from '../../images/canada1.jpg';
 import map from '../../images/map.jpg';
 import france from '../../images/france1.jpg';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import React from 'react';
-import {
-  Timeline,
-  TimelineConnector,
-  TimelineContent,
-  TimelineDot,
-  TimelineItem,
-  TimelineSeparator,
-  timelineItemClasses,
-} from '@mui/lab';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import Footer from '../../layout/Footer';
+import { number } from 'prop-types';
+import { useState } from 'react';
 
 const tour = [
   {
@@ -140,6 +122,7 @@ const BookingTour = () => {
       currency: 'VND',
     }).format(price);
   };
+  const [numberPeople, setNumberPeople] = useState(1)
 
   return (
     <>
@@ -341,6 +324,55 @@ const BookingTour = () => {
                         </Grid>
                       </Grid>
                     </FormGroup>
+                  </Grid>
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      marginBottom: '33px',
+                      marginTop: '45px',
+                      fontSize: '25px',
+                      lineHeight: '40px',
+                      fontWeight: '700',
+                      color: '#2d4271',
+                      width: '100%',
+                    }}
+                  >
+                    Hành khách
+                  </Typography>
+                  <TextField
+                      fullWidth
+                      id='number-people'
+                      label='Số lượng hành khách'
+                      placeholder='1'
+                      type='number'
+                      onKeyDown={e => ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()}
+                      InputProps={{
+                        inputProps: {
+                          min: 1,
+                          max:tourItem.number
+                        }
+                      }}
+                      customvalue={numberPeople}
+                      customsetvalue={setNumberPeople}
+                    />
+                </Grid>
+                <Grid item md={4} xs={12} className="right">
+                  <Grid sx={{ textAlign: 'left', backgroundColor: '#f2f1ed', borderRadius: '10px', }}>
+                    
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      marginBottom: '33px',
+                      marginTop: '45px',
+                      fontSize: '20px',
+                      lineHeight: '40px',
+                      fontWeight: '700',
+                      color: '#2d4271',
+                      width: '100%',
+                    }}
+                  >
+                    Tóm tắt chuyến đi
+                  </Typography>
                   </Grid>
                 </Grid>
               </Grid>
