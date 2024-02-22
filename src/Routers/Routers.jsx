@@ -1,10 +1,10 @@
 import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
-
 import ViewTour from '../pages/ViewTour/ViewTour';
 import ForgotPassword from '../pages/ForgotPassword/ForgotPassword'
 import { Home, Login, Error, News, AboutUs, Gallery, ListTour, Profile, TourDetail, Admin } from '@/pages';
 import Register from '../pages/SignUp/index.jsx'
 import '../layout/Default/Default.jsx'
+import BookingTour from '../pages/BookingTour/BookingTour.jsx';
 
 // const Routers = () => {
 //     return (
@@ -64,7 +64,7 @@ export const routes = [
         page: Gallery
     }, 
     {
-        path: "/listTour",
+        path: "/list-tour",
         page: ListTour
     }, 
     {
@@ -72,7 +72,7 @@ export const routes = [
         page: Profile
     }, 
     {
-        path: "/tourDetail",
+        path: "/tour-detail",
         page: TourDetail
     }, 
     {
@@ -80,12 +80,16 @@ export const routes = [
         page: Admin
     },
     {
-        path: "/viewTour",
+        path: "/view-tour",
         page: ViewTour
     },
     {
-        path: "/forgotPassword",
+        path: "/forgot-password",
         page: ForgotPassword
+    },
+    {
+        path: "/booking-tour",
+        page: BookingTour
     },
     
 ]
