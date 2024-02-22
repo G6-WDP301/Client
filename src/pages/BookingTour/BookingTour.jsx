@@ -179,7 +179,7 @@ const BookingTour = () => {
                 <Grid item xs={12} sm={4} sx={{ textAlign: 'left' }}>
                   <CardMedia
                     component="img"
-                    image={tourItem?.imgSrc}
+                    image={tourItem?.imgSrc} 
                     alt="Live from space album cover"
                     sx={{ borderRadius: '10px 0px 0px 10px' }}
                   />
