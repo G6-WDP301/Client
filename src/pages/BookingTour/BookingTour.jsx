@@ -134,6 +134,14 @@ const BookingTour = () => {
   const [option2Check, setOption2Checked] = useState(false);
   const [textComment, setTextComment] = useState('');
   const [birthDate, setBirthDate] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [telephone, setTelephone] = useState('');
+  const [address, setAddress] = useState('');
+  const [fullNamePeople, setFullNamePeople] = useState('');
+  const [gender, setGender] = useState('Male');
+  const [numberPhone, setNumberPhone] = useState('');
+  const [addressPeople, setAddressPeople] = useState('');
 
   const handleBirthDateChange = (event) => {
     const selectedDate = new Date(event.target.value);
@@ -320,6 +328,10 @@ const BookingTour = () => {
                               marginBottom: '20px',
                               backgroundColor: '#ffffff',
                             }}
+                            value={fullName}
+        onChange={(event) => {
+          setFullName(event.target.value);
+        }}
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -334,6 +346,10 @@ const BookingTour = () => {
                               marginBottom: '20px',
                               backgroundColor: '#ffffff',
                             }}
+                            value={email}
+        onChange={(event) => {
+          setEmail(event.target.value);
+        }}
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -348,6 +364,10 @@ const BookingTour = () => {
                               marginBottom: '20px',
                               backgroundColor: '#ffffff',
                             }}
+                            value={telephone}
+        onChange={(event) => {
+          setTelephone(event.target.value);
+        }}
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -362,6 +382,10 @@ const BookingTour = () => {
                               marginBottom: '20px',
                               backgroundColor: '#ffffff',
                             }}
+                            value={address}
+        onChange={(event) => {
+          setAddress(event.target.value);
+        }}
                           />
                         </Grid>
                       </Grid>
@@ -499,6 +523,10 @@ const BookingTour = () => {
                                 marginBottom: '20px',
                                 backgroundColor: '#ffffff',
                               }}
+                              value={fullNamePeople}
+        onChange={(event) => {
+          setFullNamePeople(event.target.value);
+        }}
                             />
                           </Grid>
                           <Grid item xs={12} sm={4}>
@@ -513,6 +541,10 @@ const BookingTour = () => {
                                 marginBottom: '20px',
                                 backgroundColor: '#ffffff',
                               }}
+                              value={gender}
+        onChange={(event) => {
+          setGender(event.target.value);
+        }}
                             />
                           </Grid>
                           <Grid item xs={12} sm={4}>
@@ -545,6 +577,10 @@ const BookingTour = () => {
                                 marginBottom: '20px',
                                 backgroundColor: '#ffffff',
                               }}
+                              value={numberPhone}
+        onChange={(event) => {
+          setNumberPhone(event.target.value);
+        }}
                             />
                           </Grid>
                           <Grid item xs={12} sm={6}>
@@ -558,6 +594,10 @@ const BookingTour = () => {
                                 flexDirection: 'column',
                                 marginBottom: '20px',
                                 backgroundColor: '#ffffff',
+                              }}
+                              value={addressPeople}
+                              onChange={(event) => {
+                                setAddressPeople(event.target.value);
                               }}
                             />
                           </Grid>
