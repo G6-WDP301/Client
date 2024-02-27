@@ -16,12 +16,16 @@ import { InputLabel } from '@mui/material';
 import { useState } from 'react';
 import { useRef } from 'react';
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
 
   const navigate = useNavigate();
+
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -34,7 +38,21 @@ export default function SignInSide() {
       formData[key] = value;
     });
 
-    console.log('Form Data:', formData)
+    console.log('Form Data:', formData);
+
+    const requiredFields = ["email", "username", "password", "confirmPassword", "dob", "gender", "phoneNumber", "address"];
+    const errors = {};
+
+    requiredFields.forEach(field => {
+      if (!formData[field]) {
+        errors[field] = "This field is required";
+      }
+    });
+
+    if (Object.keys(errors).length > 0) {
+      setErrors(errors);
+      return;
+    }
 
     try {
       const response = await fetch('http://localhost:8080/api/user/create', {
@@ -48,18 +66,19 @@ export default function SignInSide() {
       if (response.ok) {
         const responseData = await response.json();
         console.log('Data received:', responseData);
-        navigate('/login');
+        toast.success('Register successfully ~')
+        navigate('/');
       } else {
         console.error('Error:', response.status);
         const errorData = await response.json();
         console.error('Error Data:', errorData);
+        toast.error(errorData.error)
       }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-
-
   };
+
 
   const formRef = useRef(null);
 
@@ -146,6 +165,8 @@ export default function SignInSide() {
               ref={formRef}
             >
               <TextField
+                error={errors["email"]}
+                helperText={errors["email"]}
                 margin="normal"
                 required
                 fullWidth
@@ -156,6 +177,8 @@ export default function SignInSide() {
                 autoFocus
               />
               <TextField
+                error={errors["username"]}
+                helperText={errors["username"]}
                 margin="normal"
                 required
                 fullWidth
@@ -165,6 +188,8 @@ export default function SignInSide() {
                 autoFocus
               />
               <TextField
+                error={errors["password"]}
+                helperText={errors["password"]}
                 margin="normal"
                 required
                 fullWidth
@@ -175,6 +200,8 @@ export default function SignInSide() {
                 autoComplete="current-password"
               />
               <TextField
+                error={errors["confirmPassword"]}
+                helperText={errors["confirmPassword"]}
                 margin="normal"
                 required
                 fullWidth
@@ -185,6 +212,8 @@ export default function SignInSide() {
                 autoComplete="current-password"
               />
               <TextField
+                error={errors["dob"]}
+                helperText={errors["dob"]}
                 margin="normal"
                 required
                 fullWidth
@@ -202,6 +231,8 @@ export default function SignInSide() {
                   Select Gender
                 </InputLabel>
                 <Select
+                  error={errors["gender"]}
+                  helperText={errors["gender"]}
                   label="Select Gender"
                   labelId="gender-label"
                   id="gender"
@@ -221,6 +252,8 @@ export default function SignInSide() {
                 </Select>
               </div>
               <TextField
+                error={errors["phoneNumber"]}
+                helperText={errors["phoneNumber"]}
                 placeholder="Your phone number"
                 margin="normal"
                 required
@@ -232,6 +265,8 @@ export default function SignInSide() {
                 id="phoneNumber"
               />
               <TextField
+                error={errors["address"]}
+                helperText={errors["address"]}
                 placeholder="Your address"
                 margin="normal"
                 required

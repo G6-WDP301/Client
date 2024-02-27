@@ -1,5 +1,4 @@
 import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
-
 import ViewTour from '../pages/ViewTour/ViewTour';
 import ForgotPassword from '../pages/ForgotPassword/ForgotPassword'
 import { Home, Login, Error, News, AboutUs, Gallery, ListTour, Profile, TourDetail, Admin } from '@/pages';
@@ -90,16 +89,20 @@ export const routes = [
         page: Admin
     },
     {
-        path: "/viewTour",
+        path: "/view-tour",
         page: ViewTour
     },
     {
-        path: "/forgotPassword",
+        path: "/forgot-password",
         page: ForgotPassword
     },
     {
         path: "/sideBar",
         page: SidebarContext
     },
+    {
+        path: "/booking-tour",
+        page: BookingTour
+    }
     
 ]

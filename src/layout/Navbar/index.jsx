@@ -153,7 +153,7 @@ const Navbar = () => {
                 <button className='btn loginBtn' onClick={() => navigate("/login")}>
                   <a href="#">Login</a>
                 </button>
-                <button className='btn' onClick={() => navigate("/sign-up")}>
+                <button className='btn' onClick={() => navigate("/register")}>
                   <a href="#">Sign Up</a>
                 </button>
               </div>
