@@ -5,6 +5,16 @@ import ForgotPassword from '../pages/ForgotPassword/ForgotPassword'
 import { Home, Login, Error, News, AboutUs, Gallery, ListTour, Profile, TourDetail, Admin } from '@/pages';
 import Register from '../pages/SignUp/index.jsx'
 import '../layout/Default/Default.jsx'
+import Sidebar from '../layout/Sidebar/index.jsx'
+import {ContextProvider} from '../layout/Sidebar/Context/ContextProvider.jsx'
+
+const SidebarContext = () => {
+    return(
+        <ContextProvider>
+            <Sidebar/>
+        </ContextProvider>
+    )
+}
 
 // const Routers = () => {
 //     return (
@@ -64,7 +74,7 @@ export const routes = [
         page: Gallery
     }, 
     {
-        path: "/listTour",
+        path: "/list-tour",
         page: ListTour
     }, 
     {
@@ -72,7 +82,7 @@ export const routes = [
         page: Profile
     }, 
     {
-        path: "/tourDetail",
+        path: "/tour-detail",
         page: TourDetail
     }, 
     {
@@ -86,6 +96,10 @@ export const routes = [
     {
         path: "/forgotPassword",
         page: ForgotPassword
+    },
+    {
+        path: "/sideBar",
+        page: SidebarContext
     },
     
 ]

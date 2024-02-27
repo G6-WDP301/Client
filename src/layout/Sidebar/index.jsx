@@ -1,191 +1,59 @@
-import React from 'react'
-import {
-    Card,
-    Typography,
-    List,
-    ListItem,
-    ListItemPrefix,
-    ListItemSuffix,
-    Chip,
-    Accordion,
-    AccordionHeader,
-    AccordionBody,
-    Alert,
-  } from "@material-tailwind/react";
-  import {
-    PresentationChartBarIcon,
-    ShoppingBagIcon,
-    UserCircleIcon,
-    Cog6ToothIcon,
-    InboxIcon,
-    PowerIcon,
-  } from "@heroicons/react/24/solid";
-  import {
-    ChevronRightIcon,
-    ChevronDownIcon,
-    CubeTransparentIcon,
-  } from "@heroicons/react/24/outline";
-  import { SiYourtraveldottv } from 'react-icons/si'
-import { useNavigate } from 'react-router';
+import React, { useContext } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import { SiShopware } from 'react-icons/si';
+import { MdOutlineCancel } from 'react-icons/md';
 
-export default function index() {
+import { links } from './data/dummy.jsx';
+import SideBarContextValue from './Context/ContextProvider.jsx';
 
-  const [open, setOpen] = React.useState(0);
-  const [openAlert, setOpenAlert] = React.useState(true);
- 
-  const handleOpen = (value) => {
-    setOpen(open === value ? 0 : value);
+const Index = () => {
+  const { currentColor, activeMenu, setActiveMenu, screenSize } = useContext(SideBarContextValue);
+
+  const handleCloseSideBar = () => {
+    if (activeMenu !== undefined && screenSize <= 900) {
+      setActiveMenu(false);
+    }
   };
 
-  const navigate = useNavigate();
+  const activeLink = 'flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-white  text-md m-2';
+  const normalLink = 'flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg text-md text-gray-700 dark:text-gray-200 dark:hover:text-black hover:bg-light-gray m-2';
 
   return (
-    <Card className="h-[calc(100vh-2rem)] w-full max-w-[18rem] p-4 shadow-xl shadow-blue-gray-900/5">
-      <div className="mb-2 flex items-center gap-4 p-4">
-        <SiYourtraveldottv className='icon text-orange-400'/> 
-        <Typography variant="h5" color="blue-gray">
-          TripGo
-        </Typography>
-      </div>
-      <List>
-        <Accordion
-          open={open === 1}
-          icon={
-            <ChevronDownIcon
-              strokeWidth={2.5}
-              className={`mx-auto h-4 w-4 transition-transform ${open === 1 ? "rotate-180" : ""}`}
-            />
-          }
-        >
-          <ListItem className="p-0" selected={open === 1}>
-            <AccordionHeader onClick={() => handleOpen(1)} className="border-b-0 p-3 hover:text-orange-400">
-              <ListItemPrefix >
-                <PresentationChartBarIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              <span className='ml-3'></span>
-              <Typography color="blue-gray" className="mr-auto font-normal">
-                Dashboard
-              </Typography>
-            </AccordionHeader>
-          </ListItem>
-          <AccordionBody className="py-1">
-            <List className="p-0">
-              <ListItem className='hover:text-orange-400'>
-                <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                </ListItemPrefix>
-                Analytics 
-              </ListItem>
-              <ListItem className='hover:text-orange-400'>
-                <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                </ListItemPrefix>
-                Reporting
-              </ListItem>
-              <ListItem className='hover:text-orange-400'>
-                <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                </ListItemPrefix>
-                Projects
-              </ListItem>
-            </List>
-          </AccordionBody>
-        </Accordion>
-        <Accordion
-          open={open === 2}
-          icon={
-            <ChevronDownIcon
-              strokeWidth={2.5}
-              className={`mx-auto h-4 w-4 transition-transform ${open === 2 ? "rotate-180" : ""}`}
-            />
-          }
-        >
-          <ListItem className="p-0" selected={open === 2}>
-            <AccordionHeader onClick={() => handleOpen(2)} className="border-b-0 p-3 hover:text-orange-400">
-              <ListItemPrefix>
-                <ShoppingBagIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              <span className='ml-3'></span>
-              <Typography color="blue-gray" className="mr-auto font-normal">
-                E-Commerce
-              </Typography>
-            </AccordionHeader>
-          </ListItem>
-          <AccordionBody className="py-1">
-            <List className="p-0">
-              <ListItem className='hover:text-orange-400'>
-                <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                </ListItemPrefix>
-                Orders
-              </ListItem>
-              <ListItem className='hover:text-orange-400'>
-                <ListItemPrefix>
-                  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                </ListItemPrefix>
-                Products
-              </ListItem>
-            </List>
-          </AccordionBody>
-        </Accordion>
-        <div className="my-2 w-52" style={{border:'1px solid lightgrey', boxShadow:'2px 3px 4px rgba(0, 0, 0, 0.3)'}}></div>
-        <ListItem className='hover:text-orange-400'>
-          <ListItemPrefix>
-            <InboxIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          <span className='ml-3'></span>
-          Inbox
-          <ListItemSuffix>
-            <Chip value="14" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
-          </ListItemSuffix>
-        </ListItem>
-        <ListItem className='hover:text-orange-400' onClick={() => {navigate("/profile")}}>
-          <ListItemPrefix>
-            <UserCircleIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          <span className='ml-3'></span>
-          Profile
-        </ListItem>
-        <ListItem className='hover:text-orange-400'>
-          <ListItemPrefix>
-            <Cog6ToothIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          <span className='ml-3'></span>
-          Settings
-        </ListItem>
-        <ListItem onClick={() => {navigate("/login")}} className='hover:text-orange-400'>
-          <ListItemPrefix>
-            <PowerIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          <span className='ml-3'></span>
-          Log Out
-        </ListItem>
-      </List>
-      <Alert open={openAlert} className="mt-auto bg-slate-500 mt-8" onClose={() => setOpenAlert(true)}>
-        <CubeTransparentIcon className="mb-4 h-12 w-12" />
-        <Typography variant="h6" className="mb-1">
-          Upgrade to PRO
-        </Typography>
-        <Typography variant="small" className="font-normal opacity-80">
-          Upgrade to Material Tailwind PRO and get even more components, plugins, advanced features
-          and premium.
-        </Typography>
-        <div className="mt-4 flex gap-3">
-          <Typography
-            as="a"
-            href="#"
-            variant="small"
-            className="font-medium opacity-80"
-            onClick={() => setOpenAlert(false)}
-          >
-            Dismiss
-          </Typography>
-          <Typography as="a" href="#" variant="small" className="font-medium">
-            Upgrade Now
-          </Typography>
-        </div>
-      </Alert>
-    </Card>
-  )
+    <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10">
+      {activeMenu && (
+        <>
+          <div className="flex justify-between items-center">
+            <Link to="/" onClick={handleCloseSideBar} className="items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight dark:text-white text-slate-900">
+              <SiShopware /> <span>Shoppy</span>
+            </Link>
+          </div>
+          <div className="mt-10 ">
+            {links.map((item) => (
+              <div key={item.title}>
+                <p className="text-gray-400 dark:text-gray-400 m-3 mt-4 uppercase">
+                  {item.title}
+                </p>
+                {item.links.map((link) => (
+                  <NavLink
+                    to={`/${link.name}`}
+                    key={link.name}
+                    onClick={handleCloseSideBar}
+                    style={({ isActive }) => ({
+                      backgroundColor: isActive ? currentColor : '',
+                    })}
+                    className={({ isActive }) => (isActive ? activeLink : normalLink)}
+                  >
+                    {link.icon}
+                    <span className="capitalize ">{link.name}</span>
+                  </NavLink>
+                ))}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
 }
 
+export default Index;

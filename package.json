@@ -19,6 +19,7 @@
     "@mui/material": "^5.15.5",
     "@mui/styled-engine-sc": "^6.0.0-alpha.12",
     "@reduxjs/toolkit": "^1.9.5",
+    "@syncfusion/ej2-react-popups": "^24.2.5",
     "aos": "^2.3.4",
     "axios": "^1.4.0",
     "i18next": "^23.7.16",
