@@ -7,6 +7,7 @@ import '../layout/Default/Default.jsx'
 import Sidebar from '../layout/Sidebar/index.jsx'
 import {ContextProvider} from '../layout/Sidebar/Context/ContextProvider.jsx'
 import BookingTour from '../pages/BookingTour/BookingTour.jsx'
+import homeAdmin from '../layout/Sidebar/dashboard.jsx'
 
 const SidebarContext = () => {
     return(
@@ -107,3 +108,23 @@ export const routes = [
     }
     
 ]
+
+const adminRoutes = [
+    {
+        path: '/home-admin',
+        component: HomeAdmin,
+    },
+    {
+        path: "*",
+        component: Error
+    }, 
+    // {
+    //     path: "/user-admin",
+    //     page: Error
+    // }
+
+];
+
+
+
+
