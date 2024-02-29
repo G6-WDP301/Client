@@ -6,6 +6,7 @@ import Register from '../pages/SignUp/index.jsx'
 import '../layout/Default/Default.jsx'
 import Sidebar from '../layout/Sidebar/index.jsx'
 import {ContextProvider} from '../layout/Sidebar/Context/ContextProvider.jsx'
+import BookingTour from '../pages/BookingTour/BookingTour.jsx'
 
 const SidebarContext = () => {
     return(
