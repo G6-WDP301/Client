@@ -1,9 +1,10 @@
 import React from 'react';
 
 const Admin = ({ children }) => {
+
     return (
         <div>
-            { children }
+            {children}
         </div>
     );
 }

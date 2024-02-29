@@ -23,6 +23,7 @@ import Footer from '../../layout/Footer';
 import { useState } from 'react';
 import EventIcon from '@mui/icons-material/Event';
 import GroupsIcon from '@mui/icons-material/Groups';
+import { useEffect } from 'react';
 
 const tour = [
   {
@@ -142,6 +143,7 @@ const BookingTour = () => {
   const [gender, setGender] = useState('Male');
   const [numberPhone, setNumberPhone] = useState('');
   const [addressPeople, setAddressPeople] = useState('');
+  const [user, setUser] = useState('');
 
   const handleBirthDateChange = (event) => {
     const selectedDate = new Date(event.target.value);
@@ -168,11 +170,28 @@ const BookingTour = () => {
     setOption1Checked(false);
   };
 
+  useEffect(() => {
+    fetch('http://localhost:8080/api/user/all')
+      .then(response => response.json())
+      .then(data => {
+        console.log("Data user here: ", data);
+        setUser(data)
+      })
+      .catch(error => console.log(error));
+  }, []);
+
   return (
     <>
       <Navbar />
+      <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50">
+        <div className="w-full container flex justify-center items-center flex-col">
+          <p className="text-white font-secondary text-3xl 2xl:text-6xl" style={{ fontStyle: "italic", color: "#fff" }}>
+            Wish you have an enjoyable experience !
+          </p>
+        </div>
+      </section>
       <Container
-        style={{ padding: '2px', marginTop: '20px', marginBottom: '20px' }}
+        style={{ padding: '2px', marginTop: '10px', marginBottom: '20px' }}
       >
         <Grid container spacing={3}>
           {tour.map((tourItem) => (
@@ -187,7 +206,7 @@ const BookingTour = () => {
                 <Grid item xs={12} sm={4} sx={{ textAlign: 'left' }}>
                   <CardMedia
                     component="img"
-                    image={tourItem?.imgSrc} 
+                    image={tourItem?.imgSrc}
                     alt="Live from space album cover"
                     sx={{ borderRadius: '10px 0px 0px 10px' }}
                   />
@@ -329,15 +348,15 @@ const BookingTour = () => {
                               backgroundColor: '#ffffff',
                             }}
                             value={fullName}
-        onChange={(event) => {
-          setFullName(event.target.value);
-        }}
+                            onChange={(event) => {
+                              setFullName(event.target.value);
+                            }}
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <TextField
                             id="email"
-                            label="Emai;"
+                            label="Emai"
                             fullWidth
                             sx={{
                               mt: 2,
@@ -347,9 +366,9 @@ const BookingTour = () => {
                               backgroundColor: '#ffffff',
                             }}
                             value={email}
-        onChange={(event) => {
-          setEmail(event.target.value);
-        }}
+                            onChange={(event) => {
+                              setEmail(event.target.value);
+                            }}
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -365,9 +384,9 @@ const BookingTour = () => {
                               backgroundColor: '#ffffff',
                             }}
                             value={telephone}
-        onChange={(event) => {
-          setTelephone(event.target.value);
-        }}
+                            onChange={(event) => {
+                              setTelephone(event.target.value);
+                            }}
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -383,9 +402,9 @@ const BookingTour = () => {
                               backgroundColor: '#ffffff',
                             }}
                             value={address}
-        onChange={(event) => {
-          setAddress(event.target.value);
-        }}
+                            onChange={(event) => {
+                              setAddress(event.target.value);
+                            }}
                           />
                         </Grid>
                       </Grid>
@@ -454,7 +473,9 @@ const BookingTour = () => {
                         onChange={handleOption2Change}
                       />
                     }
-                    label="Tôi cần được nhân viên tư vấn Vietravel trợ giúp nhập thông tin đăng ký dịch vụ"
+                    label={
+                      <span>Tôi cần được nhân viên tư vấn <strong style={{fontStyle: "italic"}}>G6GO</strong> trợ giúp nhập thông tin đăng ký dịch vụ</span>
+                    }
                   />
                   <Grid
                     sx={{
@@ -524,9 +545,9 @@ const BookingTour = () => {
                                 backgroundColor: '#ffffff',
                               }}
                               value={fullNamePeople}
-        onChange={(event) => {
-          setFullNamePeople(event.target.value);
-        }}
+                              onChange={(event) => {
+                                setFullNamePeople(event.target.value);
+                              }}
                             />
                           </Grid>
                           <Grid item xs={12} sm={4}>
@@ -542,9 +563,9 @@ const BookingTour = () => {
                                 backgroundColor: '#ffffff',
                               }}
                               value={gender}
-        onChange={(event) => {
-          setGender(event.target.value);
-        }}
+                              onChange={(event) => {
+                                setGender(event.target.value);
+                              }}
                             />
                           </Grid>
                           <Grid item xs={12} sm={4}>
@@ -578,9 +599,9 @@ const BookingTour = () => {
                                 backgroundColor: '#ffffff',
                               }}
                               value={numberPhone}
-        onChange={(event) => {
-          setNumberPhone(event.target.value);
-        }}
+                              onChange={(event) => {
+                                setNumberPhone(event.target.value);
+                              }}
                             />
                           </Grid>
                           <Grid item xs={12} sm={6}>
@@ -777,7 +798,7 @@ const BookingTour = () => {
                         height: 48,
                         marginTop: '20px',
                         marginBottom: '20px',
-                        width: '100%', // Set width to 100% for full width
+                        width: '100%',
                         paddingX: '20px',
                       }}
                     >

@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './profile.scss';
 import { Navbar } from '@/layout';
+import axios from 'axios';
+import moment from 'moment';
+import { jwtDecode } from 'jwt-decode';
 
 import {
   Card,
@@ -24,59 +27,75 @@ import card_profile4 from '../../images/card_profile4.jpg'
 const card = [
   {
     id: 1,
-    img: 'https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80', 
-    title: 'Wooden House, Florida', 
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.', 
+    img: 'https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
+    title: 'Wooden House, Florida',
+    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
     rate: '5.0'
-  }, 
+  },
   {
     id: 2,
-    img: card_profile1, 
-    title: 'Wooden House, Florida', 
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.', 
+    img: card_profile1,
+    title: 'Wooden House, Florida',
+    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
     rate: '4.5'
-  }, 
+  },
   {
-    id: 3, 
-    img: card_profile2, 
-    title: 'Wooden House, Florida', 
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.', 
+    id: 3,
+    img: card_profile2,
+    title: 'Wooden House, Florida',
+    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
     rate: '4.0'
-  }, 
-  { id: 4,
-    img: card_profile3, 
-    title: 'Wooden House, Florida', 
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.', 
+  },
+  {
+    id: 4,
+    img: card_profile3,
+    title: 'Wooden House, Florida',
+    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
     rate: '4.0'
-  }, 
-  { id: 5,
-    img: card_profile4, 
-    title: 'Wooden House, Florida', 
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.', 
+  },
+  {
+    id: 5,
+    img: card_profile4,
+    title: 'Wooden House, Florida',
+    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
     rate: '4.0'
-  }, 
-  { id: 6,
-    img: 'https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80', 
-    title: 'Wooden House, Florida', 
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.', 
+  },
+  {
+    id: 6,
+    img: 'https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
+    title: 'Wooden House, Florida',
+    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
     rate: '4.0'
-  }, 
+  },
 
 ]
 
-
 export default function index() {
-
-  
+  const [user, setUser] = useState({});
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.user_id;
+      // Tiếp tục xử lý hoặc gọi API với userId đã lấy được
+      axios.get(`http://localhost:8080/api/user/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUser(userData);
+        })
+        .catch((error) => {
+          console.log('Error:', error);
+        });
+    }
+  }, []);
 
   return (
     <>
       <Navbar />
-
-      <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50">
+      <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50" style={{ height: "70px" }}>
         <div className="w-full container flex justify-center items-center flex-col">
           <p className="text-white font-secondary text-3xl 2xl:text-6xl">
-            Profile
           </p>
         </div>
       </section>
@@ -92,11 +111,11 @@ export default function index() {
             </div>
             <div className="flex flex-col items-center -mt-20">
               <img
-                src="https://vojislavd.com/ta-template-demo/assets/img/profile.jpg"
+                src={user.avatar}
                 className="w-40 border-4 border-white rounded-full"
               />
               <div className="flex items-center space-x-2 mt-2">
-                <p className="text-2xl">Amanda Ross</p>
+                <p className="text-2xl">{user.username}</p>
                 <span className="bg-blue-500 rounded-full p-1" title="Verified">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -114,10 +133,14 @@ export default function index() {
                   </svg>
                 </span>
               </div>
-              <p className="text-gray-700">
-                Senior Software Engineer at Tailwind CSS
-              </p>
-              <p className="text-sm text-gray-500">New York, USA</p>
+              {isPopupVisible && (
+                <div className="popup">
+                  {
+                    <h1>Popup nek</h1>
+                  }
+                </div>
+              )}
+              <p className="text-sm text-gray-500">{user.address}</p>
             </div>
             <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
               <div className="flex items-center space-x-4 mt-2">
@@ -163,11 +186,11 @@ export default function index() {
                 <ul className="mt-2 text-gray-700">
                   <li className="flex border-y py-2">
                     <span className="font-bold w-24">Full name:</span>
-                    <span className="text-gray-700">Amanda S. Ross</span>
+                    <span className="text-gray-700">{user.username}</span>
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Birthday:</span>
-                    <span className="text-gray-700">24 Jul, 1991</span>
+                    <span className="text-gray-700">{moment(user.dob).format("DD/MM/YYYY")}</span>
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Joined:</span>
@@ -176,22 +199,18 @@ export default function index() {
                     </span>
                   </li>
                   <li className="flex border-b py-2">
-                    <span className="font-bold w-24">Mobile:</span>
-                    <span className="text-gray-700">(123) 123-1234</span>
+                    <span className="font-bold w-24">Phone:</span>
+                    <span className="text-gray-700">{user.phoneNumber}</span>
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Email:</span>
                     <span className="text-gray-700">
-                      amandaross@example.com
+                      {user.email}
                     </span>
                   </li>
                   <li className="flex border-b py-2">
-                    <span className="font-bold w-24">Location:</span>
-                    <span className="text-gray-700">New York, US</span>
-                  </li>
-                  <li className="flex border-b py-2">
-                    <span className="font-bold w-24">Languages:</span>
-                    <span className="text-gray-700">English, Spanish</span>
+                    <span className="font-bold w-24">Address:</span>
+                    <span className="text-gray-700">{user.address}</span>
                   </li>
                   <li className="flex items-center border-b py-2 space-x-2">
                     <span className="font-bold w-24">Elsewhere:</span>
@@ -230,23 +249,7 @@ export default function index() {
                         ></path>
                       </svg>
                     </a>
-                    <a href="#" title="LinkedIn">
-                      <svg
-                        className="w-5 h-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 333333 333333"
-                        shape-rendering="geometricPrecision"
-                        text-rendering="geometricPrecision"
-                        image-rendering="optimizeQuality"
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                      >
-                        <path
-                          d="M166667 0c92048 0 166667 74619 166667 166667s-74619 166667-166667 166667S0 258715 0 166667 74619 0 166667 0zm-18220 138885h28897v14814l418 1c4024-7220 13865-14814 28538-14814 30514-1 36157 18989 36157 43691v50320l-30136 1v-44607c0-10634-221-24322-15670-24322-15691 0-18096 11575-18096 23548v45382h-30109v-94013zm-20892-26114c0 8650-7020 15670-15670 15670s-15672-7020-15672-15670 7022-15670 15672-15670 15670 7020 15670 15670zm-31342 26114h31342v94013H96213v-94013z"
-                          fill="#0077b5"
-                        ></path>
-                      </svg>
-                    </a>
+
                     <a href="#" title="Github">
                       <svg
                         className="w-5 h-5"
@@ -360,19 +363,6 @@ export default function index() {
                   </div>
                 </div>
               </div>
-              <div className="flex-1 bg-white rounded-lg shadow-xl mt-4 p-8">
-                <h4 className="text-xl text-gray-900 font-bold">About</h4>
-                <p className="mt-2 text-gray-700">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Nesciunt voluptates obcaecati numquam error et ut fugiat
-                  asperiores. Sunt nulla ad incidunt laboriosam, laudantium est
-                  unde natus cum numquam, neque facere. Lorem ipsum dolor sit
-                  amet consectetur adipisicing elit. Ut, magni odio magnam
-                  commodi sunt ipsum eum! Voluptas eveniet aperiam at maxime,
-                  iste id dicta autem odio laudantium eligendi commodi
-                  distinctio!
-                </p>
-              </div>
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-xl p-8">
@@ -412,7 +402,7 @@ export default function index() {
                         color="red"
                         variant="text"
                         className="!absolute top-2 right-6 rounded-full hover:cursor-pointer"
-                        // onClick={handleHeart}
+                      // onClick={handleHeart}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -544,11 +534,11 @@ export default function index() {
                       </div>
                     </CardBody>
                     <CardFooter className="pt-3">
-                      <Button size="md" fullWidth={true}  className='text-slate-500 hover:bg-slate-300 hover:text-slate-50'>
+                      <Button size="md" fullWidth={true} className='text-slate-500 hover:bg-slate-300 hover:text-slate-50'>
                         Booking
                       </Button>
                     </CardFooter>
-                  </Card>                 
+                  </Card>
                 ))
               }
             </div>

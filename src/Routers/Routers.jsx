@@ -5,17 +5,9 @@ import { Home, Login, Error, News, AboutUs, Gallery, ListTour, Profile, TourDeta
 import Register from '../pages/SignUp/index.jsx'
 import '../layout/Default/Default.jsx'
 import Sidebar from '../layout/Sidebar/index.jsx'
-import {ContextProvider} from '../layout/Sidebar/Context/ContextProvider.jsx'
 import BookingTour from '../pages/BookingTour/BookingTour.jsx'
-import homeAdmin from '../layout/Sidebar/dashboard.jsx'
+import homeAdmin from '../layout/AdminLayout/admin.jsx'
 
-const SidebarContext = () => {
-    return(
-        <ContextProvider>
-            <Sidebar/>
-        </ContextProvider>
-    )
-}
 
 // const Routers = () => {
 //     return (
@@ -100,7 +92,7 @@ export const routes = [
     },
     {
         path: "/sideBar",
-        page: SidebarContext
+        page: Sidebar
     },
     {
         path: "/booking-tour",
@@ -109,21 +101,27 @@ export const routes = [
     
 ]
 
-const adminRoutes = [
+export const adminRoutes = [
     {
         path: '/home-admin',
-        component: HomeAdmin,
+        page: homeAdmin,
     },
     {
         path: "*",
-        component: Error
+        page: Error
     }, 
+    {
+        path: "/sideBar ",
+        page: Sidebar
+    },
     // {
     //     path: "/user-admin",
     //     page: Error
     // }
 
 ];
+
+
 
 
 
