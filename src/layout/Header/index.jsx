@@ -4,15 +4,53 @@ import axios from 'axios'
 
 const Header = () => {
 
+  const [tours, setTours] = useState([]);
+  const [startPosition, setStartPosition] = useState('');
+  const [endPosition, setEndPosition] = useState('');
+  const [searchDate, setSearchDate] = useState('');
+
   useEffect(() => {
     axios.get('http://localhost:8080/api/tour/find-all')
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
-        console.log(tourData[0].tour_name);
+        console.log("Data tour ne: ", tourData);
       })
       .catch(error => console.log(error));
   }, []);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch('http://localhost:8080/api/tour/get-list-search-tour', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(searchParams),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('Login successful:', responseData);
+        toast.success('Login successful ~')
+        // navigate('/');
+      } else {
+        console.error('Login failed:', response.status);
+        const errorData = await response.json();
+        // console.error('Error Data:', errorData);
+        toast.error(errorData.error);
+      } x
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const searchParams = {
+    startPosition,
+    endPosition,
+    searchDate,
+  };
 
 
   return (
@@ -29,34 +67,47 @@ const Header = () => {
           </p>
 
           <button data-aos="fade-up" data-aos-duration="3000" className="btn">
-            <a href="#">Explore Now</a>
+            <a href="/list-tour">Explore Now</a>
           </button>
 
         </div>
 
         <div className="homeCard grid">
-
           <div data-aos="fade-right" data-aos-duration="2000" className="locationDiv">
             <label htmlFor="location">Start place</label>
-            <input type="text" placeholder="Choose Start Position" />
+            <select value={startPosition} onChange={(e) => setStartPosition(e.target.value)}>
+              <option value="">Choose Start Position</option>
+              {tours.map((tour) => (
+                <option value={tour._id} key={tour._id}>
+                  {tour?.start_position?.location_name}
+                </option>
+              ))}
+            </select>
           </div>
-
           <div data-aos="fade-right" data-aos-duration="2500" className="distDiv">
             <label htmlFor="location">End place</label>
-            <input type="text" placeholder="Choose End Position" />
+            <select value={endPosition} onChange={(e) => setEndPosition(e.target.value)}>
+              <option value="">Choose End Position</option>
+              {tours.map((tour) => (
+                <option value={tour._id} key={tour._id}>
+                  {tour?.start_position?.location_name}
+                </option>
+              ))}
+            </select>
           </div>
-
           <div data-aos="fade-right" data-aos-duration="3000" className="priceDiv">
             <label htmlFor="price">Date</label>
-            <input type="Date" placeholder="Search Date here" />
+            <input
+              type="date"
+              value={searchDate}
+              onChange={(e) => setSearchDate(e.target.value)}
+              placeholder="Search Date here"
+            />
           </div>
-
           <button data-aos="fade-left" data-aos-duration="2000" className="btn">
             Search
           </button>
-
         </div>
-
       </div>
     </section>
   )
