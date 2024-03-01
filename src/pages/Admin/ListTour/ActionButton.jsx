@@ -21,7 +21,7 @@ const ActionButton = ({ row }) => {
   }
 
   return (
-    <div>
+    <div className='flex gap-1'>
       <CustomButton
         id='loadbalancer-action-edit'
         title={'Edit'}

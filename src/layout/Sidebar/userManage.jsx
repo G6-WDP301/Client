@@ -27,8 +27,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Avatar from '@mui/material/Avatar';
-import UserList from '../../pages/Admin/ListTour/ListTour.jsx';
-import MonitorChart from '../../pages/Admin/ChartMonitor/MonitorChart.jsx';
+import UserList from '../../pages/Admin/ListTour/ListTour/jsx';
 
 import { SiYourtraveldottv } from 'react-icons/si';
 import './sidebar.scss';
@@ -111,31 +110,9 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const Index = () => {
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  // const [selectedItem, setSelectedItem] = useState('');
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  const customIcons = [SettingsIcon, LogoutIcon];
-
-  const dashboardIcons = [
-    GridViewIcon,
-    PeopleAltIcon,
-    BallotIcon,
-    TravelExploreIcon,
-    AssessmentIcon,
-  ];
-
-  return (
-    <div className='body'>
+const UserManage = () => {
+    return (
+        <div className='body'>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
@@ -270,19 +247,18 @@ const Index = () => {
             style={{ borderRadius: '10px', height: 'calc(100vh - 64px)' }}
           >
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-              <span className="text-2xl font-bold">Dashboard</span>
+              <span className="text-2xl font-bold">User List</span>
+              <div>
                 <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                  <UserList/>
-                  <div>
-                    <MonitorChart/>
-                  </div>
+                    <UserList/>
                 </Box>
+              </div>
             </Box>
           </div>
         </Box>
       </Box>
     </div>
-  );
-};
+    );
+}
 
-export default Index;
+export default UserManage;

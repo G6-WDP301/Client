@@ -108,7 +108,6 @@ export default function index() {
                     className="flex justify-around mt-[0.4rem]"
                   >
                     <div className="dropdownButton">
-
                       <button
                         id={`dropdownDefaultButton-${list.id}`}
                         onClick={() => toggleDropdown(list.id)}
@@ -132,7 +131,6 @@ export default function index() {
                           />
                         </svg>
                       </button>
-
 
                       <div
                         id={`dropdown-${list.id}`}
@@ -287,7 +285,6 @@ export default function index() {
                       Booking Now
                     </span>
                   </button>
-
                 </div>
               </div>
               <img

@@ -81,7 +81,7 @@ const TableListTourAdmin = () => {
     <Grid container>
       <Grid item xs={12} sx={{ p: 6 }}>
         <Card>
-          <CardHeader title='List Tour Admin' titleTypographyProps={{ variant: 'h6', color: 'primary' }} />
+          <CardHeader className='bg-slate-200 text-slate-400 font-bold' title='List Tour Admin' titleTypographyProps={{ variant: 'h6', color: 'primary' }} />
           
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer>
