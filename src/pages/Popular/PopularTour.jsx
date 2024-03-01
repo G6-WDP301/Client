@@ -9,6 +9,75 @@ import canada1 from '../../images/canada1.jpg'
 import Dubai from '../../images/44-1.jpg'
 import { useNavigate } from "react-router-dom";
 
+const listTour = [
+  {
+    id: 1, 
+    nameTour: 'Maldives tour', 
+    des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.', 
+    day: '12 Days', 
+    nameCountry: 'Maldives', 
+    hour: '12+', 
+    superb: '9.8 Superb', 
+    img: maldives1, 
+    price: '$2500 / per persons'
+  },
+  {
+    id: 2, 
+    nameTour: 'Roma', 
+    des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.', 
+    day: '6 Days', 
+    nameCountry: 'Italy', 
+    hour: '10+', 
+    superb: '9.5 Superb', 
+    img: Roma, 
+    price: '$1,300 / per persons'
+  },
+  {
+    id: 3, 
+    nameTour: 'France', 
+    des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.', 
+    day: '10 Days', 
+    nameCountry: 'France', 
+    hour: '6+', 
+    superb: '9.5 Superb', 
+    img: france1, 
+    price: '$400 / per persons'
+  },
+  {
+    id: 4, 
+    nameTour: 'Greece tour', 
+    des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.', 
+    day: '10 Days', 
+    nameCountry: 'Greece', 
+    hour: '12+', 
+    superb: '9.3 Superb', 
+    img: greece1, 
+    price: '$500 / per persons'
+  },
+  {
+    id: 5, 
+    nameTour: 'Canada tour', 
+    des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.', 
+    day: '7 Days', 
+    nameCountry: 'Canada', 
+    hour: '10+', 
+    superb: '9.3 Superb', 
+    img: canada1, 
+    price: '$300 / per persons'
+  },
+  {
+    id: 6, 
+    nameTour: 'Dubai tour', 
+    des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.', 
+    day: '7 Days', 
+    nameCountry: 'Dubai', 
+    hour: '10+', 
+    superb: '9.8 Superb', 
+    img: Dubai, 
+    price: '$200 / per persons'
+  },
+]
+
 export default function PopularTour() {
 
   const navigate = useNavigate();
@@ -74,6 +143,7 @@ export default function PopularTour() {
                 <p className="text-right">$2500 / per persons</p>
               </figcaption>
             </figure>
+
             <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative photo transition-all duration-1000">
               <div className="w-[100%] h-[100%] bottom-photo absolute bg-white flex flex-col justify-center px-5">
                 <p className="text-3xl text-color3 capitalize font-secondary">
@@ -121,7 +191,7 @@ export default function PopularTour() {
               {/* Simplified the figcaption */}
               <figcaption className="absolute text-white bottom-8 right-10 fig">
                 <p className="capitalize font-secondary text-3xl">Roma</p>
-                {/* Removed redundant information */}
+                <p className="text-right">$2500 / per persons</p>
               </figcaption>
             </figure>
 
