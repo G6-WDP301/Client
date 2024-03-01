@@ -27,6 +27,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Avatar from '@mui/material/Avatar';
+import UserList from '../../pages/Admin/ListTour/ListTour.jsx';
+import MonitorChart from '../../pages/Admin/ChartMonitor/MonitorChart.jsx';
 
 import { SiYourtraveldottv } from 'react-icons/si';
 import './sidebar.scss';
@@ -35,11 +37,11 @@ import avatar from '../../images/avatar.jpg';
 import { Link } from 'react-router-dom';
 
 const menuItems = [
-  { text: 'Dashboard', link: '/dashboard' },
-  { text: 'User Manage', link: '/user-manage' },
-  { text: 'Booking Manage', link: '/booking-manage' },
-  { text: 'Tour Manage', link: '/tour-manage' },
-  { text: 'Report', link: '/report' },
+  { text: 'Dashboard', link: '/admin/dashboard' },
+  { text: 'User Manage', link: '/admin/user-manage' },
+  { text: 'Booking Manage', link: '/admin/booking-manage' },
+  { text: 'Tour Manage', link: '/admin/tour-manage' },
+  { text: 'Report', link: '/admin/report' },
 ];
 
 const drawerWidth = 240;
@@ -112,7 +114,7 @@ const Drawer = styled(MuiDrawer, {
 const Index = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [selectedItem, setSelectedItem] = useState('');
+  // const [selectedItem, setSelectedItem] = useState('');
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -133,7 +135,7 @@ const Index = () => {
   ];
 
   return (
-    <>
+    <div className='body'>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
@@ -268,15 +270,18 @@ const Index = () => {
             style={{ borderRadius: '10px', height: 'calc(100vh - 64px)' }}
           >
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-              <span className="text-2xl font-bold">User List</span>
-              <div>
-              {/* {selectedItem} */}
-              </div>
+              <span className="text-2xl font-bold">Dashboard</span>
+                <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                  <UserList/>
+                  <div>
+                    <MonitorChart/>
+                  </div>
+                </Box>
             </Box>
           </div>
         </Box>
       </Box>
-    </>
+    </div>
   );
 };
 

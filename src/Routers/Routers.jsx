@@ -34,6 +34,7 @@ import homeAdmin from '../layout/AdminLayout/admin.jsx'
 // }
 
 // export default Routers
+import TableListTourAdmin from '../pages/Admin/ListTour/ListTour.jsx';
 
 export const routes = [
     {
@@ -75,7 +76,7 @@ export const routes = [
         page: Profile
     }, 
     {
-        path: "/tour-detail",
+        path: "/tour-detail/:id",
         page: TourDetail
     }, 
     {
@@ -93,11 +94,15 @@ export const routes = [
     {
         path: "/sideBar",
         page: Sidebar
+    },  
+    {
+        path: "/booking-tour/:id",
+        page: BookingTour
     },
     {
-        path: "/booking-tour",
-        page: BookingTour
-    }
+        path: "/admin/list-tour",
+        page: TableListTourAdmin
+    },
     
 ]
 
