@@ -3,6 +3,7 @@ import ViewTour from '../pages/ViewTour/ViewTour';
 import ForgotPassword from '../pages/ForgotPassword/ForgotPassword'
 import { Home, Login, Error, News, AboutUs, Gallery, ListTour, Profile, TourDetail, Admin } from '@/pages';
 import Register from '../pages/SignUp/index.jsx'
+import Payment from '../pages/Payment/Payment.jsx';
 import '../layout/Default/Default.jsx'
 import Sidebar from '../layout/Sidebar/index.jsx'
 import BookingTour from '../pages/BookingTour/BookingTour.jsx'
@@ -58,27 +59,27 @@ export const routes = [
     {
         path: "*",
         page: Error
-    }, 
+    },
     {
         path: "/news",
         page: News
-    }, 
+    },
     {
         path: "/gallery",
         page: Gallery
-    }, 
+    },
     {
         path: "/list-tour",
         page: ListTour
-    }, 
+    },
     {
         path: "/profile",
         page: Profile
-    }, 
+    },
     {
         path: "/tour-detail/:id",
         page: TourDetail
-    }, 
+    },
     {
         path: "/admin",
         page: Admin
@@ -100,10 +101,15 @@ export const routes = [
         page: BookingTour
     },
     {
+        path: "/payment",
+        page: Payment,
+        isShowHeader: true
+    },
+    {
         path: "/admin/list-tour",
         page: TableListTourAdmin
     },
-    
+
 ]
 
 export const adminRoutes = [

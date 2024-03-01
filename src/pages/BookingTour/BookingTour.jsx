@@ -27,103 +27,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
-
-const tour = [
-  {
-    id: 1,
-    imgSrc: img,
-    destTitle:
-      'Đông Bắc: Hà Nội - Hà Giang - Lũng Cú - Đồng Văn - Mã Pí Lèng - Mèo Vạc - Cao Bằng - Thác Bản Giốc - Hồ Ba Bể',
-    type: 'NDSGN307-008-080224VU-F',
-    start_time: '31/1/2024',
-    end_time: '3/2/2024',
-    start_location: 'Hà Nội',
-    number: '3',
-    locations: [
-      {
-        location: 'SB NỘI BÀI – HÀ NỘI',
-        time: '31/01/2024',
-        details:
-          'Quý khách tập trung tại sân bay Tân Sơn Nhất (Ga nội địa), hướng dẫn viên hỗ trợ khách làm thủ tục đáp chuyến bay đi Hà Nội. Đến sân bay Nội Bài, xe và HDV Vietravel đón Quý khách đi Hà Nội nhận phòng khách sạn nghỉ ngơi hoặc tự do đi tham quan.',
-      },
-      {
-        location: 'HÀ NỘI - HÀ GIANG 01 bữa ăn: (Sáng)',
-        time: '01/02/2024',
-        details:
-          'Quý khách tập trung tại sân bay Tân Sơn Nhất (Ga nội địa), hướng dẫn viên hỗ trợ khách làm thủ tục đáp chuyến bay đi Hà Nội. Đến sân bay Nội Bài, xe và HDV Vietravel đón Quý khách đi Hà Nội nhận phòng khách sạn nghỉ ngơi hoặc tự do đi tham quan.',
-      },
-      {
-        location: 'HÀ GIANG - QUẢN BẠ - YÊN MINH – ĐỒNG VĂN 01 bữa ăn: (Sáng)',
-        time: '02/02/2024',
-        details:
-          'Quý khách tập trung tại sân bay Tân Sơn Nhất (Ga nội địa), hướng dẫn viên hỗ trợ khách làm thủ tục đáp chuyến bay đi Hà Nội. Đến sân bay Nội Bài, xe và HDV Vietravel đón Quý khách đi Hà Nội nhận phòng khách sạn nghỉ ngơi hoặc tự do đi tham quan.',
-      },
-      {
-        location: 'ĐỒNG VĂN – MÈO VẠC – CAO BẰNG 01 bữa ăn: (Sáng)',
-        time: '03/02/2024',
-        details:
-          'Quý khách tập trung tại sân bay Tân Sơn Nhất (Ga nội địa), hướng dẫn viên hỗ trợ khách làm thủ tục đáp chuyến bay đi Hà Nội. Đến sân bay Nội Bài, xe và HDV Vietravel đón Quý khách đi Hà Nội nhận phòng khách sạn nghỉ ngơi hoặc tự do đi tham quan.',
-      },
-      {
-        location:
-          'THÁC BẢN GIỐC – ĐỘNG NGƯỜM NGAO – LÀNG ĐÁ KHUỔI KY 01 bữa ăn: (Sáng)',
-        time: '0/042/2024',
-        details:
-          'Quý khách tập trung tại sân bay Tân Sơn Nhất (Ga nội địa), hướng dẫn viên hỗ trợ khách làm thủ tục đáp chuyến bay đi Hà Nội. Đến sân bay Nội Bài, xe và HDV Vietravel đón Quý khách đi Hà Nội nhận phòng khách sạn nghỉ ngơi hoặc tự do đi tham quan.',
-      },
-      {
-        location: 'CAO BẰNG – KHU DI TÍCH PÁC PÓ – BA BỂ 01 bữa ăn: (Sáng)',
-        time: '04/02/2024',
-        details:
-          'Quý khách tập trung tại sân bay Tân Sơn Nhất (Ga nội địa), hướng dẫn viên hỗ trợ khách làm thủ tục đáp chuyến bay đi Hà Nội. Đến sân bay Nội Bài, xe và HDV Vietravel đón Quý khách đi Hà Nội nhận phòng khách sạn nghỉ ngơi hoặc tự do đi tham quan.',
-      },
-      {
-        location: 'BA BỂ - BẮC CẠN – HÀ NỘI – SB NỘI BÀI 01 bữa ăn: (Sáng)',
-        time: '04/02/2024',
-        details:
-          'Quý khách tập trung tại sân bay Tân Sơn Nhất (Ga nội địa), hướng dẫn viên hỗ trợ khách làm thủ tục đáp chuyến bay đi Hà Nội. Đến sân bay Nội Bài, xe và HDV Vietravel đón Quý khách đi Hà Nội nhận phòng khách sạn nghỉ ngơi hoặc tự do đi tham quan.',
-      },
-    ],
-    panoramaImages: [img, img, img],
-    price: '720000',
-    Time: '2 ngày 1 đêm',
-  },
-];
-
-const itemData = [
-  {
-    img: img,
-    title: 'Bed',
-  },
-  {
-    img: maldivies,
-    title: 'Bed',
-  },
-  {
-    img: map,
-    title: 'Bed',
-  },
-  {
-    img: canada,
-    title: 'Bed',
-  },
-  {
-    img: france,
-    title: 'Bed',
-  },
-  {
-    img: img1,
-    title: 'Bed',
-  },
-  {
-    img: img2,
-    title: 'Bed',
-  },
-  {
-    img: img3,
-    title: 'Bed',
-  },
-];
+import { toast } from 'react-toastify';
 
 const BookingTour = () => {
 
@@ -182,14 +86,16 @@ const BookingTour = () => {
   useEffect(() => {
     axios.get(`http://localhost:8080/api/tour/${id}`)
       .then((response) => {
-        // const tours = response.data.tour.tour.tour;
         const tours = Object.values(response.data.tour);
         setTourData(tours);
+        console.log(tourData);
       })
       .catch(error => console.log(error));
   }, []);
 
-  console.log(tourData);
+  const handleBooking = () => {
+    toast('Feature being updated, please come back later!');
+  };
 
   return (
     <>
@@ -205,139 +111,334 @@ const BookingTour = () => {
         style={{ padding: '2px', marginTop: '10px', marginBottom: '20px' }}
       >
         <Grid container spacing={3}>
-          {tourData.map((tourItem) => (
-            <Grid key={tourItem?._id} item xs={12} sm={12}>
+          <Grid key={tourData?._id} item xs={12} sm={12}>
+            <Grid
+              container
+              style={{
+                padding: '16px',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              }}
+            >
+              <Grid item xs={12} sm={4} sx={{ textAlign: 'left' }}>
+                <CardMedia
+                  component="img"
+                  image={tourData[0]?.tour_img}
+                  alt="Live from space album cover"
+                  sx={{ borderRadius: '10px 0px 0px 10px' }}
+                />
+              </Grid>
               <Grid
-                container
-                style={{
-                  padding: '16px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                }}
+                item
+                xs={12}
+                sm={8}
+                sx={{ textAlign: 'left', backgroundColor: '#f2f1ed' }}
               >
-                <Grid item xs={12} sm={4} sx={{ textAlign: 'left' }}>
-                  <CardMedia
-                    component="img"
-                    image={tourItem?.tour_img}
-                    alt="Live from space album cover"
-                    sx={{ borderRadius: '10px 0px 0px 10px' }}
-                  />
+                <Typography
+                  sx={{
+                    marginBottom: '8px',
+                    fontFamily: 'Arial',
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                    color: '#fa4807',
+                    paddingLeft: '20px',
+                  }}
+                >
+                  {tourData[0]?.tour_description}
+                </Typography>
+                <Typography
+                  sx={{
+                    marginBottom: '8px',
+                    fontFamily: 'Arial',
+                    fontSize: '15px',
+                    color: '#000000',
+                    paddingLeft: '20px',
+                  }}
+                >
+                  Mã tour: <b>{tourData[0]?._id}</b>
+                </Typography>
+                <Typography
+                  sx={{
+                    marginBottom: '8px',
+                    fontFamily: 'Arial',
+                    fontSize: '15px',
+                    color: '#000000',
+                    paddingLeft: '20px',
+                  }}
+                >
+                  Giá vé: <b>{(tourData[0]?.tour_price)}$/khách</b>
+                </Typography>
+                <Typography
+                  sx={{
+                    marginBottom: '8px',
+                    fontFamily: 'Arial',
+                    fontSize: '15px',
+                    color: '#000000',
+                    paddingLeft: '20px',
+                  }}
+                >
+                  Khởi hành: <b>{moment(tourData[0]?.start_date).format("DD/MM/YYYY")}</b>
+
+
+                </Typography>
+                <Typography
+                  sx={{
+                    marginBottom: '8px',
+                    fontFamily: 'Arial',
+                    fontSize: '15px',
+                    color: '#000000',
+                    paddingLeft: '20px',
+                  }}
+                >
+                  Nơi khởi hành: <b>{tourData[0]?.start_position?.location_name}</b>
+                </Typography>
+                <Typography
+                  sx={{
+                    marginBottom: '8px',
+                    fontFamily: 'Arial',
+                    fontSize: '15px',
+                    color: '#000000',
+                    paddingLeft: '20px',
+                  }}
+                >
+                  Số chỗ còn nhận: <b>{tourData[0]?.max_tourist}</b>
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2}>
+              <Grid item md={8} xs={12} className="left">
+                <Typography
+                  variant="h2"
+                  sx={{
+                    marginBottom: '33px',
+                    marginTop: '45px',
+                    fontSize: '30px',
+                    fontWeight: '700',
+                    color: '#2d4271',
+                    lineHeight: '38px',
+                    width: '100%',
+                  }}
+                >
+                  Tổng quan chuyến đi
+                </Typography>
+                <Typography
+                  variant="h3"
+                  sx={{
+                    marginBottom: '33px',
+                    marginTop: '45px',
+                    fontSize: '20px',
+                    lineHeight: '40px',
+                    fontWeight: '700',
+                    color: '#2d4271',
+                    width: '100%',
+                  }}
+                >
+                  Thông tin liên lạc
+                </Typography>
+                <Grid
+                  sx={{
+                    textAlign: 'left',
+                    backgroundColor: '#f2f1ed',
+                    borderRadius: '10px',
+                  }}
+                >
+                  <FormGroup
+                    sx={{
+                      alignItems: 'center',
+                      borderRadius: '10px',
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      justifyContent: 'space-between',
+                      padding: '1rem',
+                    }}
+                  >
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          id="additionalText1"
+                          label="Họ và tên"
+                          fullWidth
+                          sx={{
+                            mt: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            marginBottom: '20px',
+                            backgroundColor: '#ffffff',
+                          }}
+                          value={fullName}
+                          onChange={(event) => {
+                            setFullName(event.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          id="email"
+                          label="Emai"
+                          fullWidth
+                          sx={{
+                            mt: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            marginBottom: '20px',
+                            backgroundColor: '#ffffff',
+                          }}
+                          value={email}
+                          onChange={(event) => {
+                            setEmail(event.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          id="sdt"
+                          label="Số điện thoại"
+                          fullWidth
+                          sx={{
+                            mt: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            marginBottom: '20px',
+                            backgroundColor: '#ffffff',
+                          }}
+                          value={telephone}
+                          onChange={(event) => {
+                            setTelephone(event.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          id="additionalText4"
+                          label="Địa chỉ"
+                          fullWidth
+                          sx={{
+                            mt: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            marginBottom: '20px',
+                            backgroundColor: '#ffffff',
+                          }}
+                          value={address}
+                          onChange={(event) => {
+                            setAddress(event.target.value);
+                          }}
+                        />
+                      </Grid>
+                    </Grid>
+                  </FormGroup>
+                </Grid>
+                <Typography
+                  variant="h3"
+                  sx={{
+                    marginBottom: '33px',
+                    marginTop: '45px',
+                    fontSize: '25px',
+                    lineHeight: '40px',
+                    fontWeight: '700',
+                    color: '#2d4271',
+                    width: '100%',
+                  }}
+                >
+                  Hành khách
+                </Typography>
+                <TextField
+                  fullWidth
+                  id="number-people"
+                  label="Số lượng hành khách"
+                  placeholder="1"
+                  type="number"
+                  onKeyDown={(e) =>
+                    ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()
+                  }
+                  InputProps={{
+                    inputProps: {
+                      min: 1,
+                      // max: tourItem.number,
+                    },
+                  }}
+                  customvalue={numberPeople}
+                  customsetvalue={setNumberPeople}
+                />
+
+                <Typography
+                  variant="h3"
+                  sx={{
+                    marginBottom: '33px',
+                    marginTop: '45px',
+                    fontSize: '25px',
+                    lineHeight: '40px',
+                    fontWeight: '700',
+                    color: '#2d4271',
+                    width: '100%',
+                  }}
+                >
+                  Lựa chọn thông tin tư vấn
+                </Typography>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={type === 'option1'}
+                      onChange={handleOption1Change}
+                    />
+                  }
+                  label="Nhập danh sách khách hàng"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={type === 'option2'}
+                      onChange={handleOption2Change}
+                    />
+                  }
+                  label={
+                    <span>Tôi cần được nhân viên tư vấn <strong style={{ fontStyle: "italic" }}>G6GO</strong> trợ giúp nhập thông tin đăng ký dịch vụ</span>
+                  }
+                />
+                <Grid
+                  sx={{
+                    textAlign: 'left',
+                    backgroundColor: '#f2f1ed',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                    marginTop: '20px',
+                  }}
+                >
+                  {type === 'option2' && (
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={12}>
+                        <TextField
+                          fullWidth
+                          multiline
+                          id="loadbalancer-create-ip-address"
+                          label="Vui lòng nhập nội dung lời nhắn bằng tiếng Anh hoặc tiếng Việt"
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              alignItems: 'baseline',
+                            },
+                            backgroundColor: '#ffffff',
+                          }}
+                          customvalue={textComment}
+                          customsetvalue={setTextComment}
+                        />
+                      </Grid>
+                    </Grid>
+                  )}
                 </Grid>
                 <Grid
-                  item
-                  xs={12}
-                  sm={8}
-                  sx={{ textAlign: 'left', backgroundColor: '#f2f1ed' }}
+                  sx={{
+                    textAlign: 'left',
+                    backgroundColor: '#f2f1ed',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                    marginTop: '20px',
+                  }}
                 >
-                  <Typography
-                    sx={{
-                      marginBottom: '8px',
-                      fontFamily: 'Arial',
-                      fontSize: '20px',
-                      fontWeight: 'bold',
-                      color: '#fa4807',
-                      paddingLeft: '20px',
-                    }}
-                  >
-                    {tourItem.destTitle}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      marginBottom: '8px',
-                      fontFamily: 'Arial',
-                      fontSize: '15px',
-                      color: '#000000',
-                      paddingLeft: '20px',
-                    }}
-                  >
-                    Mã tour: <b>{tourItem._id}</b>
-                  </Typography>
-                  <Typography
-                    sx={{
-                      marginBottom: '8px',
-                      fontFamily: 'Arial',
-                      fontSize: '15px',
-                      color: '#000000',
-                      paddingLeft: '20px',
-                    }}
-                  >
-                    Giá vé: <b>{(tourItem.tour_price)}$/khách</b>
-                  </Typography>
-                  <Typography
-                    sx={{
-                      marginBottom: '8px',
-                      fontFamily: 'Arial',
-                      fontSize: '15px',
-                      color: '#000000',
-                      paddingLeft: '20px',
-                    }}
-                  >
-                    {/* Khởi hành: <b>{tourItem.start_date}</b> */}
-                    Khởi hành: <b>{moment(tourItem.start_date).format("DD/MM/YYYY")}</b>
-
-
-                  </Typography>
-                  <Typography
-                    sx={{
-                      marginBottom: '8px',
-                      fontFamily: 'Arial',
-                      fontSize: '15px',
-                      color: '#000000',
-                      paddingLeft: '20px',
-                    }}
-                  >
-                    Nơi khởi hành: <b>{tourItem.start_position?.location_name}</b>
-                  </Typography>
-                  <Typography
-                    sx={{
-                      marginBottom: '8px',
-                      fontFamily: 'Arial',
-                      fontSize: '15px',
-                      color: '#000000',
-                      paddingLeft: '20px',
-                    }}
-                  >
-                    Số chỗ còn nhận: <b>{tourItem.max_tourist}</b>
-                  </Typography>
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={2}>
-                <Grid item md={8} xs={12} className="left">
-                  <Typography
-                    variant="h2"
-                    sx={{
-                      marginBottom: '33px',
-                      marginTop: '45px',
-                      fontSize: '30px',
-                      fontWeight: '700',
-                      color: '#2d4271',
-                      lineHeight: '38px',
-                      width: '100%',
-                    }}
-                  >
-                    Tổng quan chuyến đi
-                  </Typography>
-                  <Typography
-                    variant="h3"
-                    sx={{
-                      marginBottom: '33px',
-                      marginTop: '45px',
-                      fontSize: '20px',
-                      lineHeight: '40px',
-                      fontWeight: '700',
-                      color: '#2d4271',
-                      width: '100%',
-                    }}
-                  >
-                    Thông tin liên lạc
-                  </Typography>
-                  <Grid
-                    sx={{
-                      textAlign: 'left',
-                      backgroundColor: '#f2f1ed',
-                      borderRadius: '10px',
-                    }}
-                  >
+                  {type === 'option1' && (
                     <FormGroup
                       sx={{
                         alignItems: 'center',
@@ -349,7 +450,7 @@ const BookingTour = () => {
                       }}
                     >
                       <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={4}>
                           <TextField
                             id="additionalText1"
                             label="Họ và tên"
@@ -361,16 +462,16 @@ const BookingTour = () => {
                               marginBottom: '20px',
                               backgroundColor: '#ffffff',
                             }}
-                            value={fullName}
+                            value={fullNamePeople}
                             onChange={(event) => {
-                              setFullName(event.target.value);
+                              setFullNamePeople(event.target.value);
                             }}
                           />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={4}>
                           <TextField
-                            id="email"
-                            label="Emai"
+                            id="additionalText1"
+                            label="Giới tính"
                             fullWidth
                             sx={{
                               mt: 2,
@@ -379,9 +480,27 @@ const BookingTour = () => {
                               marginBottom: '20px',
                               backgroundColor: '#ffffff',
                             }}
-                            value={email}
+                            value={gender}
                             onChange={(event) => {
-                              setEmail(event.target.value);
+                              setGender(event.target.value);
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                          <TextField
+                            label="Ngày sinh"
+                            type="datetime-local"
+                            value={birthDate}
+                            onChange={handleBirthDateChange}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            sx={{
+                              mt: 2,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              marginBottom: '20px',
+                              backgroundColor: '#ffffff',
                             }}
                           />
                         </Grid>
@@ -397,9 +516,9 @@ const BookingTour = () => {
                               marginBottom: '20px',
                               backgroundColor: '#ffffff',
                             }}
-                            value={telephone}
+                            value={numberPhone}
                             onChange={(event) => {
-                              setTelephone(event.target.value);
+                              setNumberPhone(event.target.value);
                             }}
                           />
                         </Grid>
@@ -415,95 +534,13 @@ const BookingTour = () => {
                               marginBottom: '20px',
                               backgroundColor: '#ffffff',
                             }}
-                            value={address}
+                            value={addressPeople}
                             onChange={(event) => {
-                              setAddress(event.target.value);
+                              setAddressPeople(event.target.value);
                             }}
                           />
                         </Grid>
-                      </Grid>
-                    </FormGroup>
-                  </Grid>
-                  <Typography
-                    variant="h3"
-                    sx={{
-                      marginBottom: '33px',
-                      marginTop: '45px',
-                      fontSize: '25px',
-                      lineHeight: '40px',
-                      fontWeight: '700',
-                      color: '#2d4271',
-                      width: '100%',
-                    }}
-                  >
-                    Hành khách
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    id="number-people"
-                    label="Số lượng hành khách"
-                    placeholder="1"
-                    type="number"
-                    onKeyDown={(e) =>
-                      ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()
-                    }
-                    InputProps={{
-                      inputProps: {
-                        min: 1,
-                        max: tourItem.number,
-                      },
-                    }}
-                    customvalue={numberPeople}
-                    customsetvalue={setNumberPeople}
-                  />
 
-                  <Typography
-                    variant="h3"
-                    sx={{
-                      marginBottom: '33px',
-                      marginTop: '45px',
-                      fontSize: '25px',
-                      lineHeight: '40px',
-                      fontWeight: '700',
-                      color: '#2d4271',
-                      width: '100%',
-                    }}
-                  >
-                    Lựa chọn thông tin tư vấn
-                  </Typography>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={type === 'option1'}
-                        onChange={handleOption1Change}
-                      />
-                    }
-                    label="Nhập danh sách khách hàng"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={type === 'option2'}
-                        onChange={handleOption2Change}
-                      />
-                    }
-                    label={
-                      <span>Tôi cần được nhân viên tư vấn <strong style={{ fontStyle: "italic" }}>G6GO</strong> trợ giúp nhập thông tin đăng ký dịch vụ</span>
-                    }
-                  />
-                  <Grid
-                    sx={{
-                      textAlign: 'left',
-                      backgroundColor: '#f2f1ed',
-                      borderRadius: '10px',
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      justifyContent: 'space-between',
-                      marginTop: '20px',
-                    }}
-                  >
-                    {type === 'option2' && (
-                      <Grid container spacing={2}>
                         <Grid item xs={12} sm={12}>
                           <TextField
                             fullWidth
@@ -521,308 +558,175 @@ const BookingTour = () => {
                           />
                         </Grid>
                       </Grid>
-                    )}
-                  </Grid>
-                  <Grid
-                    sx={{
-                      textAlign: 'left',
-                      backgroundColor: '#f2f1ed',
-                      borderRadius: '10px',
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      justifyContent: 'space-between',
-                      marginTop: '20px',
-                    }}
-                  >
-                    {type === 'option1' && (
-                      <FormGroup
-                        sx={{
-                          alignItems: 'center',
-                          borderRadius: '10px',
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          justifyContent: 'space-between',
-                          padding: '1rem',
-                        }}
-                      >
-                        <Grid container spacing={2}>
-                          <Grid item xs={12} sm={4}>
-                            <TextField
-                              id="additionalText1"
-                              label="Họ và tên"
-                              fullWidth
-                              sx={{
-                                mt: 2,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                marginBottom: '20px',
-                                backgroundColor: '#ffffff',
-                              }}
-                              value={fullNamePeople}
-                              onChange={(event) => {
-                                setFullNamePeople(event.target.value);
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={4}>
-                            <TextField
-                              id="additionalText1"
-                              label="Giới tính"
-                              fullWidth
-                              sx={{
-                                mt: 2,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                marginBottom: '20px',
-                                backgroundColor: '#ffffff',
-                              }}
-                              value={gender}
-                              onChange={(event) => {
-                                setGender(event.target.value);
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={4}>
-                            <TextField
-                              label="Ngày sinh"
-                              type="datetime-local"
-                              value={birthDate}
-                              onChange={handleBirthDateChange}
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              sx={{
-                                mt: 2,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                marginBottom: '20px',
-                                backgroundColor: '#ffffff',
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              id="sdt"
-                              label="Số điện thoại"
-                              fullWidth
-                              sx={{
-                                mt: 2,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                marginBottom: '20px',
-                                backgroundColor: '#ffffff',
-                              }}
-                              value={numberPhone}
-                              onChange={(event) => {
-                                setNumberPhone(event.target.value);
-                              }}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <TextField
-                              id="additionalText4"
-                              label="Địa chỉ"
-                              fullWidth
-                              sx={{
-                                mt: 2,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                marginBottom: '20px',
-                                backgroundColor: '#ffffff',
-                              }}
-                              value={addressPeople}
-                              onChange={(event) => {
-                                setAddressPeople(event.target.value);
-                              }}
-                            />
-                          </Grid>
-
-                          <Grid item xs={12} sm={12}>
-                            <TextField
-                              fullWidth
-                              multiline
-                              id="loadbalancer-create-ip-address"
-                              label="Vui lòng nhập nội dung lời nhắn bằng tiếng Anh hoặc tiếng Việt"
-                              sx={{
-                                '& .MuiOutlinedInput-root': {
-                                  alignItems: 'baseline',
-                                },
-                                backgroundColor: '#ffffff',
-                              }}
-                              customvalue={textComment}
-                              customsetvalue={setTextComment}
-                            />
-                          </Grid>
-                        </Grid>
-                      </FormGroup>
-                    )}
-                  </Grid>
+                    </FormGroup>
+                  )}
                 </Grid>
-                <Grid item md={4} xs={12} className="right">
-                  <Grid
+              </Grid>
+              <Grid item md={4} xs={12} className="right">
+                <Grid
+                  sx={{
+                    textAlign: 'left',
+                    backgroundColor: '#f2f1ed',
+                  }}
+                >
+                  <Typography
+                    variant="h3"
                     sx={{
-                      textAlign: 'left',
-                      backgroundColor: '#f2f1ed',
+                      marginBottom: '33px',
+                      marginTop: '45px',
+                      fontSize: '20px',
+                      lineHeight: '40px',
+                      fontWeight: '700',
+                      color: '#2d4271',
+                      width: '100%',
+                      paddingLeft: '20px',
                     }}
                   >
-                    <Typography
-                      variant="h3"
+                    Tóm tắt chuyến đi
+                  </Typography>
+                  <Grid item xs={12} sm={12} sx={{ textAlign: 'left' }}>
+                    <CardMedia
+                      component="img"
+                      image={tourData[0]?.tour_img}
+                      alt="Live from space album cover"
                       sx={{
-                        marginBottom: '33px',
-                        marginTop: '45px',
-                        fontSize: '20px',
-                        lineHeight: '40px',
-                        fontWeight: '700',
-                        color: '#2d4271',
-                        width: '100%',
+                        borderRadius: '10px 0px 0px 10px',
                         paddingLeft: '20px',
-                      }}
-                    >
-                      Tóm tắt chuyến đi
-                    </Typography>
-                    <Grid item xs={12} sm={12} sx={{ textAlign: 'left' }}>
-                      <CardMedia
-                        component="img"
-                        image={tourItem?.tour_img}
-                        alt="Live from space album cover"
-                        sx={{
-                          borderRadius: '10px 0px 0px 10px',
-                          paddingLeft: '20px',
-                          paddingRight: '20px',
-                          marginBottom: '20px',
-                        }}
-                      />
-                    </Grid>
-                    <Typography
-                      sx={{
-                        marginBottom: '8px',
-                        fontFamily: 'Arial',
-                        fontSize: '15px',
-                        color: '#000000',
-                        paddingLeft: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <EventIcon sx={{ marginRight: '8px' }} />
-                      <span style={{ marginRight: '7px', color: '#2d4271' }}>
-                        {' '}
-                        Ngày bắt đầu:
-                      </span>
-                      <b>{moment(tourItem.start_date).format("DD/MM/YYYY")}</b>
-                    </Typography>
-                    <Typography
-                      sx={{
-                        marginBottom: '8px',
-                        fontFamily: 'Arial',
-                        fontSize: '15px',
-                        color: '#000000',
-                        paddingLeft: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <EventIcon sx={{ marginRight: '8px' }} />
-                      <span style={{ marginRight: '7px', color: '#2d4271' }}>
-                        Ngày kết thúc:
-                      </span>{' '}
-                      <b>{moment(tourItem.end_date).format("DD/MM/YYYY")}</b>
-                    </Typography>
-                    <Typography
-                      sx={{
-                        marginBottom: '8px',
-                        fontFamily: 'Arial',
-                        fontSize: '15px',
-                        color: '#000000',
-                        paddingLeft: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingTop: '10px',
-                      }}
-                    >
-                      <span>
-                        <GroupsIcon sx={{ marginRight: '8px' }} />
-                        <b style={{ marginRight: '30px', color: '#2d4271' }}>
-                          Hành khách:
-                        </b>
-                      </span>
-                      <b style={{ marginLeft: 'auto', paddingRight: '20px' }}>
-                        {numberPeople} x {(tourItem.tour_price)}$/khách
-                      </b>
-                    </Typography>
-
-                    <Typography
-                      sx={{
-                        marginBottom: '8px',
-                        fontFamily: 'Arial',
-                        fontSize: '15px',
-                        color: '#000000',
-                        paddingLeft: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingTop: '10px',
-                      }}
-                    >
-                      <b style={{ marginRight: '30px', color: '#2d4271' }}>
-                        Chi phí{' '}
-                      </b>
-                      <b style={{ marginLeft: 'auto', paddingRight: '20px' }}>
-                        {formatPrice(
-                          calculateTotalCost(tourItem.tour_price, numberPeople)
-                        )}
-                      </b>
-                    </Typography>
-
-                    <Divider />
-                    <Typography
-                      sx={{
-                        marginBottom: '8px',
-                        fontFamily: 'Arial',
-                        fontSize: '18px',
-                        color: '#000000',
-                        paddingLeft: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingTop: '10px',
-                      }}
-                    >
-                      <b style={{ color: '#2d4271' }}>Tổng Thanh Toán</b>
-                      <b
-                        style={{
-                          color: 'red',
-                          fontSize: '25px',
-                          marginLeft: 'auto',
-                          paddingRight: '20px',
-                        }}
-                      >
-                        {formatPrice(
-                          calculateTotalCost(tourItem.tour_price, numberPeople)
-                        )}
-                      </b>
-                    </Typography>
-                    <Divider />
-                    <Button
-                      style={{
-                        background:
-                          'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-                        border: 0,
-                        borderRadius: 10,
-                        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-                        color: 'white',
-                        height: 48,
-                        marginTop: '20px',
+                        paddingRight: '20px',
                         marginBottom: '20px',
-                        width: '100%',
-                        paddingX: '20px',
+                      }}
+                    />
+                  </Grid>
+                  <Typography
+                    sx={{
+                      marginBottom: '8px',
+                      fontFamily: 'Arial',
+                      fontSize: '15px',
+                      color: '#000000',
+                      paddingLeft: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <EventIcon sx={{ marginRight: '8px' }} />
+                    <span style={{ marginRight: '7px', color: '#2d4271' }}>
+                      {' '}
+                      Ngày bắt đầu:
+                    </span>
+                    <b>{moment(tourData[0]?.start_date).format("DD/MM/YYYY")}</b>
+                  </Typography>
+                  <Typography
+                    sx={{
+                      marginBottom: '8px',
+                      fontFamily: 'Arial',
+                      fontSize: '15px',
+                      color: '#000000',
+                      paddingLeft: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <EventIcon sx={{ marginRight: '8px' }} />
+                    <span style={{ marginRight: '7px', color: '#2d4271' }}>
+                      Ngày kết thúc:
+                    </span>{' '}
+                    <b>{moment(tourData[0]?.end_date).format("DD/MM/YYYY")}</b>
+                  </Typography>
+                  <Typography
+                    sx={{
+                      marginBottom: '8px',
+                      fontFamily: 'Arial',
+                      fontSize: '15px',
+                      color: '#000000',
+                      paddingLeft: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      paddingTop: '10px',
+                    }}
+                  >
+                    <span>
+                      <GroupsIcon sx={{ marginRight: '8px' }} />
+                      <b style={{ marginRight: '30px', color: '#2d4271' }}>
+                        Hành khách:
+                      </b>
+                    </span>
+                    <b style={{ marginLeft: 'auto', paddingRight: '20px' }}>
+                      {numberPeople} x {(tourData[0]?.tour_price)}$/khách
+                    </b>
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      marginBottom: '8px',
+                      fontFamily: 'Arial',
+                      fontSize: '15px',
+                      color: '#000000',
+                      paddingLeft: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      paddingTop: '10px',
+                    }}
+                  >
+                    <b style={{ marginRight: '30px', color: '#2d4271' }}>
+                      Chi phí{' '}
+                    </b>
+                    <b style={{ marginLeft: 'auto', paddingRight: '20px' }}>
+                      {(
+                        "$" + calculateTotalCost(tourData[0]?.tour_price, numberPeople)
+                      )}
+                    </b>
+                  </Typography>
+
+                  <Divider />
+                  <Typography
+                    sx={{
+                      marginBottom: '8px',
+                      fontFamily: 'Arial',
+                      fontSize: '18px',
+                      color: '#000000',
+                      paddingLeft: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      paddingTop: '10px',
+                    }}
+                  >
+                    <b style={{ color: '#2d4271' }}>Tổng Thanh Toán</b>
+                    <b
+                      style={{
+                        color: 'red',
+                        fontSize: '25px',
+                        marginLeft: 'auto',
+                        paddingRight: '20px',
                       }}
                     >
-                      Đăng kí ngay
-                    </Button>
-                  </Grid>
+                      {(
+                        "$" + calculateTotalCost(tourData[0]?.tour_price, numberPeople) + ".00"
+                      )}
+                    </b>
+                  </Typography>
+                  <Divider />
+                  <Button
+                    style={{
+                      background:
+                        'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+                      border: 0,
+                      borderRadius: 10,
+                      boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+                      color: 'white',
+                      height: 48,
+                      marginTop: '20px',
+                      marginBottom: '20px',
+                      width: '100%',
+                      paddingX: '20px',
+                    }}
+                    onClick={handleBooking}
+                  >
+                    Đăng kí ngay
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>
-          ))}
+          </Grid>
         </Grid>
       </Container>
       <Footer />

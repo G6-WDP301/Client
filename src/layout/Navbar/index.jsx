@@ -7,45 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
-
 const Navbar = () => {
-
-  //
-
-  // const isLoggedIn = useSelector((state) => state.isAuthenticated);
-
-  // const [user, setUser] = useState([]);
-
-  // const [token, setToken] = useState(localStorage.getItem("token"));
-
-  // useEffect(() => {
-  //   axios
-  //     .get("https://api.realworld.io/api/user", {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       const userData = response.data.user;
-  //       setUser({
-  //         username: userData.username,
-  //         email: userData.email,
-  //       });
-  //       console.log(userData);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching user data:", error);
-  //     });
-
-
-  //   axios.get('https://api.realworld.io/api/user', {
-  //     headers: {
-  //       Authorization: `Token ${token}`,
-  //     },
-  //   })
-
-    //
 
     const navigate = useNavigate();
 
