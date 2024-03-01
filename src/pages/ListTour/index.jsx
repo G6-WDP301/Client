@@ -191,7 +191,9 @@ export default function index() {
     setIsOpen({ ...isOpen, [id]: !isOpen[id] });
   };
 
-  const [tours, setTours] = useState([])
+  const [tours, setTours] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState([]);
+  const [bookingId, setBookingId] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:8080/api/tour/find-all')
@@ -206,6 +208,16 @@ export default function index() {
   useEffect(() => {
     console.log("Data tour here: ", tours);
   }, [tours]);
+
+  const handleClickUser = (tourId) => {
+    setSelectedUserId(tourId);
+    navigate(`/tour-detail/${tourId}`);
+  }
+  
+  const handleBooking = (tourId) => {
+    setBookingId(tourId);
+    navigate(`/booking-tour/${tourId}`);
+  }
 
   return (
     <>
@@ -375,7 +387,7 @@ export default function index() {
                 <p className="text-3xl text-color3 capitalize font-secondary">
                   {list.tour_name}
                 </p>
-                <p className="text-color1 mb-4" style={{paddingTop: "10px"}}>{list.tour_price}$</p>
+                <p className="text-color1 mb-4" style={{ paddingTop: "10px" }}>{list.tour_price}$</p>
                 <p className="text-color6">{list.tour_description}</p>
                 <div className="flex flex-wrap my-4">
                   <div className="w-[50%] flex">
@@ -397,15 +409,15 @@ export default function index() {
                 </div>
                 <div className="flex gap-5 mt-6">
                   <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
-                    onClick={() => navigate('/tour-detail')}
+                    onClick={() => handleClickUser(list._id)}
                   >
                     <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                       Tour Details
                     </span>
                   </button>
 
-                  <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800" 
-                    onClick={() => navigate('/booking-tour')}>
+                  <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
+                    onClick={() => handleBooking(list._id)}>
                     <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                       Booking Now
                     </span>
@@ -422,7 +434,7 @@ export default function index() {
                 {list.end_position.location_name}
               </p>
               <figcaption className="absolute text-white bottom-8 right-10 fig">
-                <p className="capitalize font-secondary text-3xl" style={{paddingLeft: "20px", paddingBottom: "90px"}}>
+                <p className="capitalize font-secondary text-3xl" style={{ paddingLeft: "20px", paddingBottom: "90px" }}>
                   {list.tour_name}
                 </p>
                 <p className="text-right">{list.tour_price} $ / person</p>

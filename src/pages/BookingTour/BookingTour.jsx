@@ -24,6 +24,9 @@ import { useState } from 'react';
 import EventIcon from '@mui/icons-material/Event';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import moment from 'moment';
 
 const tour = [
   {
@@ -123,12 +126,25 @@ const itemData = [
 ];
 
 const BookingTour = () => {
+
+  // const formatPrice = (price) => {
+  //   return new Intl.NumberFormat('vi-VN', {
+  //     style: 'currency',
+  //     currency: 'VND',
+  //   }).format(price);
+  // };
+
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('vi-VN', {
+    const formattedPrice = new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'VND',
+      currency: 'USD',
     }).format(price);
+
+    const modifiedFormattedPrice = formattedPrice.replace(/\$/g, '$');
+
+    return modifiedFormattedPrice;
   };
+
   const [numberPeople, setNumberPeople] = useState(1);
   const [type, setType] = useState('option1');
   const [option1Check, setOption1Checked] = useState(false);
@@ -170,15 +186,21 @@ const BookingTour = () => {
     setOption1Checked(false);
   };
 
+  const [tourData, setTourData] = useState([]);
+
+  const { id } = useParams();
+
   useEffect(() => {
-    fetch('http://localhost:8080/api/user/all')
-      .then(response => response.json())
-      .then(data => {
-        console.log("Data user here: ", data);
-        setUser(data)
+    axios.get(`http://localhost:8080/api/tour/${id}`)
+      .then((response) => {
+        // const tours = response.data.tour.tour.tour;
+        const tours = Object.values(response.data.tour);
+        setTourData(tours);
       })
       .catch(error => console.log(error));
   }, []);
+
+  console.log(tourData);
 
   return (
     <>
@@ -194,8 +216,8 @@ const BookingTour = () => {
         style={{ padding: '2px', marginTop: '10px', marginBottom: '20px' }}
       >
         <Grid container spacing={3}>
-          {tour.map((tourItem) => (
-            <Grid key={tourItem.id} item xs={12} sm={12}>
+          {tourData.map((tourItem) => (
+            <Grid key={tourItem?._id} item xs={12} sm={12}>
               <Grid
                 container
                 style={{
@@ -206,7 +228,7 @@ const BookingTour = () => {
                 <Grid item xs={12} sm={4} sx={{ textAlign: 'left' }}>
                   <CardMedia
                     component="img"
-                    image={tourItem?.imgSrc}
+                    image={tourItem?.tour_img}
                     alt="Live from space album cover"
                     sx={{ borderRadius: '10px 0px 0px 10px' }}
                   />
@@ -238,7 +260,7 @@ const BookingTour = () => {
                       paddingLeft: '20px',
                     }}
                   >
-                    Mã tour: <b>{tourItem.type}</b>
+                    Mã tour: <b>{tourItem._id}</b>
                   </Typography>
                   <Typography
                     sx={{
@@ -249,7 +271,7 @@ const BookingTour = () => {
                       paddingLeft: '20px',
                     }}
                   >
-                    Giá vé: <b>{formatPrice(tourItem.price)}/khách</b>
+                    Giá vé: <b>{(tourItem.tour_price)}$/khách</b>
                   </Typography>
                   <Typography
                     sx={{
@@ -260,7 +282,10 @@ const BookingTour = () => {
                       paddingLeft: '20px',
                     }}
                   >
-                    Khởi hành: <b>{tourItem.start_time}</b>
+                    {/* Khởi hành: <b>{tourItem.start_date}</b> */}
+                    Khởi hành: <b>{moment(tourItem.start_date).format("DD/MM/YYYY")}</b>
+
+
                   </Typography>
                   <Typography
                     sx={{
@@ -271,7 +296,7 @@ const BookingTour = () => {
                       paddingLeft: '20px',
                     }}
                   >
-                    Nơi khởi hành: <b>{tourItem.start_location}</b>
+                    Nơi khởi hành: <b>{tourItem.start_position?.location_name}</b>
                   </Typography>
                   <Typography
                     sx={{
@@ -282,7 +307,7 @@ const BookingTour = () => {
                       paddingLeft: '20px',
                     }}
                   >
-                    Số chỗ còn nhận: <b>{tourItem.number}</b>
+                    Số chỗ còn nhận: <b>{tourItem.max_tourist}</b>
                   </Typography>
                 </Grid>
               </Grid>
@@ -474,7 +499,7 @@ const BookingTour = () => {
                       />
                     }
                     label={
-                      <span>Tôi cần được nhân viên tư vấn <strong style={{fontStyle: "italic"}}>G6GO</strong> trợ giúp nhập thông tin đăng ký dịch vụ</span>
+                      <span>Tôi cần được nhân viên tư vấn <strong style={{ fontStyle: "italic" }}>G6GO</strong> trợ giúp nhập thông tin đăng ký dịch vụ</span>
                     }
                   />
                   <Grid
@@ -669,7 +694,7 @@ const BookingTour = () => {
                     <Grid item xs={12} sm={12} sx={{ textAlign: 'left' }}>
                       <CardMedia
                         component="img"
-                        image={tourItem?.imgSrc}
+                        image={tourItem?.tour_img}
                         alt="Live from space album cover"
                         sx={{
                           borderRadius: '10px 0px 0px 10px',
@@ -695,7 +720,7 @@ const BookingTour = () => {
                         {' '}
                         Ngày bắt đầu:
                       </span>
-                      <b>{tourItem.start_time}</b>
+                      <b>{moment(tourItem.start_date).format("DD/MM/YYYY")}</b>
                     </Typography>
                     <Typography
                       sx={{
@@ -712,7 +737,7 @@ const BookingTour = () => {
                       <span style={{ marginRight: '7px', color: '#2d4271' }}>
                         Ngày kết thúc:
                       </span>{' '}
-                      <b>{tourItem.end_time}</b>
+                      <b>{moment(tourItem.end_date).format("DD/MM/YYYY")}</b>
                     </Typography>
                     <Typography
                       sx={{
@@ -733,7 +758,7 @@ const BookingTour = () => {
                         </b>
                       </span>
                       <b style={{ marginLeft: 'auto', paddingRight: '20px' }}>
-                        {numberPeople} x {formatPrice(tourItem.price)}
+                        {numberPeople} x {(tourItem.tour_price)}$/khách
                       </b>
                     </Typography>
 
@@ -754,7 +779,7 @@ const BookingTour = () => {
                       </b>
                       <b style={{ marginLeft: 'auto', paddingRight: '20px' }}>
                         {formatPrice(
-                          calculateTotalCost(tourItem.price, numberPeople)
+                          calculateTotalCost(tourItem.tour_price, numberPeople)
                         )}
                       </b>
                     </Typography>
@@ -782,7 +807,7 @@ const BookingTour = () => {
                         }}
                       >
                         {formatPrice(
-                          calculateTotalCost(tourItem.price, numberPeople)
+                          calculateTotalCost(tourItem.tour_price, numberPeople)
                         )}
                       </b>
                     </Typography>
