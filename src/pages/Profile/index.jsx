@@ -77,7 +77,6 @@ export default function index() {
     if (token) {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.user_id;
-      // Tiếp tục xử lý hoặc gọi API với userId đã lấy được
       axios.get(`http://localhost:8080/api/user/${userId}`)
         .then((response) => {
           const userData = response.data.data;

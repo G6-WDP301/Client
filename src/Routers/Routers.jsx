@@ -47,7 +47,7 @@ export const routes = [
         page: Profile
     }, 
     {
-        path: "/tour-detail",
+        path: "/tour-detail/:id",
         page: TourDetail
     }, 
     {
@@ -63,7 +63,7 @@ export const routes = [
         page: ForgotPassword
     },
     {
-        path: "/booking-tour",
+        path: "/booking-tour/:id",
         page: BookingTour
     },
     {
