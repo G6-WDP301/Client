@@ -34,7 +34,7 @@ import {
 } from '@mui/lab';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Footer from '../../layout/Footer';
 
 const tour = [
@@ -154,9 +154,13 @@ export default function index() {
   const [points, setTours] = React.useState([]);
   const [open, setOpen] = React.useState(false);
 
+  const navigate = useNavigate();
+
   const { id } = useParams();
 
-  const [tourData, setTourData] = useState({});
+  const [tourData, setTourData] = useState([]);
+
+  const [bookingId, setBookingId] = useState([])
 
   const allTourLength = allPoints.length;
 
@@ -180,11 +184,18 @@ export default function index() {
   useEffect(() => {
     axios.get(`http://localhost:8080/api/tour/${id}`)
       .then((response) => {
-        const tours = response.data;
-        console.log(tours);
+        const tours = Object.values(response.data.tour);
+        setTourData(tours);
       })
       .catch(error => console.log(error));
   }, []);
+
+  console.log(tourData[0]?._id);
+
+  const handleBooking = (tourId) => {
+    setBookingId(tourId);
+    navigate(`/booking-tour/${tourId}`);
+  }
 
   return (
     <>
@@ -234,7 +245,7 @@ export default function index() {
                       color: '#fa4807',
                     }}
                   >
-                    {formatPrice(tourItem.price)}/khách
+                    $100.00 / khách
                   </Typography>
                   <Button
                     style={{
@@ -247,6 +258,7 @@ export default function index() {
                       height: 48,
                       padding: '0 30px',
                     }}
+                    onClick={() => handleBooking(tourData[0]?._id)}
                   >
                     Đăng kí ngay
                   </Button>
