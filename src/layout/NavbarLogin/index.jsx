@@ -104,7 +104,7 @@ export default function index() {
             </li>
 
             <li className="navItem">
-              <a href="#" className="navLink" onClick={() => navigate("/list-tour")}>List Tour</a>
+              <a href="#" className="navLink" onClick={() => navigate('/list-tour')}>List Tour</a>
             </li>
 
             <li className="navItem">

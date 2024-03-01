@@ -82,6 +82,7 @@ export default function index() {
       axios.get(`http://localhost:8080/api/user/${userId}`)
         .then((response) => {
           const userData = response.data.data;
+          console.log(userData);
           setUser(userData);
         })
         .catch((error) => {
