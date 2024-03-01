@@ -127,22 +127,11 @@ const itemData = [
 
 const BookingTour = () => {
 
-  // const formatPrice = (price) => {
-  //   return new Intl.NumberFormat('vi-VN', {
-  //     style: 'currency',
-  //     currency: 'VND',
-  //   }).format(price);
-  // };
-
   const formatPrice = (price) => {
-    const formattedPrice = new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'VND',
     }).format(price);
-
-    const modifiedFormattedPrice = formattedPrice.replace(/\$/g, '$');
-
-    return modifiedFormattedPrice;
   };
 
   const [numberPeople, setNumberPeople] = useState(1);
