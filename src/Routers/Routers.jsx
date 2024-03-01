@@ -5,6 +5,7 @@ import { Home, Login, Error, News, AboutUs, Gallery, ListTour, Profile, TourDeta
 import Register from '../pages/SignUp/index.jsx'
 import '../layout/Default/Default.jsx'
 import BookingTour from '../pages/BookingTour/BookingTour.jsx';
+import TableListTourAdmin from '../pages/Admin/ListTour/ListTour.jsx';
 
 // const Routers = () => {
 //     return (
@@ -90,6 +91,10 @@ export const routes = [
     {
         path: "/booking-tour",
         page: BookingTour
+    },
+    {
+        path: "/admin/list-tour",
+        page: TableListTourAdmin
     },
     
 ]
