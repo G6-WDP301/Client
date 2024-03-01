@@ -6,7 +6,6 @@ import Register from '../pages/SignUp/index.jsx'
 import Payment from '../pages/Payment/Payment.jsx';
 import '../layout/Default/Default.jsx'
 import Sidebar from '../layout/Sidebar/index.jsx'
-import BookingTour from '../pages/BookingTour/BookingTour.jsx'
 import homeAdmin from '../layout/AdminLayout/admin.jsx'
 
 
@@ -109,7 +108,6 @@ export const routes = [
         path: "/admin/list-tour",
         page: TableListTourAdmin
     },
-
 ]
 
 export const adminRoutes = [
