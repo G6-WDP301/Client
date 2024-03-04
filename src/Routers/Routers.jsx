@@ -7,6 +7,7 @@ import Payment from '../pages/Payment/Payment.jsx';
 import '../layout/Default/Default.jsx'
 import Sidebar from '../layout/Sidebar/index.jsx'
 import homeAdmin from '../layout/AdminLayout/admin.jsx'
+import BookingTour from '../pages/BookingTour/BookingTour.jsx';
 
 
 // const Routers = () => {
