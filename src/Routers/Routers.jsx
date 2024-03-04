@@ -7,33 +7,7 @@ import Payment from '../pages/Payment/Payment.jsx';
 import '../layout/Default/Default.jsx'
 import Sidebar from '../layout/Sidebar/index.jsx'
 import homeAdmin from '../layout/AdminLayout/admin.jsx'
-
-
-// const Routers = () => {
-//     return (
-//         <div>
-//             <Router>
-//                 <Routes>
-//                     <Route path="/" element={<Home />} />
-//                     <Route path="/login" element={<Login />} />
-//                     <Route path="/sign-up" element={<SignUp />} />
-//                     <Route path="/Error" element={<Error />} />
-//                     <Route path="/News" element={<News />} />
-//                     <Route path="/AboutUs" element={<AboutUs />} />
-//                     <Route path="/forgot" element={<ForgotPassword />} />
-//                     <Route path="/list-tour/viewtour" element={<ViewTour />} />
-//                     <Route path="/gallery" element={<Gallery />} />
-//                     <Route path="/list_tour" element={<ListTour />} />
-//                     <Route path="/profile" element={<Profile />} />
-//                     <Route path="/tour_detail" element={<TourDetail />} />
-//                     <Route path="/Admin" element={<Admin />} />
-//                 </Routes>
-//             </Router>
-//         </div>
-//     )
-// }
-
-// export default Routers
+import BookingTour from '../pages/BookingTour/BookingTour.jsx'
 import TableListTourAdmin from '../pages/Admin/ListTour/ListTour.jsx';
 
 export const routes = [
@@ -94,7 +68,7 @@ export const routes = [
     {
         path: "/sideBar",
         page: Sidebar
-    },  
+    },
     {
         path: "/booking-tour/:id",
         page: BookingTour
@@ -118,9 +92,9 @@ export const adminRoutes = [
     {
         path: "*",
         page: Error
-    }, 
+    },
     {
-        path: "/sideBar ",
+        path: "/dashboard",
         page: Sidebar
     },
     // {

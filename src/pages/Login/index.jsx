@@ -15,6 +15,9 @@ import { useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 
 const defaultTheme = createTheme();
@@ -24,6 +27,8 @@ export default function LogIn() {
   const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
+
+  const [user, setUser] = useState({});
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -38,6 +43,8 @@ export default function LogIn() {
     const requiredFields = ["email", "password"];
     const newErrors = {};
 
+    const token = localStorage.getItem('token');
+
     requiredFields.forEach(field => {
       if (!formData[field]) {
         newErrors[field] = "This field is required";
@@ -48,7 +55,6 @@ export default function LogIn() {
       setErrors(newErrors);
       return;
     }
-
 
     try {
       const response = await fetch('http://localhost:8080/api/user/login', {
@@ -63,8 +69,18 @@ export default function LogIn() {
         const responseData = await response.json();
         console.log('Login successful:', responseData);
         localStorage.setItem('token', responseData.token);
+        const token = responseData.token;
         toast.success('Login successful ~')
-        navigate('/');
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          const roleId = decodedToken.role;
+          console.log("roleId ne: ", roleId);
+          if (roleId === 'ADMIN') {
+            window.location.href = '/dashboard';
+          } else {
+            navigate('/');
+          }
+        }
       } else {
         console.error('Login failed:', response.status);
         const errorData = await response.json();
@@ -75,8 +91,6 @@ export default function LogIn() {
       console.error('Error fetching data:', error);
     }
   };
-
-
 
   const formRef = useRef(null);
 

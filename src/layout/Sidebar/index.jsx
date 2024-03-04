@@ -114,7 +114,6 @@ const Drawer = styled(MuiDrawer, {
 const Index = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  // const [selectedItem, setSelectedItem] = useState('');
 
   const handleDrawerOpen = () => {
     setOpen(true);
