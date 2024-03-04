@@ -22,7 +22,7 @@ const Header = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/api/tour/get-list-search-tour', {
+      const response = await fetch('http://localhost:8080/api/tour/get-list-search-tour?page=1&pageSize=10', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ const Header = () => {
               placeholder="Search Date here"
             />
           </div>
-          <button data-aos="fade-left" data-aos-duration="2000" className="btn">
+          <button data-aos="fade-left" data-aos-duration="2000" className="btn" onClick={handleSubmit}>
             Search
           </button>
         </div>
