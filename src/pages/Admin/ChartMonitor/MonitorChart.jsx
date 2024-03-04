@@ -57,7 +57,17 @@ const MonitorChart = () => {
               timeRange={selectedTimeRange}
               min={0}
               max={100}
-              title="CPU Usage"
+              title="Sales"
+              unit={'%'}
+            />
+          </Grid>
+          <Grid item xs={12} md={6} sx={{ py: 3, paddingLeft: 2 }}>
+            <ChartSection
+              metric="cpu_usage_timeseries"
+              timeRange={selectedTimeRange}
+              min={0}
+              max={100}
+              title="Sale2"
               unit={'%'}
             />
           </Grid>
