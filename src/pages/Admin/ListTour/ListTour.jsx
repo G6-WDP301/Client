@@ -11,7 +11,6 @@ import {
   TableHead,
   TableRow,
   Toolbar,
-  StyledDialog,
   DialogTitle,
   Typography,
   DialogContent,
@@ -25,6 +24,7 @@ import axios from 'axios';
 import moment from 'moment';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { LoadingButton } from '@mui/lab';
+import { StyledDialog } from '../../utils/components/StyledDialog';
 
 const fakeData = [
   {
@@ -76,8 +76,14 @@ const TableListTourAdmin = () => {
   const [target, setTarget] = useState('');
   const [tours, setTours] = useState([]);
   const [openCreateTour, setOpenCreateTour] = useState(false);
-  const [tourName, setTourName] = useState(false);
-  const [tourDes, setTourDes] = useState(false);
+  const [tourName, setTourName] = useState('');
+  const [tourDes, setTourDes] = useState('');
+  const [tourPrice, setTourPrice] = useState('');
+  const [maxTourist, setMaxTourist] = useState('');
+  const [startDateTime, setStartDateTime] = useState('');
+  const [endDateTime, setEndDateTime] = useState('');
+  const [duration, setDuration] = useState('');
+  const [transportion, setTransportion] = useState('');
 
   const headCells = [
     { id: 'expand-button', filterable: false },
@@ -94,13 +100,14 @@ const TableListTourAdmin = () => {
   ];
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/tour/find-all')
+    axios
+      .get('http://localhost:8080/api/tour/find-all')
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
         console.log(tourData);
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }, []);
 
   return (
@@ -152,7 +159,6 @@ const TableListTourAdmin = () => {
                         mt: 2,
                         display: 'flex',
                         flexDirection: 'column',
-                        marginBottom: '20px',
                         backgroundColor: '#ffffff',
                       }}
                       value={tourName}
@@ -163,19 +169,151 @@ const TableListTourAdmin = () => {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      id="Name"
-                      label="Tour Name"
+                      id="Description"
+                      label="Tour Description"
                       fullWidth
                       sx={{
                         mt: 2,
                         display: 'flex',
                         flexDirection: 'column',
-                        marginBottom: '20px',
                         backgroundColor: '#ffffff',
                       }}
                       value={tourDes}
                       onChange={(event) => {
                         setTourDes(event.target.value);
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="Price"
+                      label="Tour Price"
+                      type="number"
+                      onKeyDown={(e) =>
+                        ['e', 'E', '+', '-'].includes(e.key) &&
+                        e.preventDefault()
+                      }
+                      InputProps={{
+                        inputProps: {
+                          min: 1,
+                        },
+                      }}
+                      sx={{
+                        mt: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        backgroundColor: '#ffffff',
+                      }}
+                      value={tourPrice}
+                      onChange={(event) => {
+                        setTourPrice(event.target.value);
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="Max Tourist"
+                      label="Max Tourist"
+                      type="number"
+                      onKeyDown={(e) =>
+                        ['e', 'E', '+', '-'].includes(e.key) &&
+                        e.preventDefault()
+                      }
+                      InputProps={{
+                        inputProps: {
+                          min: 1,
+                        },
+                      }}
+                      sx={{
+                        mt: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        backgroundColor: '#ffffff',
+                      }}
+                      value={maxTourist}
+                      onChange={(event) => {
+                        setMaxTourist(event.target.value);
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="datetime-local"
+                      label="Start"
+                      type="datetime-local"
+                      value={startDateTime}
+                      onChange={(event) => {
+                        setStartDateTime(event.target.value);
+                      }}
+                      sx={{ width: '100%' }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="datetime-local"
+                      label="End"
+                      type="datetime-local"
+                      value={endDateTime}
+                      onChange={(event) => {
+                        setEndDateTime(event.target.value);
+                      }}
+                      sx={{ width: '100%' }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="Duration"
+                      label="Duration"
+                      fullWidth
+                      sx={{
+                        mt: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        backgroundColor: '#ffffff',
+                      }}
+                      value={duration}
+                      onChange={(event) => {
+                        setDuration(event.target.value);
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="Transportion"
+                      label="Transportion"
+                      fullWidth
+                      sx={{
+                        mt: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        backgroundColor: '#ffffff',
+                      }}
+                      value={transportion}
+                      onChange={(event) => {
+                        setTransportion(event.target.value);
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
+                    <TextField
+                      id="tour-image"
+                      type="file"
+                      fullWidth
+                      sx={{
+                        mt: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        backgroundColor: '#ffffff',
+                      }}
+                        onChange={(event) => {
+                        const selectedImage = event.target.files[0];
+                        console.log(selectedImage);
                       }}
                     />
                   </Grid>
