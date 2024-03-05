@@ -9,9 +9,9 @@ const index = () => {
   return (
     <section className="page_404">
         <div className="container-fuild">
-          <div className="row">
+          <div className="">
             <div className="col-sm-12 ">
-              <div className="col-sm-10 col-sm-offset-1  text-center content404">
+              <div className="col-sm-12 col-sm-offset-1 text-center content404">
                 <div className="four_zero_four_bg">
                   <h1 className="text-center ">404</h1>
                 </div>
