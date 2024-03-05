@@ -1,16 +1,22 @@
-// import Routers from './Routers/Routers'
-// import './app.css'
-
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { routes, adminRoutes } from './Routers/Routers.jsx'
-import Default from './layout/Default/Default'
-import { jwtDecode } from "jwt-decode";
+import { routes, adminRoutes } from './Routers/Routers.jsx';
+import Default from './layout/Default/Default';
 
-import AdminLayout from './layout/AdminLayout/admin.jsx'
+function jwtDecode(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
+      .join('')
+  );
+
+  return JSON.parse(jsonPayload);
+}
 
 function App() {
-
   const [token, setToken] = useState('');
 
   useEffect(() => {
@@ -20,51 +26,66 @@ function App() {
     }
   }, []);
 
-  const decoded = jwtDecode(localStorage.getItem('token'));
-  console.log(decoded);
+  function getDecodedToken() {
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      const decodedToken = jwtDecode(storedToken);
+      return decodedToken;
+    }
+    return null;
+  }
 
-  const account = decoded;
+  const account = getDecodedToken();
 
-  if(account?.role === 'ADMIN'){
-      return (
+  if (account?.role === 'ADMIN') {
+    return (
+      <div>
         <Router>
           <Routes>
             {adminRoutes.map((route, index) => {
-              const Page = route.page
-              const Layout = Fragment
+              const Page = route.page;
+              const Layout = Fragment;
               return (
-                <Route key={route.path} path={route.path} element={
-                  <Layout>
-                    <Page />
-                  </Layout>
-                } />
-              )
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  element={
+                    <Layout>
+                      <Page />
+                    </Layout>
+                  }
+                />
+              );
             })}
           </Routes>
-      </Router>
-      )
+        </Router>
+      </div>
+    );
   }
 
   return (
     <div>
-      {/* <Routers /> */}
       <Router>
         <Routes>
           {routes.map((route) => {
-            const Page = route.page
-            const Layout = route.isShowHeader ? Default : Fragment
+            const Page = route.page;
+            const Layout = route.isShowHeader ? Default : Fragment;
             return (
-              <Route key={route.path} path={route.path} element={
-                <Layout>
-                  <Page />
-                </Layout>
-              } />
-            )
+              <Route
+                key={route.path}
+                path={route.path}
+                element={
+                  <Layout>
+                    <Page />
+                  </Layout>
+                }
+              />
+            );
           })}
         </Routes>
       </Router>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

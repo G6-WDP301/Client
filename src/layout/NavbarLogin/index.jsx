@@ -84,6 +84,11 @@ export default function index() {
     setShowMenu(false);
   };
 
+  function handleLogout() {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+  }
+
   return (
     <section className='navBarSection'>
       <div className={transparent}>
@@ -128,7 +133,6 @@ export default function index() {
                 />
               </div>
 
-              {/* Dropdown menu */}
               {showMenu && (
                 <div className="flex dropdown-menu absolute top-full right-0 mt-2 bg-white border border-gray-300 rounded-md shadow-md overflow-hidden transform origin-top transition-all duration-300" style={{ border: '1px solid grey', boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.4)' }}>
                   <ul className="py-3 px-5">
@@ -146,8 +150,12 @@ export default function index() {
                       <AiOutlineUser className="menu-icon" />
                       <span className="ml-4">Profile</span>
                     </li>
+                    {/* <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={() => navigate("/login")}>
+                      <AiOutlineLogout className="menu-icon" />
+                      <span className="ml-4">Logout</span>
+                    </li>  */}
                     <div className='mt-2 mb-2' style={{ border: '1px solid lightgrey', boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.2)' }}></div>
-                    <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={() => navigate("/login")}>
+                    <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={handleLogout}>
                       <AiOutlineLogout className="menu-icon" />
                       <span className="ml-4">Logout</span>
                     </li>
