@@ -81,7 +81,6 @@ export const routes = [
     {
         path: "/admin/list-tour",
         page: TableListTourAdmin
-    }
 ]
 
 export const adminRoutes = [
