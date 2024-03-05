@@ -266,7 +266,9 @@ const Index = () => {
           <DrawerHeader />
           <div
             className="bg-white h-full"
-            style={{ borderRadius: '10px', height: 'calc(100vh - 64px)' }}
+            style={{ borderRadius: '10px', 
+            // height: 'calc(100vh - 64px)'
+           }}
           >
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
               <span className="text-2xl font-bold">Dashboard</span>
