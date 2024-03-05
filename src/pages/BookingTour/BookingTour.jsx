@@ -28,6 +28,8 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { jwtDecode } from 'jwt-decode'
 
 const BookingTour = () => {
 
@@ -52,7 +54,6 @@ const BookingTour = () => {
   const [gender, setGender] = useState('Male');
   const [numberPhone, setNumberPhone] = useState('');
   const [addressPeople, setAddressPeople] = useState('');
-  const [user, setUser] = useState('');
 
   const handleBirthDateChange = (event) => {
     const selectedDate = new Date(event.target.value);
@@ -80,22 +81,68 @@ const BookingTour = () => {
   };
 
   const [tourData, setTourData] = useState([]);
+  const [user, setUser] = useState({});
 
   const { id } = useParams();
+
+  const handleBooking = async (event) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      try {
+        const userId = decodedToken.user_id;
+        const response = await axios.post(`http://localhost:8080/api/booking/${id}`, {
+          user_id: userId
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.status === 200) {
+          const responseData = response.data;
+          console.log('Booking tour successful:', responseData);
+          toast.success('Booking successful ~')
+        } else {
+          console.error('Booking tour failed:', response.data);
+          const errorData = response.error;
+          console.error('Error Data:', errorData);
+          toast.error(errorData.error);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+      }
+    }
+  };
 
   useEffect(() => {
     axios.get(`http://localhost:8080/api/tour/${id}`)
       .then((response) => {
         const tours = Object.values(response.data.tour);
         setTourData(tours);
-        console.log(tourData);
       })
       .catch(error => console.log(error));
   }, []);
 
-  const handleBooking = () => {
-    toast('Feature being updated, please come back later!');
-  };
+  // useEffect(() => {
+  //   const handleBooking = () => {
+  //     const token = localStorage.getItem('token');
+  //     if (token) {
+  //       const decodedToken = jwtDecode(token);
+  //       const userId = decodedToken.user_id;
+  //       axios.get(`http://localhost:8080/api/user/${userId}`)
+  //         .then((response) => {
+  //           const userData = response.data.data;
+  //           console.log("user ne: ", userData);
+  //           setUser(userData);
+  //         })
+  //         .catch((error) => {
+  //           console.log('Error:', error);
+  //         });
+  //     }
+  //   };
+
+  //   handleBooking();
+  // }, []);
 
   return (
     <>

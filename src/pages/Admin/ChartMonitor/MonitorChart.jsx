@@ -57,7 +57,7 @@ const MonitorChart = () => {
               timeRange={selectedTimeRange}
               min={0}
               max={100}
-              title="Sales"
+              title="Tour"
               unit={'%'}
             />
           </Grid>
@@ -67,7 +67,7 @@ const MonitorChart = () => {
               timeRange={selectedTimeRange}
               min={0}
               max={100}
-              title="Sale2"
+              title="User booking tour"
               unit={'%'}
             />
           </Grid>
