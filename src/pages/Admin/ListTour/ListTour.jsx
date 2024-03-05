@@ -70,14 +70,14 @@ const TableListTourAdmin = () => {
     { id: 'expand-button', filterable: false },
     { id: 'tour-name', label: 'Tour', filterable: true, defaultFilter: true },
     { id: 'tour-description', label: 'Tour Description', filterable: false },
-    { id: 'tour-transportion', label: 'Tour Transportion', filterable: false },
+    // { id: 'tour-transportion', label: 'Tour Transportion', filterable: false },
     { id: 'tour-price', label: 'Tour Price', filterable: false },
     { id: 'max-tourist', label: 'Max Tourist', filterable: false },
     { id: 'start-date', label: 'Start Date', filterable: false },
     { id: 'end-date', label: 'End Date', filterable: false },
     { id: 'start-position', label: 'Start Position', filterable: false },
     { id: 'end-position', label: 'End Position', filterable: false },
-    { id: 'action-button', label: 'Action Button', align: 'right', filterable: false }
+    { id: 'action-button', label: 'Action Button', filterable: false }
   ]
 
   useEffect(() => {
@@ -120,7 +120,7 @@ const TableListTourAdmin = () => {
                         </TableCell>
                         <TableCell>
                           {row.tour_description}</TableCell>
-                        <TableCell>{row.tour_transportion}</TableCell>
+                        {/* <TableCell>{row.tour_transportion}</TableCell> */}
                         <TableCell>{row.tour_price}$</TableCell>
                         <TableCell>{row.max_tourist}</TableCell>
                         <TableCell>{moment(row.start_date).format("DD/MM/YYYY")}</TableCell>
