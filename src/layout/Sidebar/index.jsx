@@ -27,8 +27,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Avatar from '@mui/material/Avatar';
-import UserList from '../../pages/Admin/ListTour/ListTour.jsx';
+import TourList from '../../pages/Admin/ListTour/ListTour.jsx';
 import MonitorChart from '../../pages/Admin/ChartMonitor/MonitorChart.jsx';
+
+import { useNavigate } from "react-router-dom";
 
 import { SiYourtraveldottv } from 'react-icons/si';
 import './sidebar.scss';
@@ -114,6 +116,8 @@ const Drawer = styled(MuiDrawer, {
 const Index = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+
+  const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -209,6 +213,7 @@ const Index = () => {
                 key={item.text}
                 disablePadding
                 sx={{ display: 'block' }}
+                onClick={() => navigate(`${item.link}`)}
               >
                 <ListItemButton
                   sx={{
@@ -266,14 +271,12 @@ const Index = () => {
           <DrawerHeader />
           <div
             className="bg-white h-full"
-            style={{ borderRadius: '10px', 
-            // height: 'calc(100vh - 64px)'
-           }}
+            style={{ borderRadius: '10px', height: 'calc(100vh - 64px)' }}
           >
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
               <span className="text-2xl font-bold">Dashboard</span>
                 <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                  <UserList/>
+                  <TourList/>
                   <div>
                     <MonitorChart/>
                   </div>

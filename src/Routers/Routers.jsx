@@ -9,6 +9,9 @@ import Sidebar from '../layout/Sidebar/index.jsx'
 import homeAdmin from '../layout/AdminLayout/admin.jsx'
 import BookingTour from '../pages/BookingTour/BookingTour.jsx'
 import TableListTourAdmin from '../pages/Admin/ListTour/ListTour.jsx';
+import UserManage from '../layout/Sidebar/userManage.jsx';
+import TourManage from '../layout/Sidebar/tourManage.jsx';
+
 
 export const routes = [
     {
@@ -66,10 +69,6 @@ export const routes = [
         page: ForgotPassword
     },
     {
-        path: "/sideBar",
-        page: Sidebar
-    },
-    {
         path: "/booking-tour/:id",
         page: BookingTour
     },
@@ -79,12 +78,26 @@ export const routes = [
         isShowHeader: true
     },
     {
+        path: "/admin/dashboard",
+        page: Sidebar
+    },
+    {
+        path: "/admin/user-manage",
+        page: UserManage
+    },
+    // {
+    //     path: "/admin/user-manage/:id",
+    //     page: UserManage
+    // },
+    {
+        path: "/admin/tour-manage",
+        page: TourManage
+    },
+    {
         path: "/admin/list-tour",
         page: TableListTourAdmin
-<<<<<<< HEAD
-    }
-=======
->>>>>>> 848ff2bbd73bdab85cd020f890168320fabe7f94
+    },
+
 ]
 
 export const adminRoutes = [
