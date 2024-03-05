@@ -25,13 +25,16 @@ import EventIcon from '@mui/icons-material/Event';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { jwtDecode } from 'jwt-decode'
 
+
 const BookingTour = () => {
+
+  const navigate = useNavigate();
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -102,6 +105,7 @@ const BookingTour = () => {
           const responseData = response.data;
           console.log('Booking tour successful:', responseData);
           toast.success('Booking successful ~')
+          navigate('/')
         } else {
           console.error('Booking tour failed:', response.data);
           const errorData = response.error;

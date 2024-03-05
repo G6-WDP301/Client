@@ -25,52 +25,7 @@ import moment from 'moment';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { LoadingButton } from '@mui/lab';
 import { StyledDialog } from '../../utils/components/StyledDialog';
-
-const fakeData = [
-  {
-    tour_name: 'Amazing Tour',
-    tour_description:
-      'Explore breathtaking destinations with our Amazing Tour.',
-    tour_transportion: [
-      // Insert Transportation ObjectId(s) here
-    ],
-    tour_price: 1500,
-    discount: 10,
-    tour_img: ['image1.jpg', 'image2.jpg'],
-    max_tourist: 20,
-    status: true,
-    start_date: '2024-04-01T08:00:00Z',
-    end_date: '2024-04-10T18:00:00Z',
-    duration: 10,
-    start_position: 'locationObjectId', // Insert Location ObjectId here
-    end_position: [
-      // Insert Location ObjectId(s) here
-    ],
-    return_status: true,
-    return_tax: 5,
-  },
-  {
-    tour_name: 'Oke t test',
-    tour_description: 'destinations with our Amazing Tour.',
-    tour_transportion: [
-      // Insert Transportation ObjectId(s) here
-    ],
-    tour_price: 1500,
-    discount: 10,
-    tour_img: ['image1.jpg', 'image2.jpg'],
-    max_tourist: 20,
-    status: true,
-    start_date: '2024-04-01T08:00:00Z',
-    end_date: '2024-04-10T18:00:00Z',
-    duration: 10,
-    start_position: 'locationObjectId', // Insert Location ObjectId here
-    end_position: [
-      // Insert Location ObjectId(s) here
-    ],
-    return_status: true,
-    return_tax: 5,
-  },
-];
+import { jwtDecode } from 'jwt-decode';
 
 const TableListTourAdmin = () => {
   const [target, setTarget] = useState('');
@@ -110,6 +65,34 @@ const TableListTourAdmin = () => {
       .catch((error) => console.log(error));
   }, []);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const decodedToken = jwtDecode(token);
+    const userId = decodedToken.user_id;
+    try {
+      const response = axios.post('http://localhost:9999/api/tour/create', {
+        user_id: userId
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status === 200) {
+        const responseData = response.data;
+        console.log('Booking tour successful:', responseData);
+        toast.success('Booking successful ~')
+        navigate('/')
+      } else {
+        console.error('Booking tour failed:', response.data);
+        const errorData = response.error;
+        console.error('Error Data:', errorData);
+        toast.error(errorData.error);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error.message);
+    }
+  }, []);
+
   return (
     <Grid container>
       <Grid item xs={12} sx={{ p: 6 }}>
@@ -129,7 +112,7 @@ const TableListTourAdmin = () => {
                 sx={{ float: 'right' }}
                 id="listener-create"
               >
-                Create
+                Create tour
               </Button>
             </Toolbar>
             <StyledDialog open={openCreateTour}>
@@ -239,7 +222,7 @@ const TableListTourAdmin = () => {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       id="datetime-local"
-                      label="Start"
+                      label="Start date"
                       type="datetime-local"
                       value={startDateTime}
                       onChange={(event) => {
@@ -254,7 +237,7 @@ const TableListTourAdmin = () => {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       id="datetime-local"
-                      label="End"
+                      label="End date"
                       type="datetime-local"
                       value={endDateTime}
                       onChange={(event) => {
@@ -311,7 +294,7 @@ const TableListTourAdmin = () => {
                         flexDirection: 'column',
                         backgroundColor: '#ffffff',
                       }}
-                        onChange={(event) => {
+                      onChange={(event) => {
                         const selectedImage = event.target.files[0];
                         console.log(selectedImage);
                       }}

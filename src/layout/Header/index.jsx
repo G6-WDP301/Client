@@ -31,14 +31,14 @@ const Header = () => {
       });
 
       if (response.ok) {
-        const responseData = await response.json();
-        console.log('Login successful:', responseData);
-        toast.success('Login successful ~')
+        const responseData = await response.data;
+        console.log('Search successful:', responseData);
+        toast.success('Please wait few minutes...')
         // navigate('/');
       } else {
-        console.error('Login failed:', response.status);
-        const errorData = await response.json();
-        // console.error('Error Data:', errorData);
+        console.error('Search failed:', response.status);
+        const errorData = await response.error;
+        console.error('Error Data:', errorData);
         toast.error(errorData.error);
       } x
     } catch (error) {
