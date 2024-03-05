@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Chart as ChartJS, LinearScale } from 'chart.js/auto'
 import { Line } from 'react-chartjs-2'
 import { CHART_LAST_1day, CHART_LAST_1hour, CHART_LAST_2days, CHART_LAST_30days, CHART_LAST_30m, CHART_LAST_5m, CHART_LAST_7days } from '../../utils/components/ChartTime'
+import axios from 'axios'
 
 const ChartSection = ({ metric, timeRange, min, max, title, unit }) => {
   ChartJS.register(LinearScale)
@@ -35,7 +36,19 @@ const ChartSection = ({ metric, timeRange, min, max, title, unit }) => {
     return dateObject.toLocaleString('en-US', options)
   }
 
+  const [tours, setTours] = useState([]);
+
   useEffect(() => {
+
+    axios.get('http://localhost:8080/api/tour/find-all')
+      .then((response) => {
+        const tourData = response.data.tours;
+        setTours(tourData);
+        console.log(tourData);
+      })
+      .catch(error => console.log(error));
+
+
     const getData = async () => {
       if (chartDataRaw) {
         let chartdata = {
@@ -87,7 +100,6 @@ const ChartSection = ({ metric, timeRange, min, max, title, unit }) => {
       }
     }
     getData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chartDataRaw])
 
   let clicked = false
