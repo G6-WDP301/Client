@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import Navbar from '../../layout/Navbar';
+import NavbarLogin from '../../layout/NavbarLogin/index'
 import img from '../../images/image_hotel(1).jpg';
 import img1 from '../../images/image_hotel(2).jpg';
 import img2 from '../../images/image_hotel(3).jpg';
@@ -30,6 +31,7 @@ import moment from 'moment';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { jwtDecode } from 'jwt-decode'
+import Aos from 'aos';
 
 
 const BookingTour = () => {
@@ -42,7 +44,7 @@ const BookingTour = () => {
       currency: 'VND',
     }).format(price);
   };
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [numberPeople, setNumberPeople] = useState(1);
   const [type, setType] = useState('option1');
   const [option1Check, setOption1Checked] = useState(false);
@@ -120,6 +122,9 @@ const BookingTour = () => {
   };
 
   useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
     axios.get(`http://localhost:8080/api/tour/${id}`)
       .then((response) => {
         const tours = Object.values(response.data.tour);
@@ -130,7 +135,7 @@ const BookingTour = () => {
 
   return (
     <>
-      <Navbar />
+      {isLoggedIn ? <NavbarLogin /> : <Navbar />}
       <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50">
         <div className="w-full container flex justify-center items-center flex-col">
           <p className="text-white font-secondary text-3xl 2xl:text-6xl" style={{ fontStyle: "italic", color: "#fff" }}>
