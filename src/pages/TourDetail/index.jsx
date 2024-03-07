@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import Navbar from '../../layout/Navbar';
+import NavbarLogin from '../../layout/NavbarLogin/index'
 import img from '../../images/image_hotel(1).jpg';
 import img1 from '../../images/image_hotel(2).jpg';
 import img2 from '../../images/image_hotel(3).jpg';
@@ -36,6 +37,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Footer from '../../layout/Footer';
+import Aos from 'aos';
 
 const tour = [
   {
@@ -144,6 +146,8 @@ const styles = {
 
 export default function index() {
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -182,6 +186,9 @@ export default function index() {
   }, [open, allPoints, allTourLength]);
 
   useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
     axios.get(`http://localhost:8080/api/tour/${id}`)
       .then((response) => {
         const tours = Object.values(response.data.tour);
@@ -199,7 +206,7 @@ export default function index() {
 
   return (
     <>
-      <Navbar />
+      {isLoggedIn ? <NavbarLogin /> : <Navbar />}
       <Paper sx={styles.paperContainer}>
         <div style={{ padding: '2rem' }} className="flex-column">
           <Typography variant="h4" sx={{ color: 'whitesmoke', mt: 2 }}>
