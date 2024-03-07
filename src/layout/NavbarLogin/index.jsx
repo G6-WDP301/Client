@@ -121,7 +121,7 @@ export default function index() {
             </li>
 
             <li className="navItem">
-              <a href="#" className="navLink" onClick={() => navigate("/AboutUs")}>About Us</a>
+              <a href="#" className="navLink" onClick={() => navigate("/aboutus")}>About Us</a>
             </li>
 
             <div className="headerBtns flex items-center relative pl-4">

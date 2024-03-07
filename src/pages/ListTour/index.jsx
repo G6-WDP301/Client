@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './listTour.scss';
-import { Navbar, Footer } from '@/layout';
+import { Navbar, NavbarLogin, Footer } from '@/layout';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Aos from 'aos';
 
 import maldives1 from '../../images/maldives1.jpg';
 import Roma from '../../images/2.jpg';
@@ -49,6 +50,7 @@ const listFilter = [
 
 export default function index() {
   const [isOpen, setIsOpen] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
 
@@ -61,6 +63,9 @@ export default function index() {
   const [bookingId, setBookingId] = useState([]);
 
   useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
     axios.get('http://localhost:8080/api/tour/find-all')
       .then((response) => {
         const tourData = response.data.tours;
@@ -78,7 +83,7 @@ export default function index() {
     setSelectedUserId(tourId);
     navigate(`/tour-detail/${tourId}`);
   }
-  
+
   const handleBooking = (tourId) => {
     setBookingId(tourId);
     navigate(`/booking-tour/${tourId}`);
@@ -86,7 +91,7 @@ export default function index() {
 
   return (
     <>
-      <Navbar />
+      {isLoggedIn ? <NavbarLogin /> : <Navbar />}
       <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50">
         <div className="w-full container flex justify-center items-center flex-col">
           <p className="text-white font-secondary text-3xl 2xl:text-6xl">

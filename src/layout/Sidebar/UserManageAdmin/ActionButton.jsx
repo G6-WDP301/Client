@@ -16,13 +16,13 @@ import moment from 'moment'
 
 import axios from 'axios';
 
-const ActionButton = ({ user}) => {
+const ActionButton = ({ user }) => {
   const [visibleModals, setVisibleModals] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [value , setValue] = useState({});
+  const [value, setValue] = useState({});
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [dob, setDob] = useState('');
@@ -32,38 +32,37 @@ const ActionButton = ({ user}) => {
 
 
   useEffect(() => {
-    if(showEditDialog === true){
+    if (showEditDialog === true) {
       axios.get(`http://localhost:8080/api/user/${user._id}`)
         .then((response) => {
           const useData = response.data.data
-          console.log(useData);
           setValue(useData)
-          
+
         })
         .catch(error => console.log(error))
     }
-  }, [user._id,showEditDialog]);
+  }, [user._id, showEditDialog]);
 
-const handleClickUser = (userId) => {
-  setSelectedUserId(userId);
-  navigate(`/users/${userId}`);
-}
+  const handleClickUser = (userId) => {
+    setSelectedUserId(userId);
+    navigate(`/users/${userId}`);
+  }
 
   // const handleIconButtonOnClick = async (user, setShowModalFunc) => {
   //   setVisibleModals(true);
   //   setAnchorEl(null);
   //   setShowModalFunc(true);
   // };
-  useEffect(() => {{
+  useEffect(() => {
+    axios.post(`http://localhost:8080/api/user/update/${user._id}`)
+      .then((response) => {
+        const useData = response.data.data;
+        console.log("userData ne: ", useData);
+        setValue(useData)
 
-      axios.post(`http://localhost:8080/api/user/update/${user._id}`)
-        .then((response) => {
-          const useData = response.data.data
-          console.log(useData);
-          setValue(useData)
-          
-        })
-        .catch(error => console.log(error)), []);
+      })
+      .catch(error => console.log(error))
+  }, [])
 
 
   const handleDeleteClick = () => {
