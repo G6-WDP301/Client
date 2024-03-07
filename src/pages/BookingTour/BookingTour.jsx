@@ -107,13 +107,14 @@ const BookingTour = () => {
           toast.success('Booking successful ~')
           navigate('/')
         } else {
-          console.error('Booking tour failed:', response.data);
+          console.error('Booking tour failed:', response.status);
           const errorData = response.error;
           console.error('Error Data:', errorData);
           toast.error(errorData.error);
         }
       } catch (error) {
-        console.error('Error fetching data:', error.message);
+        console.error('Booking tour failed');
+        toast.error('You already booked this tour ~ You can book other tour !');
       }
     }
   };
@@ -126,27 +127,6 @@ const BookingTour = () => {
       })
       .catch(error => console.log(error));
   }, []);
-
-  // useEffect(() => {
-  //   const handleBooking = () => {
-  //     const token = localStorage.getItem('token');
-  //     if (token) {
-  //       const decodedToken = jwtDecode(token);
-  //       const userId = decodedToken.user_id;
-  //       axios.get(`http://localhost:8080/api/user/${userId}`)
-  //         .then((response) => {
-  //           const userData = response.data.data;
-  //           console.log("user ne: ", userData);
-  //           setUser(userData);
-  //         })
-  //         .catch((error) => {
-  //           console.log('Error:', error);
-  //         });
-  //     }
-  //   };
-
-  //   handleBooking();
-  // }, []);
 
   return (
     <>

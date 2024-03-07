@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Navbar, NavbarLogin, Footer } from '@/layout';
 import './gallery.scss';
 import { Carousel } from "@material-tailwind/react";
+import Aos from 'aos';
+import { useEffect } from 'react';
 
 export default function index() {
   const data = [
@@ -31,10 +33,16 @@ export default function index() {
     'https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80'
   );
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
+  }, []);
   return (
     <>
-      {/* <navBarNoTransparent /> */}
-      <NavbarLogin />
+      {isLoggedIn ? <NavbarLogin /> : <Navbar />}
 
       <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50">
         <div className="w-full container flex justify-center items-center flex-col">
@@ -49,14 +57,14 @@ export default function index() {
       </section>
 
       <div className='px-5 pt-10'>
-        <div style={{paddingTop:'1.6rem', paddingBottom:'3rem'}}>
+        <div style={{ paddingTop: '1.6rem', paddingBottom: '3rem' }}>
           <p className="text-color4 uppercase py-2 px-5">Maybe You Will Like</p>
-            <p className="text-5xl font-secondary text-color3 px-5">
-                Popular <span className="text-color1">Destinations</span>
-            </p>
+          <p className="text-5xl font-secondary text-color3 px-5">
+            Popular <span className="text-color1">Destinations</span>
+          </p>
         </div>
 
-        
+
         <div className="grid gap-4">
           <div>
             <img
@@ -77,188 +85,188 @@ export default function index() {
               </div>
             ))}
           </div>
-        </div>  
+        </div>
       </div>
 
       <div className='px-5 pt-10'>
-        <div style={{paddingTop:'1.6rem', paddingBottom:'3rem'}}>
-            <p className="text-5xl font-secondary text-color3 text-center px-5">
-                Our <span className="text-color1">Collection</span>
-            </p>
+        <div style={{ paddingTop: '1.6rem', paddingBottom: '3rem' }}>
+          <p className="text-5xl font-secondary text-color3 text-center px-5">
+            Our <span className="text-color1">Collection</span>
+          </p>
         </div>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div className="grid gap-4">
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1432462770865-65b70566d673?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
-              alt="gallery-photo"
-            />
+          <div className="grid gap-4">
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1432462770865-65b70566d673?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center "
+                src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"
+                alt="gallery-photo"
+              />
+            </div>
           </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center "
-              src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
-              alt="gallery-photo"
-            />
+          <div className="grid gap-4">
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center "
+                src="https://docs.material-tailwind.com/img/team-3.jpg"
+                alt="gallery-photo"
+              />
+            </div>
           </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"
-              alt="gallery-photo"
-            />
+          <div className="grid gap-4">
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center "
+                src="https://docs.material-tailwind.com/img/team-3.jpg"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+                alt="gallery-photo"
+              />
+            </div>
           </div>
-        </div>
-        <div className="grid gap-4">
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-              alt="gallery-photo"
-            />
+          <div className="grid gap-4">
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
+                alt="gallery-photo"
+              />
+            </div>
           </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-              alt="gallery-photo"
-            />
-          </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center "
-              src="https://docs.material-tailwind.com/img/team-3.jpg"
-              alt="gallery-photo"
-            />
-          </div>
-        </div>
-        <div className="grid gap-4">
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"
-              alt="gallery-photo"
-            />
-          </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center "
-              src="https://docs.material-tailwind.com/img/team-3.jpg"
-              alt="gallery-photo"
-            />
-          </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-              alt="gallery-photo"
-            />
-          </div>
-        </div>
-        <div className="grid gap-4">
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-              alt="gallery-photo"
-            />
-          </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
-              alt="gallery-photo"
-            />
-          </div>
-        </div>
         </div>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4 pb-28">
-        <div className="grid gap-4">
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1432462770865-65b70566d673?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
-              alt="gallery-photo"
-            />
+          <div className="grid gap-4">
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1432462770865-65b70566d673?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center "
+                src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"
+                alt="gallery-photo"
+              />
+            </div>
           </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center "
-              src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
-              alt="gallery-photo"
-            />
+          <div className="grid gap-4">
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center "
+                src="https://docs.material-tailwind.com/img/team-3.jpg"
+                alt="gallery-photo"
+              />
+            </div>
           </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"
-              alt="gallery-photo"
-            />
+          <div className="grid gap-4">
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center "
+                src="https://docs.material-tailwind.com/img/team-3.jpg"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+                alt="gallery-photo"
+              />
+            </div>
           </div>
-        </div>
-        <div className="grid gap-4">
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-              alt="gallery-photo"
-            />
+          <div className="grid gap-4">
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
+                alt="gallery-photo"
+              />
+            </div>
+            <div>
+              <img
+                className="h-auto max-w-full rounded-lg object-cover object-center"
+                src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
+                alt="gallery-photo"
+              />
+            </div>
           </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-              alt="gallery-photo"
-            />
-          </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center "
-              src="https://docs.material-tailwind.com/img/team-3.jpg"
-              alt="gallery-photo"
-            />
-          </div>
-        </div>
-        <div className="grid gap-4">
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"
-              alt="gallery-photo"
-            />
-          </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center "
-              src="https://docs.material-tailwind.com/img/team-3.jpg"
-              alt="gallery-photo"
-            />
-          </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-              alt="gallery-photo"
-            />
-          </div>
-        </div>
-        <div className="grid gap-4">
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-              alt="gallery-photo"
-            />
-          </div>
-          <div>
-            <img
-              className="h-auto max-w-full rounded-lg object-cover object-center"
-              src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
-              alt="gallery-photo"
-            />
-          </div>
-        </div>
         </div>
       </div>
 

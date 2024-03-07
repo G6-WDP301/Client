@@ -78,26 +78,13 @@ export const routes = [
         isShowHeader: true
     },
     {
-        path: "/admin/dashboard",
-        page: Sidebar
-    },
-    {
-        path: "/admin/user-manage",
-        page: UserManage
-    },
+        path: "/aboutus",
+        page: AboutUs,
+    }
     // {
     //     path: "/admin/user-manage/:id",
     //     page: UserManage
     // },
-    {
-        path: "/admin/tour-manage",
-        page: TourManage
-    },
-    {
-        path: "/admin/list-tour",
-        page: TableListTourAdmin
-    },
-
 ]
 
 export const adminRoutes = [
@@ -112,6 +99,14 @@ export const adminRoutes = [
     {
         path: "/dashboard",
         page: Sidebar
+    },
+    {
+        path: "/admin/user-manage",
+        page: UserManage
+    },
+    {
+        path: "/admin/tour-manage",
+        page: TourManage
     },
     // {
     //     path: "/user-admin",
