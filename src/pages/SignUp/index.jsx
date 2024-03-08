@@ -67,7 +67,7 @@ export default function SignInSide() {
         const responseData = await response.json();
         console.log('Data received:', responseData);
         toast.success('Register successfully ~')
-        navigate('/');
+        navigate('/login');
       } else {
         console.error('Error:', response.status);
         const errorData = await response.json();
