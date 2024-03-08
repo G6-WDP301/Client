@@ -1,6 +1,8 @@
 import './Header.scss'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Header = () => {
 
@@ -8,13 +10,25 @@ const Header = () => {
   const [startPosition, setStartPosition] = useState('');
   const [endPosition, setEndPosition] = useState('');
   const [searchDate, setSearchDate] = useState('');
+  const [location, setLocation] = useState([]);
+  const [search, setSearch] = useState([]);
 
   useEffect(() => {
+    // Get api tours
     axios.get('http://localhost:8080/api/tour/find-all')
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
-        console.log("Data tour ne: ", tourData);
+        console.log(tourData);
+      })
+      .catch(error => console.log(error));
+
+    // Get api locations
+    axios.get('http://localhost:8080/api/location/all')
+      .then((response) => {
+        const locationData = response.data.locations.locationSaved;
+        setLocation(locationData);
+        console.log("location nek: ", locationData[0]?.location_name);
       })
       .catch(error => console.log(error));
   }, []);
@@ -22,27 +36,31 @@ const Header = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/api/tour/get-list-search-tour?page=1&pageSize=10', {
-        method: 'POST',
+      const response = await axios.post('http://localhost:8080/api/tour/get-list-search-tour?page=1&pageSize=10', {
+        start_position: startPosition,
+        end_position: endPosition,
+        start_date: searchDate
+      }, {
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(searchParams),
+        }
       });
 
-      if (response.ok) {
-        const responseData = await response.data;
+      if (response.status === 200) {
+        const responseData = await response.data.tours.tours[0];
         console.log('Search successful:', responseData);
+        setSearch(responseData)
         toast.success('Please wait few minutes...')
         // navigate('/');
       } else {
         console.error('Search failed:', response.status);
-        const errorData = await response.error;
+        const errorData = await response.data.error;
         console.error('Error Data:', errorData);
-        toast.error(errorData.error);
-      } x
+        toast.error(errorData.message);
+      }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error Data:', error);
+      toast.error('There are no tours like you are looking for ~ Try to find other tours!');
     }
   };
 
@@ -77,9 +95,9 @@ const Header = () => {
             <label htmlFor="location">Start place</label>
             <select value={startPosition} onChange={(e) => setStartPosition(e.target.value)}>
               <option value="">Choose Start Position</option>
-              {tours.map((tour) => (
-                <option value={tour._id} key={tour._id}>
-                  {tour?.start_position?.location_name}
+              {location.map((loc) => (
+                <option value={loc._id} key={loc._id}>
+                  {loc?.location_name}
                 </option>
               ))}
             </select>
@@ -88,9 +106,9 @@ const Header = () => {
             <label htmlFor="location">End place</label>
             <select value={endPosition} onChange={(e) => setEndPosition(e.target.value)}>
               <option value="">Choose End Position</option>
-              {tours.map((tour) => (
-                <option value={tour._id} key={tour._id}>
-                  {tour?.start_position?.location_name}
+              {location.map((loc) => (
+                <option value={loc._id} key={loc._id}>
+                  {loc?.location_name}
                 </option>
               ))}
             </select>

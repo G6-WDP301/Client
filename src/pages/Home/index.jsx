@@ -43,10 +43,6 @@ const Home = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log('logAdmin:', logAdmin);
-  }, [logAdmin]);
-
   if (!user) {
     return (
       <div> Loading...
