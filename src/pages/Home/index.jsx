@@ -12,11 +12,16 @@ import 'aos/dist/aos.css';
 import PopularTour from '../Popular/PopularTour.jsx';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import DataContext from '../../layout/ContextData/ContextData.jsx';
+import { useContext } from 'react';
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [logAdmin, setLogAdmin] = useState(false);
+  const [headerData, setHeaderData] = useState([]);
 
+  // State context data
+  const [data, setData] = useState('alo test');
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -50,11 +55,17 @@ const Home = () => {
     );
   }
 
+  const handleApiData = (dataAfterSearch) => {
+    setHeaderData(dataAfterSearch);
+  };
+
   return (
     <>
       {isLoggedIn ? (logAdmin ? <NavbarAdminLogin /> : <NavbarLogin />) : <Navbar />}
-      <Header />
-      <Popular />
+      <Header dataSearch={handleApiData} />
+      <DataContext.Provider value={headerData}>
+        <Popular />
+      </DataContext.Provider>
       <PopularTour />
       <Offers />
       <About />

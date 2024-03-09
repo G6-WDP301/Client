@@ -34,7 +34,6 @@ export default function index() {
   );
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   useEffect(() => {
     Aos.init({ duration: 2000 });
     const token = localStorage.getItem('token');
@@ -49,10 +48,6 @@ export default function index() {
           <p className="text-white font-secondary text-3xl 2xl:text-6xl">
             Gallery of travel
           </p>
-          {/* <div classNameName="flex mt-5 gap-5">
-                <div classNameName="flex items-center"><i classNameName="bi bi-geo-alt text-white text-2xl me-2"></i><p classNameName="text-white">Maldives</p></div>
-                <div classNameName="flex items-center"><i classNameName="bi bi-clock text-white text-2xl me-2"></i><p classNameName="text-white"> 4 Days + 3 Nights   </p></div>
-        </div> */}
         </div>
       </section>
 

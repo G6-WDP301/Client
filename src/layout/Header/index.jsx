@@ -1,17 +1,16 @@
 import './Header.scss'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Header = () => {
-
+const Header = ({ dataSearch }) => {
   const [tours, setTours] = useState([]);
   const [startPosition, setStartPosition] = useState('');
   const [endPosition, setEndPosition] = useState('');
   const [searchDate, setSearchDate] = useState('');
   const [location, setLocation] = useState([]);
-  const [search, setSearch] = useState([]);
+  const [searchData, setSearchData] = useState([]);
 
   useEffect(() => {
     // Get api tours
@@ -19,7 +18,6 @@ const Header = () => {
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
-        console.log(tourData);
       })
       .catch(error => console.log(error));
 
@@ -28,12 +26,13 @@ const Header = () => {
       .then((response) => {
         const locationData = response.data.locations.locationSaved;
         setLocation(locationData);
-        console.log("location nek: ", locationData[0]?.location_name);
       })
       .catch(error => console.log(error));
   }, []);
 
+  // Search feature
   const handleSubmit = async (event) => {
+
     event.preventDefault();
     try {
       const response = await axios.post('http://localhost:8080/api/tour/get-list-search-tour?page=1&pageSize=10', {
@@ -49,8 +48,9 @@ const Header = () => {
       if (response.status === 200) {
         const responseData = await response.data.tours.tours[0];
         console.log('Search successful:', responseData);
-        setSearch(responseData)
-        toast.success('Please wait few minutes...')
+        setSearchData(responseData);
+        dataSearch(responseData);
+        toast.success('Please wait few secondes...')
         // navigate('/');
       } else {
         console.error('Search failed:', response.status);
