@@ -94,7 +94,7 @@ export default function index() {
             <div className={transparent}>
 
                 <div className='logoDiv'>
-                    <a href="#" className='logo'>
+                    <a href="#" className='logo' onClick={() => navigate('/')}>
                         <h1 className='flex font-bold text-xl'><SiYourtraveldottv className='icon' />
                             TripGo
                         </h1>
