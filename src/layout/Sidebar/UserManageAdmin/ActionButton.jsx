@@ -54,17 +54,9 @@ const handleClickUser = (userId) => {
   //   setAnchorEl(null);
   //   setShowModalFunc(true);
   // };
-  useEffect(() => {{
 
-      axios.post(`http://localhost:8080/api/user/update/${user._id}`)
-        .then((response) => {
-          const useData = response.data.data
-          console.log(useData);
-          setValue(useData)
-          
-        })
-        .catch(error => console.log(error)), []);
 
+  
 
   const handleDeleteClick = () => {
     setShowDeleteDialog(true);
