@@ -4,6 +4,7 @@ import { Navbar, NavbarLogin, Footer } from '@/layout';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Aos from 'aos';
+import moment from 'moment';
 
 const listFilter = [
   {
@@ -30,6 +31,8 @@ export default function index() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
+
+  const timeNow = new Date().toISOString();
 
   const toggleDropdown = (id) => {
     setIsOpen({ ...isOpen, [id]: !isOpen[id] });
@@ -75,19 +78,22 @@ export default function index() {
 
   const applyPriceFilter = (tours) => {
     if (selectedPriceFilter === null) {
-      return tours;
+      return tours.filter(tour => new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item1) {
-      return tours.filter((tour) => tour.tour_price < 500);
+      return tours.filter((tour) => tour.tour_price < 500 && new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item2) {
-      return tours.filter((tour) => tour.tour_price >= 500 && tour.tour_price <= 1000);
+      return tours.filter((tour) => tour.tour_price >= 500 && tour.tour_price <= 1000 && new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item3) {
-      return tours.filter((tour) => tour.tour_price >= 1000 && tour.tour_price <= 2000);
+      return tours.filter((tour) => tour.tour_price >= 1000 && tour.tour_price <= 2000 && new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item4) {
-      return tours.filter((tour) => tour.tour_price > 2000);
+      return tours.filter((tour) => tour.tour_price > 2000 && new Date(tour.start_date) >= new Date(timeNow));
     } else {
-      return tours;
+      return tours.filter(tour => new Date(tour.start_date) >= new Date(timeNow));
     }
   };
+
+
+  console.log('time now:', timeNow);
 
   return (
     <>
