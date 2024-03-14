@@ -11,7 +11,8 @@ import BookingTour from '../pages/BookingTour/BookingTour.jsx'
 import TableListTourAdmin from '../pages/Admin/ListTour/ListTour.jsx';
 import UserManage from '../layout/Sidebar/userManage.jsx';
 import TourManage from '../layout/Sidebar/tourManage.jsx';
-
+import Success from '../pages/StatusPayment/Success.jsx'
+import Cancel from '../pages/StatusPayment/Cancel.jsx'
 
 export const routes = [
     {
@@ -73,18 +74,22 @@ export const routes = [
         page: BookingTour
     },
     {
-        path: "/payment",
+        path: "/payment/:id",
         page: Payment,
         isShowHeader: true
     },
     {
         path: "/aboutus",
         page: AboutUs,
+    },
+    {
+        path: "/success",
+        page: Success
+    },
+    {
+        path: "/Cancel",
+        page: Cancel
     }
-    // {
-    //     path: "/admin/user-manage/:id",
-    //     page: UserManage
-    // },
 ]
 
 export const adminRoutes = [

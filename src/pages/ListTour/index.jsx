@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Aos from 'aos';
 import moment from 'moment';
+import Header from '../../layout/Header';
 
 const listFilter = [
   {
@@ -92,9 +93,6 @@ export default function index() {
     }
   };
 
-
-  console.log('time now:', timeNow);
-
   return (
     <>
       {isLoggedIn ? <NavbarLogin /> : <Navbar />}
@@ -111,7 +109,7 @@ export default function index() {
           <div className="">
             <div className="flex justify-evenly items-center">
               <div className="flex flex-wrap justify-around items-center gap-[1rem]">
-                <div className="text-lg font-semibold mr-3">Filter</div>
+                <div className="text-lg font-semibold mr-3">Search Filter</div>
 
                 {listFilter.map((list) => (
                   <div
@@ -196,7 +194,7 @@ export default function index() {
 
               </div>
 
-              <div className="">
+              {/* <div className="">
                 <form className="flex items-center max-w-sm mx-auto">
                   <label for="simple-search" className="sr-only">
                     Search
@@ -250,7 +248,7 @@ export default function index() {
                     <span className="sr-only">Search</span>
                   </button>
                 </form>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -275,7 +273,7 @@ export default function index() {
                     </div>
                     <div className="w-[50%] flex">
                       <i className="bi bi-geo-alt text-color4"></i>
-                      <p className="text-color6 ms-2">{list.end_position.location_name}</p>
+                      <p className="text-color6 ms-2">{list.start_position?.location_name}</p>
                     </div>
                   </div>
                   <div className="flex gap-5 mt-6">
@@ -301,7 +299,7 @@ export default function index() {
                   className="w-[100%] h-[100%] object-cover brightness-75 absolute"
                 />
                 <p className="absolute uppercase text-white bg-color3 px-4 py-1 right-1 top-12 rotate-[-90deg] ">
-                  {list.end_position.location_name}
+                  {list.start_position?.location_name}
                 </p>
                 <figcaption className="absolute text-white bottom-8 right-10 fig">
                   <p className="capitalize font-secondary text-3xl" style={{ paddingLeft: "20px", paddingBottom: "90px" }}>

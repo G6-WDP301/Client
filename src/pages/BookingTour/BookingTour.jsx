@@ -107,7 +107,7 @@ const BookingTour = () => {
           const responseData = response.data;
           console.log('Booking tour successful:', responseData);
           toast.success('Booking successful ~')
-          navigate('/list-tour')
+          navigate(`/payment/${id}`)
         } else {
           console.error('Booking tour failed:', response.status);
           const errorData = response.error;
@@ -120,6 +120,9 @@ const BookingTour = () => {
         toast.error('You already booked this tour ~ You can book other tour !');
         navigate('/list-tour');
       }
+    } else {
+      toast('You are not logged in ~ Please log in to book a tour !!!')
+      navigate('/login');
     }
   };
 
