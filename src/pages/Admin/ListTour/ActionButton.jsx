@@ -4,6 +4,8 @@ import React, { useState, useContext } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import { CustomButton } from '../../utils/components/CustomButton'
+import EditStateModal from './modals/Edit.jsx'
+import DeleteTourAdminModal from './modals/Delete.jsx'
 
 //Styled Imports
 
@@ -36,6 +38,20 @@ const ActionButton = ({ row }) => {
         onClick={() => handleIconButtonOnClick(row, setShowDeleteModal)}
         disabled={false}
       />
+      {visibleModals && (
+        <div>
+          <EditStateModal
+            row={row}
+            openModal={showEditModal}
+            setOpenModal={setShowEditModal}
+          />
+          <DeleteTourAdminModal
+            row={row}
+            openModal={showDeleteModal}
+            setOpenModal={setShowDeleteModal}
+          />
+        </div>
+      )}
     </div>
   )
 }
