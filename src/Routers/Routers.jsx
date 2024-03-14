@@ -80,7 +80,11 @@ export const routes = [
     {
         path: "/aboutus",
         page: AboutUs,
-    }
+    },
+    {
+        path: "/dashboard",
+        page: Sidebar
+    },
     // {
     //     path: "/admin/user-manage/:id",
     //     page: UserManage
