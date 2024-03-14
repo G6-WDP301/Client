@@ -6,8 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Header = ({ dataSearch }) => {
   const [tours, setTours] = useState([]);
-  const [startPosition, setStartPosition] = useState('');
-  const [endPosition, setEndPosition] = useState('');
+  const [startPosition, setStartPosition] = useState(null);
+  const [endPosition, setEndPosition] = useState(null);
   const [searchDate, setSearchDate] = useState('');
   const [location, setLocation] = useState([]);
   const [searchData, setSearchData] = useState([]);
