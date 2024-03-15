@@ -1,40 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import './listTour.scss';
-import { Navbar, Footer } from '@/layout';
+import { Navbar, NavbarLogin, Footer } from '@/layout';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Aos from 'aos';
 
-import maldives1 from '../../images/maldives1.jpg';
-import Roma from '../../images/2.jpg';
-import france1 from '../../images/france1.jpg';
-import greece1 from '../../images/greece1.jpg';
-import canada1 from '../../images/canada1.jpg';
-import Dubai from '../../images/44-1.jpg';
+import { jwtDecode } from 'jwt-decode';
+import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 
 const listFilter = [
   {
     id: 1,
     name: 'Price',
-    item1: 'Less than $5000c',
+    item1: 'Less than $500',
     item2: '$500 - $1000',
     item3: '$1000 - $2000',
-    item4: '$2000 + ',
-  },
-  {
-    id: 2,
-    name: 'Amenities',
-    item1: 'Swimming pool',
-    item2: 'Laundry',
-    item3: 'Outdoor spaces',
-    item4: 'Security',
-  },
-  {
-    id: 3,
-    name: 'Style',
-    item1: 'Modern',
-    item2: 'Minimalist',
-    item3: 'Contemporary',
-    item4: 'Bohemian',
+    item4: '$2000+ ',
   },
   {
     id: 4,
@@ -44,11 +25,12 @@ const listFilter = [
     item3: '3',
     item4: '4',
     item5: '5',
-  },
+  }
 ];
 
 export default function index() {
   const [isOpen, setIsOpen] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
 
@@ -59,13 +41,18 @@ export default function index() {
   const [tours, setTours] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState([]);
   const [bookingId, setBookingId] = useState([]);
+  const [selectedPriceFilter, setSelectedPriceFilter] = useState(null);
+  const [hasFilteredTours, setHasFilteredTours] = useState(true);
 
   useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
     axios.get('http://localhost:8080/api/tour/find-all')
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
-        console.log(tourData[0].tour_name);
+        setHasFilteredTours(tourData.length > 0);
       })
       .catch(error => console.log(error));
   }, []);
@@ -78,15 +65,75 @@ export default function index() {
     setSelectedUserId(tourId);
     navigate(`/tour-detail/${tourId}`);
   }
-  
+
   const handleBooking = (tourId) => {
     setBookingId(tourId);
     navigate(`/booking-tour/${tourId}`);
   }
 
+  const handlePriceFilter = (price) => {
+    setSelectedPriceFilter(price);
+    setIsOpen(true);
+  };
+
+  const applyPriceFilter = (tours) => {
+    if (selectedPriceFilter === null) {
+      return tours;
+    } else if (selectedPriceFilter === listFilter[0].item1) {
+      return tours.filter((tour) => tour.tour_price < 500);
+    } else if (selectedPriceFilter === listFilter[0].item2) {
+      return tours.filter((tour) => tour.tour_price >= 500 && tour.tour_price <= 1000);
+    } else if (selectedPriceFilter === listFilter[0].item3) {
+      return tours.filter((tour) => tour.tour_price >= 1000 && tour.tour_price <= 2000);
+    } else if (selectedPriceFilter === listFilter[0].item4) {
+      return tours.filter((tour) => tour.tour_price > 2000);
+    } else {
+      return tours;
+    }
+  };
+
+
+  const [logPartner, setLogPartner] = useState(false);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.user_id;
+      axios
+        .get(`http://localhost:8080/api/user/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUser(userData);
+          const rid = decodedToken.role;
+          console.log(decodedToken)
+          if (rid === 'PARTNER') {
+            setLogPartner(true);
+          } else {
+            setLogPartner(false);
+          }
+        })
+        .catch((error) => {
+          console.log('Error:', error);
+        });
+    }
+  }, []);
+
   return (
     <>
-      <Navbar />
+      {/* {isLoggedIn ? <NavbarLogin /> : <Navbar />} */}
+      {isLoggedIn ? (
+        logPartner ? (
+          <NavbarPartnerLogin />
+        ) : (
+          <NavbarLogin />
+        )
+      ) : (
+        <Navbar />
+      )}
       <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50">
         <div className="w-full container flex justify-center items-center flex-col">
           <p className="text-white font-secondary text-3xl 2xl:text-6xl">
@@ -145,6 +192,7 @@ export default function index() {
                             <a
                               href="#"
                               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                              onClick={() => handlePriceFilter(list.item1)}
                             >
                               {list.item1}
                             </a>
@@ -153,6 +201,7 @@ export default function index() {
                             <a
                               href="#"
                               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                              onClick={() => handlePriceFilter(list.item2)}
                             >
                               {list.item2}
                             </a>
@@ -161,6 +210,7 @@ export default function index() {
                             <a
                               href="#"
                               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                              onClick={() => handlePriceFilter(list.item3)}
                             >
                               {list.item3}
                             </a>
@@ -169,6 +219,7 @@ export default function index() {
                             <a
                               href="#"
                               className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                              onClick={() => handlePriceFilter(list.item4)}
                             >
                               {list.item4}
                             </a>
@@ -178,6 +229,7 @@ export default function index() {
                     </div>
                   </div>
                 ))}
+
               </div>
 
               <div className="">
@@ -239,73 +291,68 @@ export default function index() {
           </div>
         </div>
       </section>
-
       <hr className="container mt-[4rem]" />
 
       <section className="mt-[4rem] container">
         <div className="flex flex-wrap md:justify-between gap-10 px-6 xl:px-0 py-8 lg:px-3">
-          {tours.map((list) => (
-            <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative photo transition-all duration-1000">
-              <div className="w-[100%] h-[100%] bottom-photo absolute bg-color7 flex flex-col justify-center px-5">
-                <p className="text-3xl text-color3 capitalize font-secondary">
-                  {list.tour_name}
-                </p>
-                <p className="text-color1 mb-4" style={{ paddingTop: "10px" }}>{list.tour_price}$</p>
-                <p className="text-color6">{list.tour_description}</p>
-                <div className="flex flex-wrap my-4">
-                  <div className="w-[50%] flex">
-                    <i className="bi bi-clock text-color4"></i>
-                    <p className="text-color6 ms-2">Time:{list.duration}h</p>
+          {applyPriceFilter(tours).length > 0 ? (
+            applyPriceFilter(tours).map((list) => (
+              <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative photo transition-all duration-1000">
+                <div className="w-[100%] h-[100%] bottom-photo absolute bg-color7 flex flex-col justify-center px-5">
+                  <p className="text-3xl text-color3 capitalize font-secondary">
+                    {list.tour_name}
+                  </p>
+                  <p className="text-color1 mb-4" style={{ paddingTop: "10px" }}>{list.tour_price}$</p>
+                  <p className="text-color6">{list.tour_description}</p>
+                  <div className="flex flex-wrap my-4">
+                    <div className="w-[50%] flex">
+                      <i className="bi bi-clock text-color4"></i>
+                      <p className="text-color6 ms-2">Time:{list.duration}h</p>
+                    </div>
+                    <div className="w-[50%] flex">
+                      <i className="bi bi-geo-alt text-color4"></i>
+                      <p className="text-color6 ms-2">{list.end_position.location_name}</p>
+                    </div>
                   </div>
-                  <div className="w-[50%] flex">
-                    <i className="bi bi-geo-alt text-color4"></i>
-                    <p className="text-color6 ms-2">{list.end_position.location_name}</p>
-                  </div>
-                  {/* <div className="w-[50%] flex">
-                    <i className="bi bi-person text-color4"></i>
-                    <p className="text-color6 ms-2">{list.duration}</p>
-                  </div> */}
-                  {/* <div className="w-[50%] flex">
-                    <i className="bi bi-emoji-smile text-color4"></i>
-                    <p className="text-color6 ms-2">{list.superb}</p>
-                  </div> */}
-                </div>
-                <div className="flex gap-5 mt-6">
-                  <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
-                    onClick={() => handleClickUser(list._id)}
-                  >
-                    <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                      Tour Details
-                    </span>
-                  </button>
+                  <div className="flex gap-5 mt-6">
+                    <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
+                      onClick={() => handleClickUser(list._id)}
+                    >
+                      <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                        Tour Details
+                      </span>
+                    </button>
 
-                  <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
-                    onClick={() => handleBooking(list._id)}>
-                    <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                      Booking Now
-                    </span>
-                  </button>
+                    <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
+                      onClick={() => handleBooking(list._id)}>
+                      <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                        Booking Now
+                      </span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <img
-                src={list.tour_img}
-                alt={list.end_position.location_name}
-                className="w-[100%] h-[100%] object-cover brightness-75 absolute"
-              />
-              <p className="absolute uppercase text-white bg-color3 px-4 py-1 right-1 top-12 rotate-[-90deg] ">
-                {list.end_position.location_name}
-              </p>
-              <figcaption className="absolute text-white bottom-8 right-10 fig">
-                <p className="capitalize font-secondary text-3xl" style={{ paddingLeft: "20px", paddingBottom: "90px" }}>
-                  {list.tour_name}
+                <img
+                  src={list.tour_img}
+                  alt={list.end_position.location_name}
+                  className="w-[100%] h-[100%] object-cover brightness-75 absolute"
+                />
+                <p className="absolute uppercase text-white bg-color3 px-4 py-1 right-1 top-12 rotate-[-90deg] ">
+                  {list.end_position.location_name}
                 </p>
-                <p className="text-right">{list.tour_price} $ / person</p>
-              </figcaption>
-            </figure>
-          ))}
+                <figcaption className="absolute text-white bottom-8 right-10 fig">
+                  <p className="capitalize font-secondary text-3xl" style={{ paddingLeft: "20px", paddingBottom: "90px" }}>
+                    {list.tour_name}
+                  </p>
+                  <p className="text-right">{list.tour_price} $ / person</p>
+                </figcaption>
+              </figure>
+            ))
+          ) : (
+            <h1 style={{ color: "gray", fontSize: "25px", fontStyle: "italic" }}>No tour has that price ~</h1>
+          )}
+
         </div>
-      </section>
-
+      </section >
       <div class="flex items-center justify-center py-10 lg:px-0 sm:px-6 px-4">
         <div class="lg:w-3/5 w-full  flex items-center justify-between border-t border-gray-200">
           <div class="flex items-center pt-3 text-gray-600 hover:text-orange-400 cursor-pointer">
@@ -398,7 +445,7 @@ export default function index() {
               />
             </svg>
           </div>
-        </div>
+        </div >
       </div>
 
       <div className="text-gray-400 text-sm flex justify-center mb-[6rem]">
@@ -411,267 +458,3 @@ export default function index() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import './listTour.scss';
-// import { Navbar, Footer } from '@/layout';
-// import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
-
-// import maldives1 from '../../images/maldives1.jpg';
-// import Roma from '../../images/2.jpg';
-// import france1 from '../../images/france1.jpg';
-// import greece1 from '../../images/greece1.jpg';
-// import canada1 from '../../images/canada1.jpg';
-// import Dubai from '../../images/44-1.jpg';
-
-// const listTour = [
-//   {
-//     id: 1,
-//     nameTour: 'Maldives tour',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '12 Days',
-//     nameCountry: 'Hòa Lạc',
-//     hour: '12+',
-//     superb: '9.8 Superb',
-//     img: maldives1,
-//     price: '$150 / per persons',
-//   },
-//   {
-//     id: 2,
-//     nameTour: 'Roma',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '6 Days',
-//     nameCountry: 'Italy',
-//     hour: '10+',
-//     superb: '9.5 Superb',
-//     img: Roma,
-//     price: '$1,300 / per persons',
-//   },
-//   {
-//     id: 3,
-//     nameTour: 'France',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '10 Days',
-//     nameCountry: 'France',
-//     hour: '6+',
-//     superb: '9.5 Superb',
-//     img: france1,
-//     price: '$400 / per persons',
-//   },
-//   {
-//     id: 4,
-//     nameTour: 'Greece tour',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '10 Days',
-//     nameCountry: 'Greece',
-//     hour: '12+',
-//     superb: '9.3 Superb',
-//     img: greece1,
-//     price: '$500 / per persons',
-//   },
-//   {
-//     id: 5,
-//     nameTour: 'Canada tour',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '7 Days',
-//     nameCountry: 'Canada',
-//     hour: '10+',
-//     superb: '9.3 Superb',
-//     img: canada1,
-//     price: '$300 / per persons',
-//   },
-//   {
-//     id: 6,
-//     nameTour: 'Dubai tour',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '7 Days',
-//     nameCountry: 'Dubai',
-//     hour: '10+',
-//     superb: '9.8 Superb',
-//     img: Dubai,
-//     price: '$200 / per persons',
-//   },
-//   {
-//     id: 7,
-//     nameTour: 'Dubai tour',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '7 Days',
-//     nameCountry: 'Dubai',
-//     hour: '10+',
-//     superb: '9.8 Superb',
-//     img: Dubai,
-//     price: '$200 / per persons',
-//   },
-//   {
-//     id: 8,
-//     nameTour: 'Dubai tour',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '7 Days',
-//     nameCountry: 'Dubai',
-//     hour: '10+',
-//     superb: '9.8 Superb',
-//     img: Dubai,
-//     price: '$200 / per persons',
-//   },
-//   {
-//     id: 9,
-//     nameTour: 'Dubai tour',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '7 Days',
-//     nameCountry: 'Dubai',
-//     hour: '10+',
-//     superb: '9.8 Superb',
-//     img: Dubai,
-//     price: '$200 / per persons',
-//   },
-//   {
-//     id: 10,
-//     nameTour: 'Dubai tour',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '7 Days',
-//     nameCountry: 'Dubai',
-//     hour: '10+',
-//     superb: '9.8 Superb',
-//     img: Dubai,
-//     price: '$200 / per persons',
-//   },
-//   {
-//     id: 11,
-//     nameTour: 'Dubai tour',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '7 Days',
-//     nameCountry: 'Dubai',
-//     hour: '10+',
-//     superb: '9.8 Superb',
-//     img: Dubai,
-//     price: '$200 / per persons',
-//   },
-//   {
-//     id: 12,
-//     nameTour: 'Dubai tour',
-//     des: 'Travel non lorem ac erat susce bibendum nulla facilisi. Sedeuter nunc voluat miss conse viventa amet vestibulum.',
-//     day: '7 Days',
-//     nameCountry: 'Dubai',
-//     hour: '10+',
-//     superb: '9.8 Superb',
-//     img: Dubai,
-//     price: '$200 / per persons',
-//   },
-// ];
-
-// export default function index() {
-//   const [isOpen, setIsOpen] = useState([]);
-
-//   const navigate = useNavigate();
-
-//   const toggleDropdown = (id) => {
-//     setIsOpen({ ...isOpen, [id]: !isOpen[id] });
-//   };
-
-//   const [tour, setTour] = useState({})
-
-//   useEffect(() => {
-//     axios.get('http://localhost:8080/api/tour/find-all')
-//       .then((response) => {
-//         const tourData = response.data.tours;
-//         setTour(tourData);
-//         console.log(tourData[0].tour_name);
-//       })
-//       .catch(error => console.log(error));
-//   }, []);
-
-//   useEffect(() => {
-//     console.log("Data tour here: ", tour);
-//   }, [tour]);
-
-
-
-//   return (
-//     <>
-//       <section className="mt-[4rem] container">
-//         <div className="flex flex-wrap md:justify-between gap-10 px-6 xl:px-0 py-8 lg:px-3">
-//           {listTour.map((list) => (
-//             <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative photo transition-all duration-1000">
-//               <div className="w-[100%] h-[100%] bottom-photo absolute bg-color7 flex flex-col justify-center px-5">
-//                 <p className="text-3xl text-color3 capitalize font-secondary">
-//                   {tour[0]?.tour_name}
-//                 </p>
-//                 <p className="text-color1 mb-4">{tour[0]?.tour_price}</p>
-//                 <p className="text-color6">{tour[0]?.tour_description}</p>
-//                 <div className="flex flex-wrap my-4">
-//                   <div className="w-[50%] flex">
-//                     <i className="bi bi-clock text-color4"></i>
-//                     <p className="text-color6 ms-2">{tour[0]?.duration}</p>
-//                   </div>
-//                   <div className="w-[50%] flex">
-//                     <i className="bi bi-geo-alt text-color4"></i>
-//                     <p className="text-color6 ms-2">{tour[0]?.end_position.location_name}</p>
-//                   </div>
-//                   <div className="w-[50%] flex">
-//                     <i className="bi bi-person text-color4"></i>
-//                     <p className="text-color6 ms-2">{tour[0]?.duration}</p>
-//                   </div>
-//                   <div className="w-[50%] flex">
-//                     <i className="bi bi-emoji-smile text-color4"></i>
-//                     <p className="text-color6 ms-2">{list.superb}</p>
-//                   </div>
-//                 </div>
-//                 <div className="flex gap-5 mt-6">
-//                   <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
-//                     onClick={() => navigate('/tour-detail')}
-//                   >
-//                     <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-//                       Tour Details
-//                     </span>
-//                   </button>
-
-//                   <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
-//                     <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-//                       Booking Now
-//                     </span>
-//                   </button>
-
-//                 </div>
-//               </div>
-//               <img
-//                 src={tour[0]?.tour_img}
-//                 alt={tour[0]?.end_position.location_name}
-//                 className="w-[100%] h-[100%] object-cover brightness-75 absolute"
-//               />
-//               <p className="absolute uppercase text-white bg-color3 px-4 py-1 right-1 top-12 rotate-[-90deg] ">
-//                 {list.nameCountry}
-//               </p>
-//               <figcaption className="absolute text-white bottom-8 right-10 fig">
-//                 <p className="capitalize font-secondary text-3xl" style={{paddingLeft: "50px"}}>
-//                   {tour[0]?.tour_name}
-//                 </p>
-//                 <p className="text-right">{list.price}</p>
-//               </figcaption>
-//             </figure>
-//           ))}
-//         </div>
-//       </section>
-//     </>
-//   );
-// }

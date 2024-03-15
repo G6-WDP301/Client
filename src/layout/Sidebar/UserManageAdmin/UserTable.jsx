@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from 'react'
 import Paper from '@mui/material/Paper'
 import AddIcon from '@mui/icons-material/Add'
-import { Card, CardHeader, Grid, TableBody, TableCell, TableHead, TableRow, Toolbar } from '@mui/material'
+import { Card, CardHeader, Grid, TableBody, TableCell, TableHead, TableRow, Toolbar, Button } from '@mui/material'
 import TableContainer from '@mui/material/TableContainer'
 import Table from '@mui/material/Table'
 import ActionButton from './ActionButton'
@@ -9,11 +9,16 @@ import axios from 'axios'
 import moment from 'moment'
 import { useNavigate } from 'react-router-dom';
 
+const ADMIN = "65aa44271de57d06c7f378a7";
+const USER = "65aa441d1de57d06c7f378a6";
+const PARTNER = "65aa44431de57d06c7f378a8";
 
 const UserTable = () => {
 
   const [target, setTarget] = useState('')
   const [users, setUsers] = useState([]);
+
+  const [userData, setUserData] = useState(null)
 
   const [selectedUserId, setSelectedUserId] = useState([]);
   const navigate = useNavigate();
@@ -31,7 +36,7 @@ const UserTable = () => {
     { id: 'action-button', label: 'Action Button', align: 'center', filterable: false }
   ]
 
-  useEffect(() => {
+  const userList = () => {
     axios.get('http://localhost:8080/api/user/all')
       .then((response) => {
         const usersData = response.data.data;
@@ -39,12 +44,34 @@ const UserTable = () => {
         console.log(usersData);
       })
       .catch(error => console.log(error));
+  }
+
+  useEffect(() => {
+      userList()
   }, []);
+
+  const handleUpdateUser = () => {
+      userList()
+    } 
+
+    const getRoleName = (roleId) => {
+      switch (roleId) {
+        case USER:
+          return "User";
+        case ADMIN:
+          return "Admin";
+        case PARTNER:
+          return "Partner";
+        default:
+          return "Unknown";
+      }
+    };
 
 
     return (
-        <Grid container>
+      <Grid container>
       <Grid item xs={12} sx={{ p: 6 }}>
+          <Button variant="outlined" color="primary" style={{marginBottom:'1rem'}}>Create User</Button>
         <Card>
           <CardHeader className='bg-slate-200 text-slate-400 font-bold' title='List User Admin' titleTypographyProps={{ variant: 'h6', color: 'primary' }} />
 
@@ -52,9 +79,9 @@ const UserTable = () => {
             <TableContainer>
               <Table stickyHeader aria-label='sticky table'>
                 <TableHead>
-                  <TableRow>
+                  <TableRow >
                     {headCells.map((headCell) => (
-                      <TableCell key={headCell.id} align={headCell.align ?? 'left'}>
+                      <TableCell key={headCell.id} align={headCell.align ?? 'left'} style={{fontWeight:'bold'}}>
                         {headCell.label}
                       </TableCell>
                     ))}
@@ -75,9 +102,9 @@ const UserTable = () => {
                         <TableCell>{user?.gender}</TableCell>
                         <TableCell>{user?.phoneNumber}</TableCell>
                         <TableCell>{user?.address}</TableCell>
-                        <TableCell>{user?.role_id === "65aa441d1de57d06c7f378a6" ? "User" : "Admin"}</TableCell>
+                        <TableCell>{getRoleName(user?.role_id)}</TableCell>
                         <TableCell align={'right'}>
-                          <ActionButton user={user} />
+                          <ActionButton user={user} onUpdateUser={handleUpdateUser} setUserData={setUserData} />
                         </TableCell>
                       </TableRow>
                     )

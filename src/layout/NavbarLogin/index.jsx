@@ -4,7 +4,8 @@ import { SiYourtraveldottv } from 'react-icons/si'
 import { AiFillCloseCircle, AiOutlineSetting, AiOutlineUser, AiOutlineLogout } from 'react-icons/ai'
 import { TbGridDots } from 'react-icons/tb'
 import { useNavigate } from "react-router-dom";
-
+import { jwtDecode } from 'jwt-decode'
+import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -12,6 +13,24 @@ import img from '../../images/avatar_login.jpg'
 
 
 export default function index() {
+
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.user_id;
+      axios.get(`http://localhost:8080/api/user/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUser(userData);
+        })
+        .catch((error) => {
+          console.log('Error:', error);
+        });
+    }
+  }, []);
 
   const navigate = useNavigate();
 
@@ -94,7 +113,7 @@ export default function index() {
       <div className={transparent}>
 
         <div className='logoDiv'>
-          <a href="#" className='logo'>
+          <a href="#" className='logo' onClick={() => navigate('/')}>
             <h1 className='flex font-bold text-xl'><SiYourtraveldottv className='icon' />
               TripGo
             </h1>
@@ -121,13 +140,13 @@ export default function index() {
             </li>
 
             <li className="navItem">
-              <a href="#" className="navLink" onClick={() => navigate("/AboutUs")}>About Us</a>
+              <a href="#" className="navLink" onClick={() => navigate("/about")}>About Us</a>
             </li>
 
             <div className="headerBtns flex items-center relative pl-4">
               <div className="avatar" onClick={toggleMenu}>
                 <img
-                  src={img}
+                  src={user.avatar}
                   alt="User Avatar"
                   className="rounded-full h-8 w-8 cursor-pointer hover:animate-bounce"
                 />

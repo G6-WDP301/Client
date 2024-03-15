@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Navbar, Footer, NavbarLogin } from "@/layout";
-import NavbarAdminLogin from "../../layout/NavbarAdminLogin/index.jsx";
+import { Navbar, Footer, NavbarLogin } from '@/layout';
+import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 import './Home.scss';
-import Popular from "../Popular/Popular.jsx";
-import Offers from "../Offers/Offers.jsx";
-import About from "../About/About.jsx";
-import Blog from "../Blog/Blog.jsx";
-import Header from "../../layout/Header/index.jsx";
+import Popular from '../Popular/Popular.jsx';
+import Offers from '../Offers/Offers.jsx';
+import About from '../About/About.jsx';
+import Blog from '../Blog/Blog.jsx';
+import Header from '../../layout/Header/index.jsx';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
 import PopularTour from '../Popular/PopularTour.jsx';
@@ -15,9 +15,9 @@ import { jwtDecode } from 'jwt-decode';
 import DataContext from '../../layout/ContextData/ContextData.jsx';
 import { useContext } from 'react';
 
-const Home = () => {
+const HomePartner = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [logAdmin, setLogAdmin] = useState(false);
+  const [logPartner, setLogPartner] = useState(false);
   const [headerData, setHeaderData] = useState([]);
 
   // State context data
@@ -31,15 +31,17 @@ const Home = () => {
     if (token) {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.user_id;
-      axios.get(`http://localhost:8080/api/user/${userId}`)
+      axios
+        .get(`http://localhost:8080/api/user/${userId}`)
         .then((response) => {
           const userData = response.data.data;
           setUser(userData);
-          const rid = decodedToken.role_id;
-          if (rid === 'ADMIN') {
-            setLogAdmin(true);
+          const rid = decodedToken.role;
+          console.log(decodedToken)
+          if (rid === 'PARTNER') {
+            setLogPartner(true);
           } else {
-            setLogAdmin(false);
+            setLogPartner(false);
           }
         })
         .catch((error) => {
@@ -49,19 +51,26 @@ const Home = () => {
   }, []);
 
   if (!user) {
-    return (
-      <div> Loading...
-      </div>
-    );
+    return <div> Loading...</div>;
   }
 
   const handleApiData = (dataAfterSearch) => {
     setHeaderData(dataAfterSearch);
   };
 
+  console.log(logPartner)
+
   return (
     <>
-      {isLoggedIn ? (logAdmin ? <NavbarAdminLogin /> : <NavbarLogin />) : <Navbar />}
+      {isLoggedIn ? (
+        logPartner ? (
+          <NavbarPartnerLogin />
+        ) : (
+          <NavbarLogin />
+        )
+      ) : (
+        <Navbar />
+      )}
       <Header dataSearch={handleApiData} />
       <DataContext.Provider value={headerData}>
         <Popular />
@@ -75,4 +84,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePartner;

@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import Navbar from '../../layout/Navbar';
+import NavbarLogin from '../../layout/NavbarLogin/index'
 import img from '../../images/image_hotel(1).jpg';
 import img1 from '../../images/image_hotel(2).jpg';
 import img2 from '../../images/image_hotel(3).jpg';
@@ -30,7 +31,9 @@ import moment from 'moment';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { jwtDecode } from 'jwt-decode'
+import Aos from 'aos';
 
+import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 
 const BookingTour = () => {
 
@@ -42,7 +45,7 @@ const BookingTour = () => {
       currency: 'VND',
     }).format(price);
   };
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [numberPeople, setNumberPeople] = useState(1);
   const [type, setType] = useState('option1');
   const [option1Check, setOption1Checked] = useState(false);
@@ -105,20 +108,26 @@ const BookingTour = () => {
           const responseData = response.data;
           console.log('Booking tour successful:', responseData);
           toast.success('Booking successful ~')
-          navigate('/')
+          navigate('/list-tour')
         } else {
-          console.error('Booking tour failed:', response.data);
+          console.error('Booking tour failed:', response.status);
           const errorData = response.error;
           console.error('Error Data:', errorData);
           toast.error(errorData.error);
+          navigate('/list-tour');
         }
       } catch (error) {
-        console.error('Error fetching data:', error.message);
+        console.error('Booking tour failed');
+        toast.error('You already booked this tour ~ You can book other tour !');
+        navigate('/list-tour');
       }
     }
   };
 
   useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
     axios.get(`http://localhost:8080/api/tour/${id}`)
       .then((response) => {
         const tours = Object.values(response.data.tour);
@@ -127,30 +136,48 @@ const BookingTour = () => {
       .catch(error => console.log(error));
   }, []);
 
-  // useEffect(() => {
-  //   const handleBooking = () => {
-  //     const token = localStorage.getItem('token');
-  //     if (token) {
-  //       const decodedToken = jwtDecode(token);
-  //       const userId = decodedToken.user_id;
-  //       axios.get(`http://localhost:8080/api/user/${userId}`)
-  //         .then((response) => {
-  //           const userData = response.data.data;
-  //           console.log("user ne: ", userData);
-  //           setUser(userData);
-  //         })
-  //         .catch((error) => {
-  //           console.log('Error:', error);
-  //         });
-  //     }
-  //   };
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.user_id;
+      axios
+        .get(`http://localhost:8080/api/user/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUser(userData);
+          const rid = decodedToken.role;
+          console.log(decodedToken)
+          if (rid === 'PARTNER') {
+            setLogPartner(true);
+          } else {
+            setLogPartner(false);
+          }
+        })
+        .catch((error) => {
+          console.log('Error:', error);
+        });
+    }
+  }, []);
 
-  //   handleBooking();
-  // }, []);
+  const [logPartner, setLogPartner] = useState(false);
 
   return (
     <>
-      <Navbar />
+      {/* {isLoggedIn ? <NavbarLogin /> : <Navbar />} */}
+
+      {isLoggedIn ? (
+        logPartner ? (
+          <NavbarPartnerLogin />
+        ) : (
+          <NavbarLogin />
+        )
+      ) : (
+        <Navbar />
+      )}
+
       <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50">
         <div className="w-full container flex justify-center items-center flex-col">
           <p className="text-white font-secondary text-3xl 2xl:text-6xl" style={{ fontStyle: "italic", color: "#fff" }}>
