@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { routes, adminRoutes } from './Routers/Routers.jsx';
+import { routes, adminRoutes, RoutesPartner } from './Routers/Routers.jsx';
 import Default from './layout/Default/Default';
 
 function jwtDecode(token) {
@@ -43,6 +43,32 @@ function App() {
         <Router>
           <Routes>
             {adminRoutes.map((route, index) => {
+              const Page = route.page;
+              const Layout = Fragment;
+              return (
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  element={
+                    <Layout>
+                      <Page />
+                    </Layout>
+                  }
+                />
+              );
+            })}
+          </Routes>
+        </Router>
+      </div>
+    );
+  }
+
+  if (account?.role === 'PARTNER') {
+    return (
+      <div>
+        <Router>
+          <Routes>
+            {RoutesPartner.map((route, index) => {
               const Page = route.page;
               const Layout = Fragment;
               return (

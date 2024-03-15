@@ -33,6 +33,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { jwtDecode } from 'jwt-decode'
 import Aos from 'aos';
 
+import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 
 const BookingTour = () => {
 
@@ -138,9 +139,48 @@ const BookingTour = () => {
       .catch(error => console.log(error));
   }, []);
 
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.user_id;
+      axios
+        .get(`http://localhost:8080/api/user/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUser(userData);
+          const rid = decodedToken.role;
+          console.log(decodedToken)
+          if (rid === 'PARTNER') {
+            setLogPartner(true);
+          } else {
+            setLogPartner(false);
+          }
+        })
+        .catch((error) => {
+          console.log('Error:', error);
+        });
+    }
+  }, []);
+
+  const [logPartner, setLogPartner] = useState(false);
+
   return (
     <>
-      {isLoggedIn ? <NavbarLogin /> : <Navbar />}
+      {/* {isLoggedIn ? <NavbarLogin /> : <Navbar />} */}
+
+      {isLoggedIn ? (
+        logPartner ? (
+          <NavbarPartnerLogin />
+        ) : (
+          <NavbarLogin />
+        )
+      ) : (
+        <Navbar />
+      )}
+
       <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50">
         <div className="w-full container flex justify-center items-center flex-col">
           <p className="text-white font-secondary text-3xl 2xl:text-6xl" style={{ fontStyle: "italic", color: "#fff" }}>

@@ -146,7 +146,7 @@ export default function Popular() {
                   </div>
 
                   <div className="destFood">
-                    <div className="number">0{id}</div>
+                    <div className="number">{id}</div>
 
                     <div className="destText flex">
                       <h6>{location}</h6>

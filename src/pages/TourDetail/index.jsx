@@ -39,6 +39,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Footer from '../../layout/Footer';
 import Aos from 'aos';
 
+import { jwtDecode } from 'jwt-decode';
+import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
+
 const tour = [
   {
     id: 1,
@@ -204,9 +207,47 @@ export default function index() {
     navigate(`/booking-tour/${tourId}`);
   }
 
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.user_id;
+      axios
+        .get(`http://localhost:8080/api/user/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUser(userData);
+          const rid = decodedToken.role;
+          console.log(decodedToken)
+          if (rid === 'PARTNER') {
+            setLogPartner(true);
+          } else {
+            setLogPartner(false);
+          }
+        })
+        .catch((error) => {
+          console.log('Error:', error);
+        });
+    }
+  }, []);
+
+  const [logPartner, setLogPartner] = useState(false);
+  const [user, setUser] = useState({});
+
   return (
     <>
-      {isLoggedIn ? <NavbarLogin /> : <Navbar />}
+      {/* {isLoggedIn ? <NavbarLogin /> : <Navbar />} */}
+      {isLoggedIn ? (
+        logPartner ? (
+          <NavbarPartnerLogin />
+        ) : (
+          <NavbarLogin />
+        )
+      ) : (
+        <Navbar />
+      )}
       <Paper sx={styles.paperContainer}>
         <div style={{ padding: '2rem' }} className="flex-column">
           <Typography variant="h4" sx={{ color: 'whitesmoke', mt: 2 }}>
