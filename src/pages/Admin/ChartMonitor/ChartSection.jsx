@@ -44,7 +44,6 @@ const ChartSection = ({ metric, timeRange, min, max, title, unit }) => {
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
-        console.log(tourData);
       })
       .catch(error => console.log(error));
 
