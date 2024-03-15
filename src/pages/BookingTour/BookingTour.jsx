@@ -117,8 +117,8 @@ const BookingTour = () => {
         }
       } catch (error) {
         console.error('Booking tour failed');
-        toast.error('You already booked this tour ~ You can book other tour !');
-        navigate('/list-tour');
+        toast.error('You already booked this tour ~ Pay now to complete your tour booking !');
+        navigate(`/payment/${id}`);
       }
     } else {
       toast('You are not logged in ~ Please log in to book a tour !!!')
