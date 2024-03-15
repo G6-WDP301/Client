@@ -44,7 +44,6 @@ const TableListTourAdmin = () => {
     { id: 'expand-button', filterable: false },
     { id: 'tour-name', label: 'Tour', filterable: true, defaultFilter: true },
     { id: 'tour-description', label: 'Tour Description', filterable: false },
-    // { id: 'tour-transportion', label: 'Tour Transportion', filterable: false },
     { id: 'tour-price', label: 'Tour Price', filterable: false },
     { id: 'max-tourist', label: 'Max Tourist', filterable: false },
     { id: 'start-date', label: 'Start Date', filterable: false },
@@ -60,38 +59,38 @@ const TableListTourAdmin = () => {
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
-        console.log(tourData);
+        console.log("Data tour admin ne: ", tourData);
       })
       .catch((error) => console.log(error));
   }, []);
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const decodedToken = jwtDecode(token);
-    const userId = decodedToken.user_id;
-    try {
-      const response = axios.post('http://localhost:9999/api/tour/create', {
-        user_id: userId
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (response.status === 200) {
-        const responseData = response.data;
-        console.log('Booking tour successful:', responseData);
-        toast.success('Booking successful ~')
-        navigate('/')
-      } else {
-        console.error('Booking tour failed:', response.data);
-        const errorData = response.error;
-        console.error('Error Data:', errorData);
-        toast.error(errorData.error);
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error.message);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   const decodedToken = jwtDecode(token);
+  //   const userId = decodedToken.user_id;
+  //   try {
+  //     const response = axios.post('http://localhost:9999/api/tour/create', {
+  //       user_id: userId
+  //     }, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
+  //     if (response.status === 200) {
+  //       const responseData = response.data;
+  //       console.log('Accept tour successful:', responseData);
+  //       toast.success('Approve successful ~')
+  //       navigate('/')
+  //     } else {
+  //       console.error('Accept tour failed:', response.data);
+  //       const errorData = response.error;
+  //       console.error('Error Data:', errorData);
+  //       toast.error(errorData.error);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error.message);
+  //   }
+  // }, []);
 
   return (
     <Grid container>
@@ -356,7 +355,7 @@ const TableListTourAdmin = () => {
                           {row.end_position[0]?.location_name}
                         </TableCell>
                         <TableCell align={'right'}>
-                          <ActionButton row={row} />
+                          <ActionButton row={row} statusTour={row.status}/>
                         </TableCell>
                       </TableRow>
                     );

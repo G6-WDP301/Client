@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -68,6 +68,11 @@ const closedMixin = (theme) => ({
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
 });
+
+function handleLogout() {
+  localStorage.removeItem('token');
+  window.location.href = '/';
+}
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -253,6 +258,7 @@ const Index = () => {
                   }}
                 >
                   <ListItemIcon
+                    onClick={handleLogout}
                     sx={{
                       minWidth: 0,
                       mr: open ? 3 : 'auto',
@@ -275,12 +281,12 @@ const Index = () => {
           >
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
               <span className="text-2xl font-bold">Dashboard</span>
-                <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                  <TourList/>
-                  <div>
-                    <MonitorChart/>
-                  </div>
-                </Box>
+              <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                <TourList />
+                <div>
+                  <MonitorChart />
+                </div>
+              </Box>
             </Box>
           </div>
         </Box>

@@ -66,6 +66,7 @@ export default function index() {
     axios.get('http://localhost:8080/api/booking/all')
       .then((response) => {
         const booked = response.data.data;
+        console.log("booked ne: ", booked);
         setBooked(booked);
         console.log("booked ne: ", booked);
       })
@@ -141,8 +142,6 @@ export default function index() {
       return tours.filter(tour => new Date(tour.start_date) >= new Date(timeNow));
     }
   };
-
-  console.log("status ne:", tourBookingStatus);
 
   return (
     <>
