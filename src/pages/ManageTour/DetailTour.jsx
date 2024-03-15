@@ -253,7 +253,7 @@ const DetailTour = () => {
                                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                                 placeholder=""
                                 required=""
-                                value={item?.tour_transportion}
+                                value={item?.tour_transportion === '65a8f3c00786c8565da58457' ? 'Xe may' : 'No transportion'}
                                 />
                             </div>
 
@@ -407,7 +407,7 @@ const DetailTour = () => {
                                         </button>
                                     </div> */}
                                     <div className="flex item-center justify-between">
-                                        <img src={item?.tour_img} />
+                                        <img src={item?.tour_img} alt='tour image'/>
                                     </div>
                                 </div>
                             </div>

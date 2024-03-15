@@ -7,8 +7,6 @@ import Aos from 'aos';
 import moment from 'moment';
 import Header from '../../layout/Header';
 import { jwtDecode } from 'jwt-decode';
-
-import { jwtDecode } from 'jwt-decode';
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 
 const listFilter = [
