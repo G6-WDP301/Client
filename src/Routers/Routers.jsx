@@ -89,6 +89,10 @@ export const routes = [
     {
         path: "/Cancel",
         page: Cancel
+    },
+  {
+        path: "/dashboard",
+        page: Sidebar
     }
 ]
 
