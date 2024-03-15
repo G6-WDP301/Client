@@ -5,22 +5,57 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Typography,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditStateModal = ({ row, openModal, setOpenModal }) => {
   const [loadingEditSubmit, setLoadingForEdit] = useState(false);
   const [stateTour, setStateTour] = useState('pedding'); //cái này sau thay bằng row.state nhé
-  const stateOptions = ['pending', 'approved', 'rejected'];
+  // const stateOptions = ['approved', 'rejected'];
 
-  // useEffect(() => {
-  //   setStateTour(row.state) // cái này truyên từ bên Action Button sang, cái này là để trong popup hiển thị giá trị của state đang có, ví dụ đang là pedding thì hiển thị là pedding
-  // }, [row])
+  const statusOption = [
+    { label: "Pedding", value: "false" },
+    { label: "Approved", value: "true" },
+  ]
+  const [tours, setTours] = useState([])
+
+  useEffect(() => {
+    // setStateTour(row.state) // cái này truyên từ bên Action Button sang, cái này là để trong popup hiển thị giá trị của state đang có, ví dụ đang là pedding thì hiển thị là pedding
+    console.log(`row in EDIT: ${row._id}`);
+  }, [row])
 
   const handleActionEditSubmit = async () => {
     setLoadingForEdit(true);
+
+    try {
+      const response = await axios.put('http://localhost:8080/api/tour/change_status', {
+        "tour_id": row._id,
+        "status": stateTour
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status == 200) {
+        const responseData = response.data;
+        toast.success(responseData.message);
+        window.location.href = '/dashboard';
+      } else {
+        const errorData = response.data;
+        toast.error(errorData.message);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error.message);
+    }
   };
 
   return (
@@ -47,15 +82,24 @@ const EditStateModal = ({ row, openModal, setOpenModal }) => {
             Do you really want to approve or reject the post?
           </Typography>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            {stateOptions.map((stateOption, index) => (
-              <Button
-                key={index}
-                // onClick={() => setStateTour(stateOption)}                        //co api thi thay vao nhe
-                // color={stateOption === stateTour ? 'primary' : 'default'}
+          <FormControl fullWidth id='metric-type-create-silence'>
+              <InputLabel id='demo-simple-select-helper-label' required={true}>
+              State Tour
+              </InputLabel>
+              <Select
+                onChange={event => {
+                  setStateTour(event.target.value)
+                }}
+                value={stateTour}
+                label='State Tour'
               >
-                {stateOption}
-              </Button>
-            ))}
+                {statusOption.map(option => (
+                  <MenuItem key={option.value} value={option.value} id={`subnet-name-${option.value}`}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </div>
         </DialogContent>
         <DialogActions>
@@ -74,10 +118,10 @@ const EditStateModal = ({ row, openModal, setOpenModal }) => {
             loading={loadingEditSubmit}
             onClick={() => handleActionEditSubmit()}
             id="submit-edit"
-            // disabled={
-            //   row.state === stateTour
-            //   //cái state này thì lấy từ api xuống, row.state là được truyền từ component cha là action button sang nha
-            // }
+          // disabled={
+          //   row.state === stateTour
+          //   //cái state này thì lấy từ api xuống, row.state là được truyền từ component cha là action button sang nha
+          // }
           >
             Edit
           </LoadingButton>

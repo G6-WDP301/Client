@@ -92,7 +92,7 @@ export const routes = [
     {
         path: "/Cancel",
         page: Cancel
-    },
+    }
 ]
 
 export const adminRoutes = [
