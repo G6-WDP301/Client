@@ -8,6 +8,9 @@ import img from '../../images/22.jpeg'
 import img2 from '../../images/11.jpeg'
 import img3 from '../../images/18-1.jpeg'
 
+import { jwtDecode } from 'jwt-decode';
+import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
+import axios from 'axios';
 
 export default function news() {
 
@@ -19,10 +22,48 @@ export default function news() {
     setIsLoggedIn(Boolean(token));
   }, []);
 
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.user_id;
+      axios
+        .get(`http://localhost:8080/api/user/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUser(userData);
+          const rid = decodedToken.role;
+          console.log(decodedToken)
+          if (rid === 'PARTNER') {
+            setLogPartner(true);
+          } else {
+            setLogPartner(false);
+          }
+        })
+        .catch((error) => {
+          console.log('Error:', error);
+        });
+    }
+  }, []);
+
+  const [logPartner, setLogPartner] = useState(false);
+  const [user, setUser] = useState({});
+
   return (
     <>
 
-      {isLoggedIn ? <NavbarLogin /> : <Navbar />}
+      {/* {isLoggedIn ? <NavbarLogin /> : <Navbar />} */}
+      {isLoggedIn ? (
+        logPartner ? (
+          <NavbarPartnerLogin />
+        ) : (
+          <NavbarLogin />
+        )
+      ) : (
+        <Navbar />
+      )}
 
       <div>
         <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50">
@@ -30,10 +71,6 @@ export default function news() {
             <p className="text-white font-secondary text-3xl 2xl:text-6xl">
               News
             </p>
-            {/* <div classNameName="flex mt-5 gap-5">
-                <div classNameName="flex items-center"><i classNameName="bi bi-geo-alt text-white text-2xl me-2"></i><p classNameName="text-white">Maldives</p></div>
-                <div classNameName="flex items-center"><i classNameName="bi bi-clock text-white text-2xl me-2"></i><p classNameName="text-white"> 4 Days + 3 Nights   </p></div>
-        </div> */}
           </div>
         </section>
 

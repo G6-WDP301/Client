@@ -39,7 +39,7 @@ import avatar from '../../images/avatar.jpg';
 import { Link } from 'react-router-dom';
 
 const menuItems = [
-  { text: 'Dashboard', link: '/admin/dashboard' },
+  { text: 'Dashboard', link: '/dashboard' },
   { text: 'User Manage', link: '/admin/user-manage' },
   { text: 'Booking Manage', link: '/admin/booking-manage' },
   { text: 'Tour Manage', link: '/admin/tour-manage' },
@@ -275,6 +275,9 @@ const TourManage = () => {
             style={{ borderRadius: '10px', height: 'auto' }}
           >
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <p className="text-base font-semibold text-slate-300 pb-6">
+                Pages / <span className="text-slate-600">Tour Manage</span>
+              </p>
               <span className="text-2xl font-bold">Tour Manage</span>
                 <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                   <TourList/>
