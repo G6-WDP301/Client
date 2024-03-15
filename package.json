@@ -23,6 +23,7 @@
     "@mui/material": "^5.15.11",
     "@mui/styled-engine-sc": "^6.0.0-alpha.12",
     "@mui/x-charts": "^6.19.5",
+    "@paypal/react-paypal-js": "^8.1.4",
     "@reduxjs/toolkit": "^1.9.5",
     "@syncfusion/ej2-react-popups": "^24.2.5",
     "aos": "^2.3.4",

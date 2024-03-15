@@ -49,7 +49,6 @@ const Data = [
 export default function Popular() {
   const headerData = useContext(DataContext);
   const headerDataArray = JSON.parse(JSON.stringify(headerData));
-  console.log("name ne: ", headerDataArray);
 
   useEffect(() => {
     Aos.init({ duration: 2000 });

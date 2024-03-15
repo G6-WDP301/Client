@@ -4,6 +4,9 @@ import { Navbar, NavbarLogin, Footer } from '@/layout';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Aos from 'aos';
+import moment from 'moment';
+import Header from '../../layout/Header';
+import { jwtDecode } from 'jwt-decode';
 
 import { jwtDecode } from 'jwt-decode';
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
@@ -34,6 +37,8 @@ export default function index() {
 
   const navigate = useNavigate();
 
+  const timeNow = new Date().toISOString();
+
   const toggleDropdown = (id) => {
     setIsOpen({ ...isOpen, [id]: !isOpen[id] });
   };
@@ -43,11 +48,15 @@ export default function index() {
   const [bookingId, setBookingId] = useState([]);
   const [selectedPriceFilter, setSelectedPriceFilter] = useState(null);
   const [hasFilteredTours, setHasFilteredTours] = useState(true);
+  const [booked, setBooked] = useState([]);
+  const [user, setUser] = useState([])
+  const [tourBookingStatus, setTourBookingStatus] = useState({});
+  const [oayId, setPayId] = useState([]);
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
-    const token = localStorage.getItem('token');
     setIsLoggedIn(Boolean(token));
+    // Rest API all tours 
     axios.get('http://localhost:8080/api/tour/find-all')
       .then((response) => {
         const tourData = response.data.tours;
@@ -55,7 +64,36 @@ export default function index() {
         setHasFilteredTours(tourData.length > 0);
       })
       .catch(error => console.log(error));
+
+    // Rest API Booked
+    axios.get('http://localhost:8080/api/booking/all')
+      .then((response) => {
+        const booked = response.data.data;
+        setBooked(booked);
+        console.log("booked ne: ", booked);
+      })
+      .catch(error => console.log(error));
+
+    const bookedStatus = {};
+    booked.forEach(booking => {
+      if (booking.isPay === false) {
+        for (let i = 0; i < tours.length; i++) {
+          const compareTourId = booking?.tour_id === tours[i]?._id;
+          const compareUserId = booking?.user_id === userId;
+          bookedStatus[compareTourId + "-" + compareUserId] = true;
+        }
+      }
+    });
+    setTourBookingStatus(bookedStatus);
   }, []);
+
+  // Get user id
+  const token = localStorage.getItem('token');
+  let userId = null;
+  if (token) {
+    const decodedToken = jwtDecode(token);
+    userId = decodedToken.user_id;
+  }
 
   useEffect(() => {
     console.log("Data tour here: ", tours);
@@ -71,30 +109,44 @@ export default function index() {
     navigate(`/booking-tour/${tourId}`);
   }
 
+  const handlePay = (payId) => {
+    setPayId(payId);
+    navigate(`/payment/${payId}`);
+  }
+
   const handlePriceFilter = (price) => {
     setSelectedPriceFilter(price);
     setIsOpen(true);
   };
 
   const applyPriceFilter = (tours) => {
+    // for (let i = 0; i < booked.length; i++) {
+    //   if (booked[i]?.isPay === false) {
+    //     for (let j = 0; j < tours.length; j++) {
+    //       if (tours[j]?._id === booked[i]?.tour_id && userId === booked[i]?.user_id) {
+    //         setBooked(true)
+    //       }
+    //     }
+    //   }
+    // }
+
     if (selectedPriceFilter === null) {
-      return tours;
+      return tours.filter(tour => new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item1) {
-      return tours.filter((tour) => tour.tour_price < 500);
+      return tours.filter((tour) => tour.tour_price < 500 && new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item2) {
-      return tours.filter((tour) => tour.tour_price >= 500 && tour.tour_price <= 1000);
+      return tours.filter((tour) => tour.tour_price >= 500 && tour.tour_price <= 1000 && new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item3) {
-      return tours.filter((tour) => tour.tour_price >= 1000 && tour.tour_price <= 2000);
+      return tours.filter((tour) => tour.tour_price >= 1000 && tour.tour_price <= 2000 && new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item4) {
-      return tours.filter((tour) => tour.tour_price > 2000);
+      return tours.filter((tour) => tour.tour_price > 2000 && new Date(tour.start_date) >= new Date(timeNow));
     } else {
-      return tours;
+      return tours.filter(tour => new Date(tour.start_date) >= new Date(timeNow));
     }
   };
 
 
   const [logPartner, setLogPartner] = useState(false);
-  const [user, setUser] = useState({});
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -121,6 +173,7 @@ export default function index() {
         });
     }
   }, []);
+  console.log("status ne:", tourBookingStatus);
 
   return (
     <>
@@ -147,7 +200,7 @@ export default function index() {
           <div className="">
             <div className="flex justify-evenly items-center">
               <div className="flex flex-wrap justify-around items-center gap-[1rem]">
-                <div className="text-lg font-semibold mr-3">Filter</div>
+                <div className="text-lg font-semibold mr-3">Search Filter</div>
 
                 {listFilter.map((list) => (
                   <div
@@ -232,7 +285,7 @@ export default function index() {
 
               </div>
 
-              <div className="">
+              {/* <div className="">
                 <form className="flex items-center max-w-sm mx-auto">
                   <label for="simple-search" className="sr-only">
                     Search
@@ -286,7 +339,7 @@ export default function index() {
                     <span className="sr-only">Search</span>
                   </button>
                 </form>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -311,7 +364,7 @@ export default function index() {
                     </div>
                     <div className="w-[50%] flex">
                       <i className="bi bi-geo-alt text-color4"></i>
-                      <p className="text-color6 ms-2">{list.end_position.location_name}</p>
+                      <p className="text-color6 ms-2">{list.start_position?.location_name}</p>
                     </div>
                   </div>
                   <div className="flex gap-5 mt-6">
@@ -322,13 +375,23 @@ export default function index() {
                         Tour Details
                       </span>
                     </button>
-
-                    <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
-                      onClick={() => handleBooking(list._id)}>
-                      <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                        Booking Now
-                      </span>
-                    </button>
+                    {
+                      !tourBookingStatus[list._id] ? (
+                        <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
+                          onClick={() => handleBooking(list._id)}>
+                          <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                            Booking Now
+                          </span>
+                        </button>
+                      ) : (
+                        <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
+                          onClick={() => handlePay(list._id)}>
+                          <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                            Pay Now
+                          </span>
+                        </button>
+                      )
+                    }
                   </div>
                 </div>
                 <img
@@ -337,7 +400,7 @@ export default function index() {
                   className="w-[100%] h-[100%] object-cover brightness-75 absolute"
                 />
                 <p className="absolute uppercase text-white bg-color3 px-4 py-1 right-1 top-12 rotate-[-90deg] ">
-                  {list.end_position.location_name}
+                  {list.start_position?.location_name}
                 </p>
                 <figcaption className="absolute text-white bottom-8 right-10 fig">
                   <p className="capitalize font-secondary text-3xl" style={{ paddingLeft: "20px", paddingBottom: "90px" }}>

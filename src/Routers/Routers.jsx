@@ -18,6 +18,8 @@ import ManageTour from '../pages/ManageTour/index.jsx';
 import ManageTourEdit from '../pages/ManageTour/DetailTour.jsx';
 import ManageTourDetail from '../pages/ManageTour/DetailManageTour.jsx';
 
+import Success from '../pages/StatusPayment/Success.jsx'
+import Cancel from '../pages/StatusPayment/Cancel.jsx'
 
 export const routes = [
     {
@@ -79,15 +81,18 @@ export const routes = [
         page: BookingTour
     },
     {
-        path: "/payment",
+        path: "/payment/:id",
         page: Payment,
         isShowHeader: true
     },
-    // {
-    //     path: "/home-partner",
-    //     page: HomePartner,
-    //     isShowHeader: true
-    // }
+    {
+        path: "/success",
+        page: Success
+    },
+    {
+        path: "/Cancel",
+        page: Cancel
+    },
 ]
 
 export const adminRoutes = [
