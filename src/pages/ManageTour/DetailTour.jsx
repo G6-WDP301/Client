@@ -37,7 +37,7 @@ const DetailTour = () => {
   const [tours, setTours] = useState([]);
 
   const [schedule, setSchedule] = useState([]);
-  
+
   const [tourData, setTourData] = useState([]);
 
   const navigate = useNavigate();
@@ -61,7 +61,6 @@ const DetailTour = () => {
           const userData = response.data.data;
           setUser(userData);
           const rid = decodedToken.role;
-          console.log(decodedToken);
           if (rid === 'PARTNER') {
             setLogPartner(true);
           } else {
@@ -74,7 +73,7 @@ const DetailTour = () => {
     }
   }, []);
 
-  const {id} = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
     const tourItems = () => {
@@ -90,21 +89,6 @@ const DetailTour = () => {
 
     tourItems();
   }, [id]);
-
-//   useEffect(() => {
-//     const scheduleItems = () => {
-//       axios
-//         .get(`http://localhost:8080/api/schedule/${}`)
-//         .then((response) => {
-//           const scheduleData = response.data.tour.scheduleOfTour;
-//           setSchedule(scheduleData);
-//           console.log('schedule tour:', scheduleData);
-//         })
-//         .catch((error) => console.log(error));
-//     };
-
-//     scheduleItems();
-//   }, [id]);
 
   return (
     <>
@@ -139,7 +123,7 @@ const DetailTour = () => {
           </div>
         </div>
 
-        <div style={{marginTop:'2rem ', marginBottom:'6rem'}}>
+        <div style={{ marginTop: '2rem ', marginBottom: '6rem' }}>
           <div className="bg-white border border-4 rounded-lg shadow relative m-10">
             <div className="flex items-start justify-between p-5 border-b rounded-t">
               <h3 className="text-xl font-semibold">Edit Detail Tour</h3>
@@ -164,222 +148,236 @@ const DetailTour = () => {
             </div>
 
             <div className="p-6 space-y-6">
-                {
-                    [tourData]?.map((item) => (
-                        <form action="#" key={item?.id}>
-                            <div className="grid grid-cols-6 gap-6">
-                            <div className="col-span-full">
-                                <label
-                                htmlFor="tour-name"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Name
-                                </label>
+              {
+                [tourData]?.map((item) => (
+                  <form action="#" key={item?.id}>
+                    <div className="grid grid-cols-6 gap-6">
+                      <div className="col-span-full">
+                        <label
+                          htmlFor="tour-name"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Name
+                        </label>
+                        <input
+                          type="text"
+                          name="tour-name"
+                          id="tour-name"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          placeholder=""
+                          required=""
+                          value={item?.tour_name}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="price"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Price
+                        </label>
+                        <input
+                          type="number"
+                          name="price"
+                          id="price"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          placeholder="$$$"
+                          required=""
+                          value={item?.tour_price}
+                        />
+                      </div>
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="price"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Discount
+                        </label>
+                        <input
+                          type="number"
+                          name="discount"
+                          id="discount"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          placeholder="$$$"
+                          required=""
+                          value={item?.discount}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="max-tourist"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Max Tourist
+                        </label>
+                        <input
+                          type="number"
+                          name="max-tourist"
+                          id="max-tourist"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          placeholder=""
+                          required=""
+                          value={item?.max_tourist}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="transportion"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Transportion
+                        </label>
+                        {/* <input
+                          type="text"
+                          name="transportion"
+                          id="transportion"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          placeholder=""
+                          required=""
+                          value={item?.tour_transportion} /> */}
+
+
+                        {item && item.tour_transportion && item.tour_transportion.length > 0 && (
+                          <input
+                            type="text"
+                            name="transportion"
+                            id="transportion"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            placeholder=""
+                            required=""
+                            value={item?.tour_transportion[0]?.transportion_name}
+                          />
+                        )}
+
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="start-date"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Start Date
+                        </label>
+                        <input
+                          type="date"
+                          name="start-date"
+                          id="start-date"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          required=""
+                          value={moment(item.start_date).format('YYYY-MM-DD')}
+
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="end-date"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          End Date
+                        </label>
+                        <input
+                          type="date"
+                          name="end-date"
+                          id="end-date"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          required=""
+                          value={moment(item?.end_date).format('YYYY-MM-DD')}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="start-position"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Start Position
+                        </label>
+                        <input
+                          type="text"
+                          name="start-position"
+                          id="start-position"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          required=""
+                          value={item?.start_position?.location_name}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          for="end-position"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          End Position
+                        </label>
+                        <input
+                          type="text"
+                          name="end-position"
+                          id="end-position"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          placeholder=""
+                          required=""
+                          value={item?.end_position?.location_name}
+                        />
+                      </div>
+
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          for="image"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Image
+                        </label>
+                        <div
+                          className="w-[auto] height-[auto] relative border-2 border-gray-300 border-dashed rounded-lg p-6"
+                          id="dropzone"
+                        >
+                          <input
+                            type="file"
+                            className="absolute inset-0 w-full h-full opacity-0 z-50"
+                          />
+                          <div className="text-center">
+                            <img
+                              className="mx-auto h-12 w-12"
+                              src="https://www.svgrepo.com/show/357902/image-upload.svg"
+                              alt=""
+                            />
+
+                            <h3 className="mt-2 text-sm font-medium text-gray-900">
+                              <label
+                                for="file-upload"
+                                className="relative cursor-pointer"
+                              >
+                                <span>Drag and drop</span>
+                                <span className="text-indigo-600"> or browse</span>
+                                <span>to upload</span>
                                 <input
-                                type="text"
-                                name="tour-name"
-                                id="tour-name"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                placeholder=""
-                                required=""
-                                vvalue={item?.tour_name}
+                                  id="file-upload"
+                                  name="file-upload"
+                                  type="file"
+                                  className="sr-only"
                                 />
-                            </div>
+                              </label>
+                            </h3>
+                            <p className="mt-1 text-xs text-gray-500">
+                              PNG, JPG, GIF up to 10MB
+                            </p>
+                          </div>
 
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="price"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Price
-                                </label>
-                                <input
-                                type="number"
-                                name="price"
-                                id="price"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                placeholder="$$$"
-                                required=""
-                                value={item?.tour_price}
-                                />
-                            </div>
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="price"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Discount
-                                </label>
-                                <input
-                                type="number"
-                                name="discount"
-                                id="discount"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                placeholder="$$$"
-                                required=""
-                                value={item?.discount}
-                                />
-                            </div>
+                          <img
+                            src=""
+                            className="mt-4 mx-auto max-h-40 hidden"
+                            id="preview"
+                          />
+                        </div>
+                      </div>
 
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="max-tourist"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Max Tourist
-                                </label>
-                                <input
-                                type="number"
-                                name="max-tourist"
-                                id="max-tourist"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                placeholder=""
-                                required=""
-                                value={item?.max_tourist}
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="transportion"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Transportion
-                                </label>
-                                <input
-                                type="text"
-                                name="transportion"
-                                id="transportion"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                placeholder=""
-                                required=""
-                                value={item?.tour_transportion}
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="start-date"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Start Date
-                                </label>
-                                <input
-                                type="date"
-                                name="start-date"
-                                id="start-date"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                required=""
-                                value={moment(item?.start_date).format('DD/MM/YYYY')}
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="end-date"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                End Date
-                                </label>
-                                <input
-                                type="date"
-                                name="end-date"
-                                id="end-date"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                required=""
-                                value={moment(item?.end_date).format('DD/MM/YYYY')}
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="start-position"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Start Position
-                                </label>
-                                <input
-                                type="text"
-                                name="start-position"
-                                id="start-position"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                required=""
-                                value={item?.start_position}
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                for="end-position"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                End Position
-                                </label>
-                                <input
-                                type="text"
-                                name="end-position"
-                                id="end-position"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                placeholder=""
-                                required=""
-                                value={item?.end_position}
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                for="image"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Image
-                                </label>
-                                <div
-                                className="w-[auto] height-[auto] relative border-2 border-gray-300 border-dashed rounded-lg p-6"
-                                id="dropzone"
-                                >
-                                <input
-                                    type="file"
-                                    className="absolute inset-0 w-full h-full opacity-0 z-50"
-                                />
-                                <div className="text-center">
-                                    <img
-                                    className="mx-auto h-12 w-12"
-                                    src="https://www.svgrepo.com/show/357902/image-upload.svg"
-                                    alt=""
-                                    />
-
-                                    <h3 className="mt-2 text-sm font-medium text-gray-900">
-                                    <label
-                                        for="file-upload"
-                                        className="relative cursor-pointer"
-                                    >
-                                        <span>Drag and drop</span>
-                                        <span className="text-indigo-600"> or browse</span>
-                                        <span>to upload</span>
-                                        <input
-                                        id="file-upload"
-                                        name="file-upload"
-                                        type="file"
-                                        className="sr-only"
-                                        />
-                                    </label>
-                                    </h3>
-                                    <p className="mt-1 text-xs text-gray-500">
-                                    PNG, JPG, GIF up to 10MB
-                                    </p>
-                                </div>
-
-                                <img
-                                    src=""
-                                    className="mt-4 mx-auto max-h-40 hidden"
-                                    id="preview"
-                                />
-                                </div>
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <div className="mb-5 rounded-md bg-[#F5F7FB] py-4 px-8">
-                                    {/* <div className="flex items-center justify-between">
+                      <div className="col-span-6 sm:col-span-3">
+                        <div className="mb-5 rounded-md bg-[#F5F7FB] py-4 px-8">
+                          {/* <div className="flex items-center justify-between">
                                         <span className="truncate pr-3 text-base font-medium text-[#07074D]">
                                         banner-design.png
                                         </span>
@@ -406,84 +404,84 @@ const DetailTour = () => {
                                         </svg>
                                         </button>
                                     </div> */}
-                                    <div className="flex item-center justify-between">
-                                        <img src={item?.tour_img} />
-                                    </div>
-                                </div>
-                            </div>
+                          <div className="flex item-center justify-between">
+                            <img src={item?.tour_img} />
+                          </div>
+                        </div>
+                      </div>
 
-                            <div className="col-span-full">
-                                <label
-                                htmlFor="description"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Description
-                                </label>
-                                <CKEditor
-                                editor={ClassicEditor}
-                                data={item?.tour_description}
-                                // onChange={(event, editor) => {
-                                //     const data = editor.getData();
-                                // }}
-                                />
+                      <div className="col-span-full">
+                        <label
+                          htmlFor="description"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Description
+                        </label>
+                        <CKEditor
+                          editor={ClassicEditor}
+                          data={item?.tour_description}
+                        // onChange={(event, editor) => {
+                        //     const data = editor.getData();
+                        // }}
+                        />
 
-                            </div>
+                      </div>
 
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="schedule-name"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Schedule name
-                                </label>
-                                <input
-                                type="text"
-                                name="schedule-name"
-                                id="schedule-name"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                placeholder=""
-                                required=""                               
-                                />
-                            </div>
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="schedule-name"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Schedule name
+                        </label>
+                        <input
+                          type="text"
+                          name="schedule-name"
+                          id="schedule-name"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          placeholder=""
+                          required=""
+                        />
+                      </div>
 
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="schedule-date"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Schedule date 
-                                </label>
-                                <input
-                                type="text"
-                                name="schedule-date"
-                                id="schedule-date"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                placeholder=""
-                                required=""
-                                />
-                            </div>
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="schedule-date"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Schedule date
+                        </label>
+                        <input
+                          type="text"
+                          name="schedule-date"
+                          id="schedule-date"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          placeholder=""
+                          required=""
+                        />
+                      </div>
 
-                            <div className="col-span-full">
-                                <label
-                                htmlFor="schedule-detail"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Schedule detail
-                                </label>
-                                <CKEditor
-                                editor={ClassicEditor}
-                                // data={item?.tour_description}
-                                // onChange={(event, editor) => {
-                                //     const data = editor.getData();
-                                // }}
-                                />
+                      <div className="col-span-full">
+                        <label
+                          htmlFor="schedule-detail"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Schedule detail
+                        </label>
+                        <CKEditor
+                          editor={ClassicEditor}
+                        // data={item?.tour_description}
+                        // onChange={(event, editor) => {
+                        //     const data = editor.getData();
+                        // }}
+                        />
 
-                            </div>
+                      </div>
 
-                            </div>
-                        </form>
-                    ))
-                }
+                    </div>
+                  </form>
+                ))
+              }
             </div>
 
             <div className="p-6 border-t border-gray-200 rounded-b">
@@ -504,7 +502,7 @@ const DetailTour = () => {
         </div>
       </div>
 
-      <Footer/>
+      <Footer />
     </>
   );
 };

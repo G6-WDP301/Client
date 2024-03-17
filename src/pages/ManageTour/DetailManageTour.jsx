@@ -208,8 +208,8 @@ const DetailManageTour = () => {
     const newPoints = open
       ? allPoints
       : allPoints.filter(
-          (item, index) => index === 0 || index === allTourLength - 1
-        );
+        (item, index) => index === 0 || index === allTourLength - 1
+      );
     setTours(newPoints);
   }, [open, allPoints, allTourLength]);
 
@@ -355,14 +355,16 @@ const DetailManageTour = () => {
                       >
                         Transportion
                       </label>
-                      <input
-                        type="text"
-                        name="transportion"
-                        id="transportion"
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={item?.tour_transportion}
-                        readOnly
-                      />
+                      {item && item.tour_transportion && item.tour_transportion.length > 0 && (
+                        <input
+                          type="text"
+                          name="transportion"
+                          id="transportion"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          value={item?.tour_transportion[0]?.transportion_name}
+                          readOnly
+                        />
+                      )}
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
@@ -377,7 +379,7 @@ const DetailManageTour = () => {
                         name="start-date"
                         id="start-date"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={moment(item?.start_date).format('DD/MM/YYYY')}
+                        value={moment(item?.start_date).format('YYYY-MM-DD')}
                         readOnly
                       />
                     </div>
@@ -394,7 +396,7 @@ const DetailManageTour = () => {
                         name="end-date"
                         id="end-date"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={moment(item?.end_date).format('DD/MM/YYYY')}
+                        value={moment(item?.end_date).format('YYYY-MM-DD')}
                         readOnly
                       />
                     </div>
@@ -411,7 +413,7 @@ const DetailManageTour = () => {
                         name="start-position"
                         id="start-position"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={item?.start_position}
+                        value={item?.start_position?.location_name}
                         readOnly
                       />
                     </div>
@@ -428,7 +430,7 @@ const DetailManageTour = () => {
                         name="end-position"
                         id="end-position"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={item?.end_position}
+                        value={item?.end_position?.location_name}
                         readOnly
                       />
                     </div>
@@ -552,8 +554,8 @@ const DetailManageTour = () => {
                                             index === 0
                                               ? 'success'
                                               : index === points.length - 1
-                                              ? 'error'
-                                              : 'primary'
+                                                ? 'error'
+                                                : 'primary'
                                           }
                                         ></TimelineDot>
                                         {!isEnd && <TimelineConnector />}
@@ -593,9 +595,8 @@ const DetailManageTour = () => {
                                       >
                                         {open
                                           ? 'Thu gọn'
-                                          : `Chi tiết hành trình (+${
-                                              allTourLength - 2
-                                            } chặng)`}
+                                          : `Chi tiết hành trình (+${allTourLength - 2
+                                          } chặng)`}
                                       </Button>
                                     )}
                                   </React.Fragment>
