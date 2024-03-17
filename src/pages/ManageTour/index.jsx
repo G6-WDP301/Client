@@ -89,7 +89,7 @@ const Index = () => {
       .then((response) => {
         const toursData = response.data.tours;
         setTours(toursData);
-        console.log(toursData);
+        console.log("tour data ne: ", toursData);
       })
       .catch((error) => console.log(error));
   };
@@ -98,7 +98,7 @@ const Index = () => {
     tourList();
   }, []);
 
- 
+
 
   const navigate = useNavigate();
 
@@ -151,7 +151,7 @@ const Index = () => {
                 </div>
               </Grid>
               <Grid item xs={3} style={{ textAlign: 'right' }}>
-                <div style={{ marginBottom: '1rem', textAlign: 'right'}} >
+                <div style={{ marginBottom: '1rem', textAlign: 'right' }} >
                   <form className="max-w-sm">
                     <label
                       for="default-search"
@@ -232,8 +232,8 @@ const Index = () => {
                             <TableCell>
                               {moment(tour?.start_date).format('DD/MM/YYYY')}
                             </TableCell>
-                            <TableCell>{tour?.start_position}</TableCell>
-                            <TableCell>{tour?.end_position}</TableCell>
+                            <TableCell>{tour?.start_position?.location_name}</TableCell>
+                            <TableCell>{tour?.end_position?.location_name}</TableCell>
                             <TableCell align={'center'}>
                               <Box display="flex" justifyContent="center">
                                 <Tooltip title="View Detail">
