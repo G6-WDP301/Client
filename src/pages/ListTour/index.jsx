@@ -144,8 +144,6 @@ export default function index() {
     }
   };
 
-<<<<<<< HEAD
-=======
 
   const [logPartner, setLogPartner] = useState(false);
 
@@ -176,7 +174,6 @@ export default function index() {
   }, []);
   console.log("status ne:", tourBookingStatus);
 
->>>>>>> ab28c0ff2e63e70c7b0027adc41668696a69c174
   return (
     <>
       {/* {isLoggedIn ? <NavbarLogin /> : <Navbar />} */}

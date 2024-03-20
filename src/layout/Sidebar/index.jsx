@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-=======
 import React, { useState, useRef, useEffect } from 'react';
->>>>>>> ab28c0ff2e63e70c7b0027adc41668696a69c174
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -54,7 +50,7 @@ const menuItems = [
   { text: 'User Manage', link: '/admin/user-manage' },
   { text: 'Booking Manage', link: '/admin/booking-manage' },
   { text: 'Tour Manage', link: '/admin/tour-manage' },
-  { text: 'Report', link: '/admin/report' },
+  { text: 'Profile', link: '/admin/report' },
 ];
 
 const drawerWidth = 240;
@@ -296,12 +292,6 @@ const Index = () => {
               </p>
               <span className="text-2xl font-bold">Dashboard</span>
               <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-<<<<<<< HEAD
-                <TourList />
-                <div>
-                  <MonitorChart />
-                </div>
-=======
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                   <div
                     className="col-span-1 sm:col-span-1 lg:col-span-1 mb-4"
@@ -511,7 +501,6 @@ const Index = () => {
                   </div>
                 </section>
 
->>>>>>> ab28c0ff2e63e70c7b0027adc41668696a69c174
               </Box>
             </Box>
           </div>
