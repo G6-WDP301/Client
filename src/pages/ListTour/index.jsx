@@ -4,8 +4,6 @@ import { Navbar, NavbarLogin, Footer } from '@/layout';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Aos from 'aos';
-import moment from 'moment';
-import Header from '../../layout/Header';
 import { jwtDecode } from 'jwt-decode';
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 import { ToastContainer, toast } from 'react-toastify';
@@ -51,7 +49,8 @@ export default function index() {
   const [booked, setBooked] = useState([]);
   const [user, setUser] = useState([])
   const [payId, setPayId] = useState([]);
-  const [statusBook, setStatusBook] = useState(false);
+  const [logPartner, setLogPartner] = useState(false);
+
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -68,9 +67,9 @@ export default function index() {
     // Rest API Booked
     axios.get('http://localhost:8080/api/booking/all')
       .then((response) => {
-        const booked = response.data.data;
+        const booked = response.data.tours;
+        console.log("booked ne", booked);
         setBooked(booked);
-        console.log("booked ne: ", booked);
       })
       .catch(error => console.log(error));
   }, []);
@@ -107,51 +106,37 @@ export default function index() {
     setIsOpen(true);
   };
 
-  // const isTourBooked = (tourId) => {
-  //   for (let i = 0; i < booked.length; i++) {
-  //     if (booked[i].isPay === false && booked[i].user_id === userId) {
-  //       for (let j = 0; j < tours.length; j++) {
-  //         if (tours[j]._id === tourId) {
-  //           // setStatusBook(true);
-  //           return true;
-  //           break;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // };
+  const isTourBooked = (tourId) => {
+    const tour = booked.find(t => {
+      return t.user_id === userId & t.tour_id === tourId
+    })
+    console.log(tour);
+    return tour ? true : false;
+  }
+  const getBookedTour = (tourId) => {
+    const tour = booked.find(t => {
+      return t.user_id === userId & t.tour_id === tourId
+    })
+    return tour;
+  }
 
-  // for (let i = 0; i < booked.length; i++) {
-  //   if (booked[i].isPay === false && booked[i].user_id === userId) {
-  //     for (let j = 0; j < tours.length; j++) {
-  //       if (tours[j]._id === booked[i].tour_id) {
-  //         // setStatusBook(true);
-  //         da = true
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
+  // Conditional of loop
   const applyPriceFilter = (tours) => {
     if (selectedPriceFilter === null) {
-      return tours.filter(tour => new Date(tour.start_date) >= new Date(timeNow));
+      return tours.filter(tour => tour?.isAppove === "APPROVE" && new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item1) {
-      return tours.filter((tour) => tour.tour_price < 500 && new Date(tour.start_date) >= new Date(timeNow));
+      return tours.filter((tour) => tour?.isAppove === "APPROVE" && tour.tour_price < 500 && new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item2) {
-      return tours.filter((tour) => tour.tour_price >= 500 && tour.tour_price <= 1000 && new Date(tour.start_date) >= new Date(timeNow));
+      return tours.filter((tour) => tour?.isAppove === "APPROVE" && tour.tour_price >= 500 && tour.tour_price <= 1000 && new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item3) {
-      return tours.filter((tour) => tour.tour_price >= 1000 && tour.tour_price <= 2000 && new Date(tour.start_date) >= new Date(timeNow));
+      return tours.filter((tour) => tour?.isAppove === "APPROVE" && tour.tour_price >= 1000 && tour.tour_price <= 2000 && new Date(tour.start_date) >= new Date(timeNow));
     } else if (selectedPriceFilter === listFilter[0].item4) {
-      return tours.filter((tour) => tour.tour_price > 2000 && new Date(tour.start_date) >= new Date(timeNow));
+      return tours.filter((tour) => tour?.isAppove === "APPROVE" && tour.tour_price > 2000 && new Date(tour.start_date) >= new Date(timeNow));
     } else {
-      return tours.filter(tour => new Date(tour.start_date) >= new Date(timeNow));
+      return tours.filter(tour => tour.isApprove === "APPROVE" && new Date(tour.start_date) >= new Date(timeNow));
     }
   };
 
-
-  const [logPartner, setLogPartner] = useState(false);
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -166,7 +151,6 @@ export default function index() {
           const userData = response.data.data;
           setUser(userData);
           const rid = decodedToken.role;
-          console.log(decodedToken)
           if (rid === 'PARTNER') {
             setLogPartner(true);
           } else {
@@ -322,20 +306,13 @@ export default function index() {
                       </span>
                     </button>
 
-                    <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
-                      onClick={() => handleBooking(list._id)}>
-                      <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                        Booking Now
-                      </span>
-                    </button>
-
-                    {/* {isTourBooked(list._id) ? (
-                      <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
+                    {isTourBooked(list._id) ? (
+                      getBookedTour(list._id)?.isPay ? ("") : (<button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
                         onClick={() => handlePay(list._id)}>
                         <span className="relative px-2 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                           Pay Now
                         </span>
-                      </button>
+                      </button>)
                     ) : (
                       <button className="relative inline-flex items-center justify-center p-0.5 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
                         onClick={() => handleBooking(list._id)}>
@@ -343,8 +320,8 @@ export default function index() {
                           Booking Now
                         </span>
                       </button>
-                    )} */}
-                    
+                    )}
+
                   </div>
                 </div>
                 <img
@@ -364,7 +341,7 @@ export default function index() {
               </figure>
             ))
           ) : (
-            <h1 style={{ color: "gray", fontSize: "25px", fontStyle: "italic" }}>No tour has that price ~</h1>
+            <h1 style={{ color: "gray", fontSize: "25px", fontStyle: "italic" }}>No tour has found ~</h1>
           )}
 
         </div>

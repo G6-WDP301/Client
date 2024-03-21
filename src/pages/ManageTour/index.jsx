@@ -145,6 +145,7 @@ const Index = () => {
                     color="primary"
                     style={{ marginBottom: '1rem' }}
                     size="large"
+                    onClick={() => navigate('/create-tour')}
                   >
                     Create Tour
                   </Button>

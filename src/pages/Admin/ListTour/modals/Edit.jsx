@@ -52,6 +52,7 @@ const EditStateModal = ({ row, openModal, setOpenModal }) => {
       console.error('Error fetching data:', error.message);
     }
   };
+  console.log(`oke: ${stateTour}`)
 
   return (
     <div>
