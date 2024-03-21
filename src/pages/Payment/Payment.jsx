@@ -17,6 +17,7 @@ const Payment = () => {
     const [tourDataLoaded, setTourDataLoaded] = useState(false);
     const [order, setOrder] = useState(null);
     const token = localStorage.getItem('token');
+    const quantity = localStorage.getItem('numberPeople')
 
     useEffect(() => {
         // Rest API Tour booked 
@@ -42,7 +43,7 @@ const Payment = () => {
                                     amount: {
                                         description: tourBooked.tour_name,
                                         currency_code: "CAD",
-                                        value: tourBooked.tour_price * 30 / 100
+                                        value: (quantity * tourBooked.tour_price) * 30 / 100
                                     },
                                 },
                             ],
@@ -83,7 +84,6 @@ const Payment = () => {
             })
                 .then((response) => {
                     const pay = response.data;
-                    console.log(pay);
                 })
                 .catch(error => console.log(error.message));
             navigate('/');
