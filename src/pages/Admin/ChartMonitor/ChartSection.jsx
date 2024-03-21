@@ -178,7 +178,7 @@ const ChartSection = ({ metric, timeRange, min, max, title, unit }) => {
   return (
     <>
       <div>
-        <Line data={newChart} options={options} />
+        {/* <Line data={newChart} options={options} /> */}
       </div>
     </>
   )

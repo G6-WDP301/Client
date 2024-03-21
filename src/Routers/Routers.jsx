@@ -17,6 +17,7 @@ import HomePartner from '../pages/Home/homePartner.jsx';
 import ManageTour from '../pages/ManageTour/index.jsx';
 import ManageTourEdit from '../pages/ManageTour/DetailTour.jsx';
 import ManageTourDetail from '../pages/ManageTour/DetailManageTour.jsx';
+import CreateTour from '../pages/ManageTour/CreateTour.jsx'
 
 import Success from '../pages/StatusPayment/Success.jsx'
 import Cancel from '../pages/StatusPayment/Cancel.jsx'
@@ -228,6 +229,10 @@ export const RoutesPartner = [
         page: Payment,
         isShowHeader: true
     },
+    {
+        path: "/create-tour",
+        page: CreateTour
+    }
 ]
 
 

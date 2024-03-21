@@ -158,7 +158,7 @@ const ViewTour = () => {
   };
 
   React.useEffect(() => {
-    setAllPoints(tour[0].locations); // Lấy locations từ tour[0] hoặc tour[n] với n là index của tour bạn muốn sử dụng
+    setAllPoints(tour[0].locations); 
   }, []);
 
   React.useEffect(() => {

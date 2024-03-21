@@ -16,16 +16,11 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { STATE_ADMIN_TOUR } from '../../../utils/components/StateAdmin';
 
 const EditStateModal = ({ row, openModal, setOpenModal }) => {
   const [loadingEditSubmit, setLoadingForEdit] = useState(false);
-  const [stateTour, setStateTour] = useState('pedding'); //cái này sau thay bằng row.state nhé
-  // const stateOptions = ['approved', 'rejected'];
-
-  const statusOption = [
-    { label: "Pedding", value: "false" },
-    { label: "Approved", value: "true" },
-  ]
+  const [stateTour, setStateTour] = useState('PENDING');
   const [tours, setTours] = useState([])
 
   useEffect(() => {
@@ -57,6 +52,7 @@ const EditStateModal = ({ row, openModal, setOpenModal }) => {
       console.error('Error fetching data:', error.message);
     }
   };
+  console.log(`oke: ${stateTour}`)
 
   return (
     <div>
@@ -93,7 +89,7 @@ const EditStateModal = ({ row, openModal, setOpenModal }) => {
                 value={stateTour}
                 label='State Tour'
               >
-                {statusOption.map(option => (
+                {STATE_ADMIN_TOUR.map(option => (
                   <MenuItem key={option.value} value={option.value} id={`subnet-name-${option.value}`}>
                     {option.label}
                   </MenuItem>
