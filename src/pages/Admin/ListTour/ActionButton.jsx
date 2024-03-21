@@ -96,7 +96,8 @@ const ActionButton = ({ row, statusTour }) => {
               paddingRight: '15px'
             }}
           >
-            {STATE_ADMIN_TOUR.find(state => state.value === state.isApproved)?.label || 'UNKNOWN'}
+            
+            {STATE_ADMIN_TOUR.find(state => state.value === statusTour)?.label || 'UNKNOWN'}
           </Button>
         </span>
       </Tooltip>

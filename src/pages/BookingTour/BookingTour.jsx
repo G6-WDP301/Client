@@ -128,9 +128,8 @@ const BookingTour = () => {
   };
 
   useEffect(() => {
-    // Lưu giá trị numberPeople vào localStorage
     localStorage.setItem('numberPeople', numberPeople);
-  }, [numberPeople]); // Thực hiện hiệu chỉnh này chỉ khi numberPeople thay đổi
+  }, [numberPeople]); 
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -140,6 +139,7 @@ const BookingTour = () => {
       .then((response) => {
         const tours = Object.values(response.data.tour);
         setTourData(tours);
+        console.log(tours);
       })
       .catch(error => console.log(error));
   }, []);
@@ -281,6 +281,17 @@ const BookingTour = () => {
                   }}
                 >
                   Nơi khởi hành: <b>{tourData[0]?.start_position?.location_name}</b>
+                </Typography>
+                <Typography
+                  sx={{
+                    marginBottom: '8px',
+                    fontFamily: 'Arial',
+                    fontSize: '15px',
+                    color: '#000000',
+                    paddingLeft: '20px',
+                  }}
+                >
+                  Điểm đến: <b>{tourData[0]?.end_position[0]?.location_name}</b>
                 </Typography>
                 <Typography
                   sx={{

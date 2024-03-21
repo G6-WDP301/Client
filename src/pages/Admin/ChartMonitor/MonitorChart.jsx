@@ -10,7 +10,7 @@ const MonitorChart = () => {
   const handleTimeRangeChange = (event) => {
     setSelectedTimeRange(event.target.value);
   };
-  
+
 
   const sampleData = [
     {
