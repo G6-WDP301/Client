@@ -355,7 +355,7 @@ const TableListTourAdmin = () => {
                           {row.end_position[0]?.location_name}
                         </TableCell>
                         <TableCell align={'right'}>
-                          <ActionButton row={row} statusTour={row.status}/>
+                          <ActionButton row={row} statusTour={row.isAppove}/>
                         </TableCell>
                       </TableRow>
                     );

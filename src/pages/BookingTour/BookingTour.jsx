@@ -128,6 +128,11 @@ const BookingTour = () => {
   };
 
   useEffect(() => {
+    // Lưu giá trị numberPeople vào localStorage
+    localStorage.setItem('numberPeople', numberPeople);
+  }, [numberPeople]); // Thực hiện hiệu chỉnh này chỉ khi numberPeople thay đổi
+
+  useEffect(() => {
     Aos.init({ duration: 2000 });
     const token = localStorage.getItem('token');
     setIsLoggedIn(Boolean(token));
@@ -166,6 +171,11 @@ const BookingTour = () => {
   }, []);
 
   const [logPartner, setLogPartner] = useState(false);
+
+  const handleNumberPeopleChange = (event) => {
+    const value = event.target.value;
+    setNumberPeople(value);
+  };
 
   return (
     <>
@@ -435,11 +445,11 @@ const BookingTour = () => {
                   InputProps={{
                     inputProps: {
                       min: 1,
-                      // max: tourItem.number,
+                      max: tourData[0]?.max_tourist,
                     },
                   }}
-                  customvalue={numberPeople}
-                  customsetvalue={setNumberPeople}
+                  value={numberPeople}
+                  onChange={handleNumberPeopleChange}
                 />
 
                 <Typography
@@ -463,7 +473,7 @@ const BookingTour = () => {
                       onChange={handleOption1Change}
                     />
                   }
-                  label="Nhập danh sách khách hàng"
+                  label="Tôi sẽ liên hệ với nhân viên khi cần tư vấn"
                 />
                 <FormControlLabel
                   control={
@@ -520,126 +530,8 @@ const BookingTour = () => {
                   }}
                 >
                   {type === 'option1' && (
-                    <FormGroup
-                      sx={{
-                        alignItems: 'center',
-                        borderRadius: '10px',
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        justifyContent: 'space-between',
-                        padding: '1rem',
-                      }}
-                    >
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} sm={4}>
-                          <TextField
-                            id="additionalText1"
-                            label="Họ và tên"
-                            fullWidth
-                            sx={{
-                              mt: 2,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              marginBottom: '20px',
-                              backgroundColor: '#ffffff',
-                            }}
-                            value={fullNamePeople}
-                            onChange={(event) => {
-                              setFullNamePeople(event.target.value);
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                          <TextField
-                            id="additionalText1"
-                            label="Giới tính"
-                            fullWidth
-                            sx={{
-                              mt: 2,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              marginBottom: '20px',
-                              backgroundColor: '#ffffff',
-                            }}
-                            value={gender}
-                            onChange={(event) => {
-                              setGender(event.target.value);
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                          <TextField
-                            label="Ngày sinh"
-                            type="datetime-local"
-                            value={birthDate}
-                            onChange={handleBirthDateChange}
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                            sx={{
-                              mt: 2,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              marginBottom: '20px',
-                              backgroundColor: '#ffffff',
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <TextField
-                            id="sdt"
-                            label="Số điện thoại"
-                            fullWidth
-                            sx={{
-                              mt: 2,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              marginBottom: '20px',
-                              backgroundColor: '#ffffff',
-                            }}
-                            value={numberPhone}
-                            onChange={(event) => {
-                              setNumberPhone(event.target.value);
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <TextField
-                            id="additionalText4"
-                            label="Địa chỉ"
-                            fullWidth
-                            sx={{
-                              mt: 2,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              marginBottom: '20px',
-                              backgroundColor: '#ffffff',
-                            }}
-                            value={addressPeople}
-                            onChange={(event) => {
-                              setAddressPeople(event.target.value);
-                            }}
-                          />
-                        </Grid>
 
-                        <Grid item xs={12} sm={12}>
-                          <TextField
-                            fullWidth
-                            multiline
-                            id="loadbalancer-create-ip-address"
-                            label="Vui lòng nhập nội dung lời nhắn bằng tiếng Anh hoặc tiếng Việt"
-                            sx={{
-                              '& .MuiOutlinedInput-root': {
-                                alignItems: 'baseline',
-                              },
-                              backgroundColor: '#ffffff',
-                            }}
-                            customvalue={textComment}
-                            customsetvalue={setTextComment}
-                          />
-                        </Grid>
-                      </Grid>
-                    </FormGroup>
+                    <FormGroup></FormGroup>
                   )}
                 </Grid>
               </Grid>

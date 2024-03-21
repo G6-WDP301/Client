@@ -8,7 +8,7 @@ import EditStateModal from './modals/Edit.jsx'
 import DeleteTourAdminModal from './modals/Delete.jsx'
 import { Button, IconButton, Tooltip } from '@mui/material'
 import axios from 'axios'
-
+import { STATE_ADMIN_TOUR } from '../../utils/components/StateAdmin.jsx';
 //Styled Imports
 
 const ActionButton = ({ row, statusTour }) => {
@@ -24,7 +24,6 @@ const ActionButton = ({ row, statusTour }) => {
   const [tourDetail, setTourDetail] = useState([]);
 
 
-  console.log(`okenhe: ${statusTour}`)
   // const handleIconButtonOnClick = async (row, setShowModalFunc, tourId) => {
   //   setVisibleModals(true)
   //   setAnchorEl(null)
@@ -97,8 +96,7 @@ const ActionButton = ({ row, statusTour }) => {
               paddingRight: '15px'
             }}
           >
-            {/* {tourDetail.status} */}
-            {statusTour ? 'approved' : 'pending'}
+            {STATE_ADMIN_TOUR.find(state => state.value === state.isApproved)?.label || 'UNKNOWN'}
           </Button>
         </span>
       </Tooltip>
