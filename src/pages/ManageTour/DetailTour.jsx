@@ -42,6 +42,22 @@ const DetailTour = () => {
 
   const navigate = useNavigate();
 
+  // const [value, setValue] = useState('');
+  const [nameTour, setNameTour] = useState('');
+  const [price, setPrice] = useState('');
+  const [discount, setDiscount] = useState('');
+  const [maxTourist, setMaxTourist] = useState('');
+  const [transportion, setTransportion] = useState('');
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [startPosition, setStartPosition] = useState('')
+  const [endPosition, setEndPosition] = useState('')
+  const [description, setDescription] = useState('')
+  const [scheduleName, setScheduleName] = useState('')
+  const [scheduleDate, setScheduleDate] = useState('')
+  const [scheduleDetail, setScheduleDetail] = useState('')
+
+
   useEffect(() => {
     Aos.init({ duration: 2000 });
     const token = localStorage.getItem('token');
@@ -89,6 +105,52 @@ const DetailTour = () => {
 
     tourItems();
   }, [id]);
+
+  useEffect(() => {
+    const scheduleItems = () => {
+      axios
+        .get(`http://localhost:8080/api/schedule/${id}`)
+        .then((response) => {
+          const scheduleData = response.data.schedules;
+          setSchedule(scheduleData);
+          console.log('data tour:', schedule);
+        })
+        .catch((error) => console.log(error));
+    };
+
+    scheduleItems();
+  }, [id]);
+
+  const handleSubmit = (e) => {
+    const updateTour = {
+      nameTour, 
+      price,
+      discount,
+      maxTourist,
+      transportion,
+      startDate, 
+      endDate, 
+      startPosition, 
+      endPosition, 
+      description
+
+    }
+    console.log(updateTour)
+    axios.put(`http://localhost:8080/api/tour/update/${id}`, updateTour)
+     .then((response) => {
+      const editTour = response.data.tour.tour;
+      console.log('update data: ', editTour)
+      setTourData(editTour)
+     })
+     .catch(error => console.log(error))
+
+  }
+
+  // useEffect(() => {
+  //   const updateTour = () =>{
+
+  //   }
+  // })
 
   return (
     <>
@@ -150,7 +212,7 @@ const DetailTour = () => {
             <div className="p-6 space-y-6">
               {
                 [tourData]?.map((item) => (
-                  <form action="#" key={item?.id}>
+                  <form onSubmit={handleSubmit} key={item?.id}>
                     <div className="grid grid-cols-6 gap-6">
                       <div className="col-span-full">
                         <label
@@ -167,6 +229,7 @@ const DetailTour = () => {
                           placeholder=""
                           required=""
                           value={item?.tour_name}
+                          // onChange={(event) => {setNameTour(event.target.value)}}
                         />
                       </div>
 
@@ -185,6 +248,7 @@ const DetailTour = () => {
                           placeholder="$$$"
                           required=""
                           value={item?.tour_price}
+                          // onChange={(event) => setPrice(event.target.value)}
                         />
                       </div>
                       <div className="col-span-6 sm:col-span-3">
@@ -202,6 +266,7 @@ const DetailTour = () => {
                           placeholder="$$$"
                           required=""
                           value={item?.discount}
+                          // onChange={(event) => {setDiscount(event.target.value)}}
                         />
                       </div>
 
@@ -220,6 +285,7 @@ const DetailTour = () => {
                           placeholder=""
                           required=""
                           value={item?.max_tourist}
+                          // onChange={(event) => setMaxTourist(event.target.value)}
                         />
                       </div>
 
@@ -249,7 +315,8 @@ const DetailTour = () => {
                             placeholder=""
                             required=""
                             value={item?.tour_transportion[0]?.transportion_name}
-                          />
+                            // onChange={(event) => {setTransportion(event.target.value)}}
+                            />
                         )}
 
                       </div>
@@ -268,7 +335,7 @@ const DetailTour = () => {
                           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                           required=""
                           value={moment(item.start_date).format('YYYY-MM-DD')}
-
+                          // onChange={(event) => setStartDate(event.target.value)}
                         />
                       </div>
 
@@ -286,6 +353,7 @@ const DetailTour = () => {
                           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                           required=""
                           value={moment(item?.end_date).format('YYYY-MM-DD')}
+                          // onChange={(event) => setEndDate(event.target.value)}
                         />
                       </div>
 
@@ -303,6 +371,7 @@ const DetailTour = () => {
                           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                           required=""
                           value={item?.start_position?.location_name}
+                          // onChange={(event) => setStartPosition(event.target.value)}
                         />
                       </div>
 
@@ -321,166 +390,11 @@ const DetailTour = () => {
                           placeholder=""
                           required=""
                           value={item?.end_position?.location_name}
+                          // onChange={(event) => {setEndPosition(event.target.value)}}
                         />
                       </div>
 
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          for="image"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          Image
-                        </label>
-                        <div
-                          className="w-[auto] height-[auto] relative border-2 border-gray-300 border-dashed rounded-lg p-6"
-                          id="dropzone"
-                        >
-                          <input
-                            type="file"
-                            className="absolute inset-0 w-full h-full opacity-0 z-50"
-                          />
-                          <div className="text-center">
-                            <img
-                              className="mx-auto h-12 w-12"
-                              src="https://www.svgrepo.com/show/357902/image-upload.svg"
-                              alt=""
-                            />
 
-                            <h3 className="mt-2 text-sm font-medium text-gray-900">
-                              <label
-                                for="file-upload"
-                                className="relative cursor-pointer"
-                              >
-                                <span>Drag and drop</span>
-                                <span className="text-indigo-600"> or browse</span>
-                                <span>to upload</span>
-                                <input
-                                  id="file-upload"
-                                  name="file-upload"
-                                  type="file"
-                                  className="sr-only"
-                                />
-                              </label>
-                            </h3>
-                            <p className="mt-1 text-xs text-gray-500">
-                              PNG, JPG, GIF up to 10MB
-                            </p>
-                          </div>
-
-                          <img
-                            src=""
-                            className="mt-4 mx-auto max-h-40 hidden"
-                            id="preview"
-                          />
-                        </div>
-                      </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="max-tourist"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Max Tourist
-                                </label>
-                                <input
-                                type="number"
-                                name="max-tourist"
-                                id="max-tourist"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                placeholder=""
-                                required=""
-                                value={item?.max_tourist}
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="transportion"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Transportion
-                                </label>
-                                <input
-                                type="text"
-                                name="transportion"
-                                id="transportion"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                placeholder=""
-                                required=""
-                                value={item?.tour_transportion === '65a8f3c00786c8565da58457' ? 'Xe may' : 'No transportion'}
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="start-date"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Start Date
-                                </label>
-                                <input
-                                type="date"
-                                name="start-date"
-                                id="start-date"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                required=""
-                                value={moment(item?.start_date).format('DD/MM/YYYY')}
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="end-date"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                End Date
-                                </label>
-                                <input
-                                type="date"
-                                name="end-date"
-                                id="end-date"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                required=""
-                                value={moment(item?.end_date).format('DD/MM/YYYY')}
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                htmlFor="start-position"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Start Position
-                                </label>
-                                <input
-                                type="text"
-                                name="start-position"
-                                id="start-position"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                required=""
-                                value={item?.start_position}
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                for="end-position"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                End Position
-                                </label>
-                                <input
-                                type="text"
-                                name="end-position"
-                                id="end-position"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                placeholder=""
-                                required=""
-                                value={item?.end_position}
-                                />
-                            </div>
-
-                          <div>
                             <div className="col-span-6 sm:col-span-3">
                                 <label
                                 for="image"
@@ -540,8 +454,6 @@ const DetailTour = () => {
                                 </div>
                             </div>
 
-                          </div>
-
                             <div className="col-span-full">
                                 <label
                                 htmlFor="description"
@@ -552,65 +464,71 @@ const DetailTour = () => {
                                 <CKEditor
                                 editor={ClassicEditor}
                                 data={item?.tour_description}
-                                // onChange={(event, editor) => {
-                                //     const data = editor.getData();
+                                // onChange={(event) => {
+                                //     setDescription(event.target.value)
                                 // }}
                                 />
 
                       </div>
-
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="schedule-name"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          Schedule name
-                        </label>
-                        <input
-                          type="text"
-                          name="schedule-name"
-                          id="schedule-name"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          placeholder=""
-                          required=""
-                        />
-                      </div>
-
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="schedule-date"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          Schedule date
-                        </label>
-                        <input
-                          type="text"
-                          name="schedule-date"
-                          id="schedule-date"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          placeholder=""
-                          required=""
-                        />
-                      </div>
-
-                      <div className="col-span-full">
-                        <label
-                          htmlFor="schedule-detail"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          Schedule detail
-                        </label>
-                        <CKEditor
-                          editor={ClassicEditor}
-                        // data={item?.tour_description}
-                        // onChange={(event, editor) => {
-                        //     const data = editor.getData();
-                        // }}
-                        />
-
-                      </div>
-
                     </div>
+
+                    {
+                        schedule?.map((item) => (
+                          <div className="pt-6 pb-8 grid grid-cols-6 gap-6" key={item?.tour_id}>
+                            <div className="col-span-6 sm:col-span-3">
+                              <label
+                                htmlFor="schedule-name"
+                                className="text-sm font-medium text-gray-900 block mb-2"
+                              >
+                                Schedule name
+                              </label>
+                              <input
+                                type="text"
+                                name="schedule-name"
+                                id="schedule-name"
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                                value={item?.schedule_name}
+                                // onChange={(event) => {setScheduleName(event.target.value)}}
+                              />
+                            </div>
+
+                            <div className="col-span-6 sm:col-span-3">
+                              <label
+                                htmlFor="schedule-date"
+                                className="text-sm font-medium text-gray-900 block mb-2"
+                              >
+                                Schedule date
+                              </label>
+                              <input
+                                type="text"
+                                name="schedule-date"
+                                id="schedule-date"
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                                value={moment(item?.schedule_date).format('DD/MM/YYYY')}
+                                // onChange={(event) => event.target.value}
+                              />
+                            </div>
+
+                            <div className="col-span-full">
+                              <label
+                                htmlFor="schedule-detail"
+                                className="text-sm font-medium text-gray-900 block mb-2"
+                              >
+                                Schedule detail
+                              </label>
+                              <CKEditor
+                                editor={ClassicEditor}
+                              data={item?.schedule_detail}
+                              // onChange={(event) => {
+                              //     setScheduleDetail(event.target.value);
+                              // }}
+                              />
+
+                            </div>
+                          </div>
+                        ))
+                      }
+
                   </form>
                 ))
               }
@@ -620,6 +538,7 @@ const DetailTour = () => {
               <button
                 className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 type="submit"
+                onClick={handleSubmit}
               >
                 Save all
               </button>

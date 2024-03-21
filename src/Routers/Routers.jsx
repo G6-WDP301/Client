@@ -21,6 +21,9 @@ import ManageTourDetail from '../pages/ManageTour/DetailManageTour.jsx';
 import Success from '../pages/StatusPayment/Success.jsx'
 import Cancel from '../pages/StatusPayment/Cancel.jsx'
 
+import ProfileAdmin from '../layout/Sidebar/profileAdminNav.jsx'
+
+ 
 export const routes = [
     {
         path: "/",
@@ -119,16 +122,16 @@ export const adminRoutes = [
         page: ListTour
     },
     {
-        path: "/profile",
-        page: Profile
+        path: "/admin/profile",
+        page: ProfileAdmin
     },
     {
         path: "/tour-detail/:id",
         page: TourDetail
     },
     {
-        path: '/home-admin',
-        page: homeAdmin,
+        path: "/login",
+        page: Login,
     },
     {
         path: "*",
