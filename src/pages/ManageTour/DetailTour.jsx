@@ -29,7 +29,6 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useParams } from 'react-router-dom';
 
-
 const DetailTour = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [logPartner, setLogPartner] = useState(false);
@@ -48,15 +47,20 @@ const DetailTour = () => {
   const [discount, setDiscount] = useState('');
   const [maxTourist, setMaxTourist] = useState('');
   const [transportion, setTransportion] = useState('');
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
-  const [startPosition, setStartPosition] = useState('')
-  const [endPosition, setEndPosition] = useState('')
-  const [description, setDescription] = useState('')
-  const [scheduleName, setScheduleName] = useState('')
-  const [scheduleDate, setScheduleDate] = useState('')
-  const [scheduleDetail, setScheduleDetail] = useState('')
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [startPosition, setStartPosition] = useState('');
+  const [endPosition, setEndPosition] = useState('');
+  const [description, setDescription] = useState('');
+  const [tax, setTax] = useState('');
+  const [duration, setDuration] = useState('');
+  const [image, setImage] = useState('');
+  const [scheduleName, setScheduleName] = useState('');
+  const [scheduleDate, setScheduleDate] = useState('');
+  const [scheduleDetail, setScheduleDetail] = useState('');
 
+  const [location, setLocation] = useState([]);
+  const [vehicle, setVehicle] = useState([]);
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -103,54 +107,72 @@ const DetailTour = () => {
         .catch((error) => console.log(error));
     };
 
-    tourItems();
-  }, [id]);
-
-  useEffect(() => {
     const scheduleItems = () => {
       axios
         .get(`http://localhost:8080/api/schedule/${id}`)
         .then((response) => {
           const scheduleData = response.data.schedules;
           setSchedule(scheduleData);
-          console.log('data tour:', schedule);
+          console.log('data schedule tour:', schedule);
         })
         .catch((error) => console.log(error));
     };
 
+    tourItems();
+
     scheduleItems();
   }, [id]);
 
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
+    // Get location
+    axios
+      .get('http://localhost:8080/api/location/all')
+      .then((res) => {
+        const locationData = res.data.locations.locationSaved;
+        setLocation(locationData);
+      })
+      .catch((error) => {
+        console.log('Error ne: ', error);
+      });
+
+    // Get transportion
+    axios
+      .get('http://localhost:8080/api/transportion')
+      .then((res) => {
+        const vehicleData = res.data.transportions;
+        setVehicle(vehicleData);
+      })
+      .catch((error) => {
+        console.log('Error ne: ', error);
+      });
+  }, [location, vehicle]);
+
   const handleSubmit = (e) => {
     const updateTour = {
-      nameTour, 
+      nameTour,
       price,
       discount,
       maxTourist,
       transportion,
-      startDate, 
-      endDate, 
-      startPosition, 
-      endPosition, 
-      description
-
-    }
-    console.log(updateTour)
-    axios.put(`http://localhost:8080/api/tour/update/${id}`, updateTour)
-     .then((response) => {
-      const editTour = response.data.tour.tour;
-      console.log('update data: ', editTour)
-      setTourData(editTour)
-     })
-     .catch(error => console.log(error))
-
-  }
-
-  // useEffect(() => {
-  //   const updateTour = () =>{
-
-  //   }
-  // })
+      startDate,
+      endDate,
+      startPosition,
+      endPosition,
+      description,
+    };
+    console.log(updateTour);
+    axios
+      .put(`http://localhost:8080/api/tour/update/${id}`, updateTour)
+      .then((response) => {
+        const editTour = response.data.tour.tour;
+        console.log('update data: ', editTour);
+        setTourData(editTour);
+      })
+      .catch((error) => console.log(error));
+  };
 
   return (
     <>
@@ -210,100 +232,91 @@ const DetailTour = () => {
             </div>
 
             <div className="p-6 space-y-6">
-              {
-                [tourData]?.map((item) => (
-                  <form onSubmit={handleSubmit} key={item?.id}>
-                    <div className="grid grid-cols-6 gap-6">
-                      <div className="col-span-full">
-                        <label
-                          htmlFor="tour-name"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          Name
-                        </label>
-                        <input
-                          type="text"
-                          name="tour-name"
-                          id="tour-name"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          placeholder=""
-                          required=""
-                          value={item?.tour_name}
-                          // onChange={(event) => {setNameTour(event.target.value)}}
-                        />
-                      </div>
+              {[tourData]?.map((item) => (
+                <form onSubmit={handleSubmit} key={item?.id}>
+                  <div className="grid grid-cols-6 gap-6">
+                    <div className="col-span-full">
+                      <label
+                        htmlFor="tour-name"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        name="tour-name"
+                        id="tour-name"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                        placeholder=""
+                        required=""
+                        value={item?.tour_name}
+                        // onChange={(event) => {setNameTour(event.target.value)}}
+                      />
+                    </div>
 
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="price"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          Price
-                        </label>
-                        <input
-                          type="number"
-                          name="price"
-                          id="price"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          placeholder="$$$"
-                          required=""
-                          value={item?.tour_price}
-                          // onChange={(event) => setPrice(event.target.value)}
-                        />
-                      </div>
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="price"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          Discount
-                        </label>
-                        <input
-                          type="number"
-                          name="discount"
-                          id="discount"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          placeholder="$$$"
-                          required=""
-                          value={item?.discount}
-                          // onChange={(event) => {setDiscount(event.target.value)}}
-                        />
-                      </div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="price"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Price
+                      </label>
+                      <input
+                        type="number"
+                        name="price"
+                        id="price"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                        placeholder="$$$"
+                        required=""
+                        value={item?.tour_price}
+                        // onChange={(event) => setPrice(event.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="price"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Discount
+                      </label>
+                      <input
+                        type="number"
+                        name="discount"
+                        id="discount"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                        placeholder="$$$"
+                        required=""
+                        value={item?.discount}
+                        // onChange={(event) => {setDiscount(event.target.value)}}
+                      />
+                    </div>
 
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="max-tourist"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          Max Tourist
-                        </label>
-                        <input
-                          type="number"
-                          name="max-tourist"
-                          id="max-tourist"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          placeholder=""
-                          required=""
-                          value={item?.max_tourist}
-                          // onChange={(event) => setMaxTourist(event.target.value)}
-                        />
-                      </div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="max-tourist"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Max Tourist
+                      </label>
+                      <input
+                        type="number"
+                        name="max-tourist"
+                        id="max-tourist"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                        placeholder=""
+                        required=""
+                        value={item?.max_tourist}
+                        // onChange={(event) => setMaxTourist(event.target.value)}
+                      />
+                    </div>
 
-                      <div className="col-span-6 sm:col-span-3">
+                    {/* <div className="col-span-6 sm:col-span-3">
                         <label
                           htmlFor="transportion"
                           className="text-sm font-medium text-gray-900 block mb-2"
                         >
                           Transportion
                         </label>
-                        {/* <input
-                          type="text"
-                          name="transportion"
-                          id="transportion"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          placeholder=""
-                          required=""
-                          value={item?.tour_transportion} /> */}
 
 
                         {item && item.tour_transportion && item.tour_transportion.length > 0 && (
@@ -317,221 +330,306 @@ const DetailTour = () => {
                             value={item?.tour_transportion[0]?.transportion_name}
                             // onChange={(event) => {setTransportion(event.target.value)}}
                             />
-                        )}
+                        )} */}
 
-                      </div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="transportion"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Transportion
+                      </label>
+                      <select
+                        style={{
+                          width: '100%',
+                          padding: '10px',
+                          fontSize: '14px',
+                          borderRadius: '8px',
+                          backgroundColor: '#f9fafb',
+                          border: '1px solid #e5e7eb',
+                        }}
+                        name="transportion"
+                        required
+                        // onChange={(e) => setTransportion(e.target.value)}
+                      >
+                        <option>
+                          {item?.tour_transportion?.[0]?.transportion_name}
+                        </option>
+                        {vehicle.map((veh) => (
+                          <option value={veh._id} key={veh._id}>
+                            {veh?.transportion_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="start-date"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          Start Date
-                        </label>
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="start-date"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Start Date
+                      </label>
+                      <input
+                        type="date"
+                        name="start-date"
+                        id="start-date"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                        required=""
+                        value={moment(item.start_date).format('YYYY-MM-DD')}
+                        // onChange={(event) => setStartDate(event.target.value)}
+                      />
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="end-date"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        End Date
+                      </label>
+                      <input
+                        type="date"
+                        name="end-date"
+                        id="end-date"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                        required=""
+                        value={moment(item?.end_date).format('YYYY-MM-DD')}
+                        // onChange={(event) => setEndDate(event.target.value)}
+                      />
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="start-position"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Start Position
+                      </label>
+                      <select
+                        style={{
+                          width: '100%',
+                          padding: '10px',
+                          fontSize: '14px',
+                          borderRadius: '8px',
+                          backgroundColor: '#f9fafb',
+                          border: '1px solid #e5e7eb',
+                        }}
+                        name="start-position"
+                        required
+                        // onChange={(event) => setStartPosition(event.target.value)}
+                      >
+                        <option>{item?.start_position?.location_name || "No Start Position"}</option>
+                        {location.map((loc) => (
+                          <option value={loc._id} key={loc._id}>
+                            {loc?.location_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="start-position"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        End Position
+                      </label>
+                      <select
+                        style={{
+                          width: '100%',
+                          padding: '10px',
+                          fontSize: '14px',
+                          borderRadius: '8px',
+                          backgroundColor: '#f9fafb',
+                          border: '1px solid #e5e7eb',
+                        }}
+                        name="end-position"
+                        required
+                        // onChange={(event) => {setEndPosition(event.target.value)}}
+                      >
+                        <option>{item?.end_position?.location_name || "No End Position"}</option>
+                        {location.map((loc) => (
+                          <option value={loc._id} key={loc._id}>
+                            {loc?.location_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="ol-span-6 sm:col-span-3">
+                      <label
+                        for="tax"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Tax
+                      </label>
+                      <input
+                        type="number"
+                        name="tax"
+                        id="tax"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                        value={item?.return_tax}
+                        // onChange={(event) => {setTax(event.target.value)}}
+                      />
+                    </div>
+
+                    <div className="ol-span-6 sm:col-span-3">
+                      <label
+                        for="duration"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Duration
+                      </label>
+                      <input
+                        type="text"
+                        name="Duration"
+                        id="Duration"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                        value={item?.duration}
+                        // onChange={(event) => {setEndPosition(event.target.value)}}
+                      />
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        for="image"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Image
+                      </label>
+                      <div
+                        className="w-[auto] height-[auto] relative border-2 border-gray-300 border-dashed rounded-lg p-6"
+                        id="dropzone"
+                      >
                         <input
-                          type="date"
-                          name="start-date"
-                          id="start-date"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          required=""
-                          value={moment(item.start_date).format('YYYY-MM-DD')}
-                          // onChange={(event) => setStartDate(event.target.value)}
+                          type="file"
+                          className="absolute inset-0 w-full h-full opacity-0 z-50"
                         />
-                      </div>
+                        <div className="text-center">
+                          <img
+                            className="mx-auto h-12 w-12"
+                            src="https://www.svgrepo.com/show/357902/image-upload.svg"
+                            alt=""
+                          />
 
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="end-date"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          End Date
-                        </label>
-                        <input
-                          type="date"
-                          name="end-date"
-                          id="end-date"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          required=""
-                          value={moment(item?.end_date).format('YYYY-MM-DD')}
-                          // onChange={(event) => setEndDate(event.target.value)}
+                          <h3 className="mt-2 text-sm font-medium text-gray-900">
+                            <label
+                              for="file-upload"
+                              className="relative cursor-pointer"
+                            >
+                              <span>Drag and drop</span>
+                              <span className="text-indigo-600">
+                                {' '}
+                                or browse
+                              </span>
+                              <span>to upload</span>
+                              <input
+                                id="file-upload"
+                                name="file-upload"
+                                type="file"
+                                className="sr-only"
+                              />
+                            </label>
+                          </h3>
+                          <p className="mt-1 text-xs text-gray-500">
+                            PNG, JPG, GIF up to 10MB
+                          </p>
+                        </div>
+
+                        <img
+                          src=""
+                          className="mt-4 mx-auto max-h-40 hidden"
+                          id="preview"
                         />
-                      </div>
-
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="start-position"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          Start Position
-                        </label>
-                        <input
-                          type="text"
-                          name="start-position"
-                          id="start-position"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          required=""
-                          value={item?.start_position?.location_name}
-                          // onChange={(event) => setStartPosition(event.target.value)}
-                        />
-                      </div>
-
-                      <div className="col-span-6 sm:col-span-3">
-                        <label
-                          for="end-position"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          End Position
-                        </label>
-                        <input
-                          type="text"
-                          name="end-position"
-                          id="end-position"
-                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          placeholder=""
-                          required=""
-                          value={item?.end_position?.location_name}
-                          // onChange={(event) => {setEndPosition(event.target.value)}}
-                        />
-                      </div>
-
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <label
-                                for="image"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Image
-                                </label>
-                                <div
-                                className="w-[auto] height-[auto] relative border-2 border-gray-300 border-dashed rounded-lg p-6"
-                                id="dropzone"
-                                >
-                                <input
-                                    type="file"
-                                    className="absolute inset-0 w-full h-full opacity-0 z-50"
-                                />
-                                <div className="text-center">
-                                    <img
-                                    className="mx-auto h-12 w-12"
-                                    src="https://www.svgrepo.com/show/357902/image-upload.svg"
-                                    alt=""
-                                    />
-
-                                    <h3 className="mt-2 text-sm font-medium text-gray-900">
-                                    <label
-                                        for="file-upload"
-                                        className="relative cursor-pointer"
-                                    >
-                                        <span>Drag and drop</span>
-                                        <span className="text-indigo-600"> or browse</span>
-                                        <span>to upload</span>
-                                        <input
-                                        id="file-upload"
-                                        name="file-upload"
-                                        type="file"
-                                        className="sr-only"
-                                        />
-                                    </label>
-                                    </h3>
-                                    <p className="mt-1 text-xs text-gray-500">
-                                    PNG, JPG, GIF up to 10MB
-                                    </p>
-                                </div>
-
-                                <img
-                                    src=""
-                                    className="mt-4 mx-auto max-h-40 hidden"
-                                    id="preview"
-                                />
-                                </div>
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                                <div className="mb-5 rounded-md bg-[#F5F7FB] py-4 px-8">
-                                    <div className="flex item-center justify-between">
-                                        <img src={item?.tour_img} alt='tour image'/>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="col-span-full">
-                                <label
-                                htmlFor="description"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                                >
-                                Description
-                                </label>
-                                <CKEditor
-                                editor={ClassicEditor}
-                                data={item?.tour_description}
-                                // onChange={(event) => {
-                                //     setDescription(event.target.value)
-                                // }}
-                                />
-
                       </div>
                     </div>
 
-                    {
-                        schedule?.map((item) => (
-                          <div className="pt-6 pb-8 grid grid-cols-6 gap-6" key={item?.tour_id}>
-                            <div className="col-span-6 sm:col-span-3">
-                              <label
-                                htmlFor="schedule-name"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                              >
-                                Schedule name
-                              </label>
-                              <input
-                                type="text"
-                                name="schedule-name"
-                                id="schedule-name"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                value={item?.schedule_name}
-                                // onChange={(event) => {setScheduleName(event.target.value)}}
-                              />
-                            </div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <div className="mb-5 rounded-md bg-[#F5F7FB] py-4 px-8">
+                        <div className="flex item-center justify-between">
+                          <img src={item?.tour_img} alt="tour image" />
+                        </div>
+                      </div>
+                    </div>
 
-                            <div className="col-span-6 sm:col-span-3">
-                              <label
-                                htmlFor="schedule-date"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                              >
-                                Schedule date
-                              </label>
-                              <input
-                                type="text"
-                                name="schedule-date"
-                                id="schedule-date"
-                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                value={moment(item?.schedule_date).format('DD/MM/YYYY')}
-                                // onChange={(event) => event.target.value}
-                              />
-                            </div>
+                    <div className="col-span-full">
+                      <label
+                        htmlFor="description"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Description
+                      </label>
+                      <CKEditor
+                        editor={ClassicEditor}
+                        data={item?.tour_description}
+                        // onChange={(event) => {
+                        //     setDescription(event.target.value)
+                        // }}
+                      />
+                    </div>
+                  </div>
 
-                            <div className="col-span-full">
-                              <label
-                                htmlFor="schedule-detail"
-                                className="text-sm font-medium text-gray-900 block mb-2"
-                              >
-                                Schedule detail
-                              </label>
-                              <CKEditor
-                                editor={ClassicEditor}
-                              data={item?.schedule_detail}
-                              // onChange={(event) => {
-                              //     setScheduleDetail(event.target.value);
-                              // }}
-                              />
+                  {schedule?.map((item) => (
+                    <form
+                      className="pt-6 pb-8 grid grid-cols-6 gap-6"
+                      key={item?.tour_id}
+                    >
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="schedule-name"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Schedule name
+                        </label>
+                        <input
+                          type="text"
+                          name="schedule-name"
+                          id="schedule-name"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          value={item?.schedule_name}
+                          // onChange={(event) => {setScheduleName(event.target.value)}}
+                        />
+                      </div>
 
-                            </div>
-                          </div>
-                        ))
-                      }
+                      <div className="col-span-6 sm:col-span-3">
+                        <label
+                          htmlFor="schedule-date"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Schedule date
+                        </label>
+                        <input
+                          type="text"
+                          name="schedule-date"
+                          id="schedule-date"
+                          className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                          value={moment(item?.schedule_date).format(
+                            'DD/MM/YYYY'
+                          )}
+                          // onChange={(event) => event.target.value}
+                        />
+                      </div>
 
-                  </form>
-                ))
-              }
+                      <div className="col-span-full">
+                        <label
+                          htmlFor="schedule-detail"
+                          className="text-sm font-medium text-gray-900 block mb-2"
+                        >
+                          Schedule detail
+                        </label>
+                        <CKEditor
+                          editor={ClassicEditor}
+                          data={item?.schedule_detail}
+                          // onChange={(event) => {
+                          //     setScheduleDetail(event.target.value);
+                          // }}
+                        />
+                      </div>
+                    </form>
+                  ))}
+                </form>
+              ))}
             </div>
 
             <div className="p-6 border-t border-gray-200 rounded-b">
