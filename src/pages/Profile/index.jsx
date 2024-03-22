@@ -5,6 +5,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { jwtDecode } from 'jwt-decode';
 import Aos from 'aos';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Card,
@@ -16,65 +17,14 @@ import {
   Tooltip,
   IconButton,
 } from '@material-tailwind/react';
-import EditIcon from '@mui/icons-material/Edit';
-
-
-import card_profile1 from '../../images/card_profile1.jpg'
-import card_profile2 from '../../images/card_profile2.jpg'
-import card_profile3 from '../../images/card_profile3.jpg'
-import card_profile4 from '../../images/card_profile4.jpg'
-
-
-const card = [
-  {
-    id: 1,
-    img: 'https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-    title: 'Wooden House, Florida',
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
-    rate: '5.0'
-  },
-  {
-    id: 2,
-    img: card_profile1,
-    title: 'Wooden House, Florida',
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
-    rate: '4.5'
-  },
-  {
-    id: 3,
-    img: card_profile2,
-    title: 'Wooden House, Florida',
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
-    rate: '4.0'
-  },
-  {
-    id: 4,
-    img: card_profile3,
-    title: 'Wooden House, Florida',
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
-    rate: '4.0'
-  },
-  {
-    id: 5,
-    img: card_profile4,
-    title: 'Wooden House, Florida',
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
-    rate: '4.0'
-  },
-  {
-    id: 6,
-    img: 'https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-    title: 'Wooden House, Florida',
-    des: 'Enter a freshly updated and thoughtfully furnished peaceful home surrounded by ancient trees, stone walls, and open meadows.',
-    rate: '4.0'
-  },
-
-]
 
 export default function index() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [booked, setBooked] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -86,13 +36,23 @@ export default function index() {
       axios.get(`http://localhost:8080/api/user/${userId}`)
         .then((response) => {
           const userData = response.data.data;
-          console.log(userData);
           setUser(userData);
         })
         .catch((error) => {
           console.log('Error:', error);
         });
+
+      // Get tours that user booked
+      axios.get(`http://localhost:8080/api/booking/user/${userId}?page=1&pageSize=10`)
+        .then((response) => {
+          const tourBooked = response.data.tour;
+          setBooked(tourBooked);
+          console.log("tourBooked ne ", tourBooked);
+        })
+        .catch(error => console.log(error));
     }
+
+
   }, []);
 
   return (
@@ -229,13 +189,12 @@ export default function index() {
               </a>
             </div>
             <div className="mt-10 mb-10 grid grid-cols-3">
-              {
-                card.map((cardItem) => (
-                  <Card key={cardItem.id} className="w-full max-w-[26rem] shadow-lg px-6 py-6 mb-7 hover:bg-slate-100 hover:cursor-pointer">
+              {booked.length > 0 ? (
+                booked.map((tour) => (
+                  <Card key={tour?._id} className="w-full max-w-[26rem] shadow-lg px-6 py-6 mb-7 hover:bg-slate-100 hover:cursor-pointer">
                     <CardHeader floated={false} color="blue-gray">
                       <img
-                        src={cardItem.img}
-                        alt={cardItem.title}
+                        src={tour.tour_id?.tour_img}
                       />
                       <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
                       <IconButton
@@ -243,7 +202,6 @@ export default function index() {
                         color="red"
                         variant="text"
                         className="!absolute top-2 right-6 rounded-full hover:cursor-pointer"
-                      // onClick={handleHeart}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -262,7 +220,7 @@ export default function index() {
                           color="blue-gray"
                           className="font-medium pb-2 pt-5"
                         >
-                          {cardItem.title}
+                          {tour.tour_id?.tour_name}
                         </Typography>
                         <Typography
                           color="blue-gray"
@@ -280,11 +238,11 @@ export default function index() {
                               clipRule="evenodd"
                             />
                           </svg>
-                          {cardItem.rate}
+                          {tour.tour_id?.duration}
                         </Typography>
                       </div>
                       <Typography color="gray">
-                        {cardItem.des}
+                        {tour.tour_id?.tour_description}
                       </Typography>
                       <div className="group mt-8 inline-flex flex-wrap items-center gap-3">
                         <Tooltip content="$129 per night">
@@ -375,13 +333,48 @@ export default function index() {
                       </div>
                     </CardBody>
                     <CardFooter className="pt-3">
-                      <Button size="md" fullWidth={true} className='text-slate-500 hover:bg-slate-300 hover:text-slate-50'>
-                        Booking
+                      <Button 
+                      size="md" 
+                      fullWidth={true} 
+                      className='text-slate-500 hover:bg-slate-300 hover:text-slate-50'
+                      onClick={() => navigate(`/tour-detail/${tour.tour_id?._id}`)}
+                      >
+                        Detour tour
                       </Button>
                     </CardFooter>
                   </Card>
                 ))
-              }
+              ) : (
+                <Card className="w-full max-w-[26rem] shadow-lg px-6 py-6 mb-7 hover:bg-slate-100 hover:cursor-pointer">
+                  <CardHeader floated={false} color="blue-gray">
+                    <img
+                      src="https://th.bing.com/th/id/OIP.d3Q4E84qw3LPQ2v4NugfDgHaFP?w=275&h=194&c=7&r=0&o=5&pid=1.7"
+                    />
+                    <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
+                  </CardHeader>
+                  <CardBody>
+                    <div className="mb-3 flex items-center justify-between">
+                      <Typography
+                        variant="h5"
+                        color="blue-gray"
+                        className="font-medium pb-2 pt-5"
+                      >
+                        Empty tour history ~
+                      </Typography>
+                    </div>
+                  </CardBody>
+                  <CardFooter className="pt-3">
+                    <Button 
+                    size="md" 
+                    fullWidth={true} 
+                    className='text-slate-500 hover:bg-slate-300 hover:text-slate-50'
+                    onClick={() => navigate('/list-tour')}
+                    >
+                      Go to booking now
+                    </Button>
+                  </CardFooter>
+                </Card>
+              )}
             </div>
           </div>
         </div>

@@ -3,25 +3,6 @@ import { Navbar, NavbarLogin, Footer } from '@/layout';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Aos from 'aos';
-import {
-  Card,
-  CardHeader,
-  Grid,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Tooltip,
-  Button,
-  Paper,
-  Box,
-} from '@mui/material';
-import TableContainer from '@mui/material/TableContainer';
-import Table from '@mui/material/Table';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-
 import { jwtDecode } from 'jwt-decode';
 import moment from 'moment';
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
@@ -35,8 +16,6 @@ const DetailTour = () => {
   const [logPartner, setLogPartner] = useState(false);
   const [user, setUser] = useState({});
   const [tours, setTours] = useState([]);
-
-  const [schedule, setSchedule] = useState([]);
 
   const [tourData, setTourData] = useState([]);
 

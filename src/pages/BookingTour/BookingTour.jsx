@@ -179,8 +179,6 @@ const BookingTour = () => {
 
   return (
     <>
-      {/* {isLoggedIn ? <NavbarLogin /> : <Navbar />} */}
-
       {isLoggedIn ? (
         logPartner ? (
           <NavbarPartnerLogin />

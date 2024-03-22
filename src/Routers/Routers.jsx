@@ -18,9 +18,7 @@ import ManageTour from '../pages/ManageTour/index.jsx';
 import ManageTourEdit from '../pages/ManageTour/DetailTour.jsx';
 import ManageTourDetail from '../pages/ManageTour/DetailManageTour.jsx';
 import CreateTour from '../pages/ManageTour/CreateTour.jsx'
-
-import Success from '../pages/StatusPayment/Success.jsx'
-import Cancel from '../pages/StatusPayment/Cancel.jsx'
+import CreateSchedule from '../pages/ManageTour/CreateSchedule.jsx';
 
 export const routes = [
     {
@@ -85,14 +83,6 @@ export const routes = [
         path: "/payment/:id",
         page: Payment,
         isShowHeader: true
-    },
-    {
-        path: "/success",
-        page: Success
-    },
-    {
-        path: "/Cancel",
-        page: Cancel
     }
 ]
 
@@ -229,6 +219,10 @@ export const RoutesPartner = [
     {
         path: "/create-tour",
         page: CreateTour
+    },
+    {
+        path: "/create-schedule/:id",
+        page: CreateSchedule
     }
 ]
 
