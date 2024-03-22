@@ -3,18 +3,20 @@ import { Navbar, NavbarLogin, Footer } from '@/layout';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Aos from 'aos';
-import moment from 'moment';
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { jwtDecode } from 'jwt-decode';
+
 const CreateTour = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [logPartner, setLogPartner] = useState(false);
     const [location, setLocation] = useState([]);
     const [vehicle, setVehicle] = useState([]);
+    const [user, setUser] = useState({});
     const navigate = useNavigate();
 
     // Field form
@@ -40,6 +42,31 @@ const CreateTour = () => {
         const plainTextData = tempDiv.textContent || tempDiv.innerText || "";
         setDescription(plainTextData);
     };
+
+    useEffect(() => {
+        Aos.init({ duration: 2000 });
+        const token = localStorage.getItem('token');
+        setIsLoggedIn(Boolean(token));
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.user_id;
+            axios
+                .get(`http://localhost:8080/api/user/${userId}`)
+                .then((response) => {
+                    const userData = response.data.data;
+                    setUser(userData);
+                    const rid = decodedToken.role;
+                    if (rid === 'PARTNER') {
+                        setLogPartner(true);
+                    } else {
+                        setLogPartner(false);
+                    }
+                })
+                .catch((error) => {
+                    console.log('Error:', error);
+                });
+        }
+    }, []);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -443,98 +470,6 @@ const CreateTour = () => {
                                         </select>
                                         {errors.endPosition && <p className="text-red-500 text-xs mt-1">{errors.endPosition}</p>}
                                     </div>
-
-                                    {/* <div className="col-span-6 sm:col-span-3">
-                                        <label
-                                            for="image"
-                                            className="text-sm font-medium text-gray-900 block mb-2"
-                                        >
-                                            Image
-                                        </label>
-                                        <div
-                                            className="w-[auto] height-[auto] relative border-2 border-gray-300 border-dashed rounded-lg p-6"
-                                            id="dropzone"
-                                        >
-                                            <input
-                                                type="file"
-                                                className="absolute inset-0 w-full h-full opacity-0 z-50"
-                                            />
-                                            <div className="text-center">
-                                                <img
-                                                    className="mx-auto h-12 w-12"
-                                                    src="https://www.svgrepo.com/show/357902/image-upload.svg"
-                                                    alt=""
-                                                />
-
-                                                <h3 className="mt-2 text-sm font-medium text-gray-900">
-                                                    <label
-                                                        for="file-upload"
-                                                        className="relative cursor-pointer"
-                                                    >
-                                                        <span>Drag and drop</span>
-                                                        <span className="text-indigo-600"> or browse</span>
-                                                        <span>to upload</span>
-                                                        <input
-                                                            id="file-upload"
-                                                            name="file-upload"
-                                                            type="file"
-                                                            className="sr-only"
-                                                            required
-                                                            value={image}
-                                                            onChange={(e) => setImage(e.target.files)[0]}
-                                                        />
-                                                    </label>
-                                                </h3>
-                                                <p className="mt-1 text-xs text-gray-500">
-                                                    PNG, JPG, GIF up to 10MB
-                                                </p>
-                                            </div>
-
-                                            <img
-                                                src=""
-                                                className="mt-4 mx-auto max-h-40 hidden"
-                                                id="preview"
-                                            />
-                                        </div>
-                                        {errors.image && <p className="text-red-500 text-xs mt-1">{errors.image}</p>}
-                                    </div> */}
-
-
-
-                                    {/* <div className="col-span-6 sm:col-span-3">
-                                                <div className="mb-5 rounded-md bg-[#F5F7FB] py-4 px-8">
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="truncate pr-3 text-base font-medium text-[#07074D]">
-                                                            banner-design.png
-                                                        </span>
-                                                        <button className="text-[#07074D]">
-                                                            <svg
-                                                                width="10"
-                                                                height="10"
-                                                                viewBox="0 0 10 10"
-                                                                fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                            >
-                                                                <path
-                                                                    fill-rule="evenodd"
-                                                                    clip-rule="evenodd"
-                                                                    d="M0.279337 0.279338C0.651787 -0.0931121 1.25565 -0.0931121 1.6281 0.279338L9.72066 8.3719C10.0931 8.74435 10.0931 9.34821 9.72066 9.72066C9.34821 10.0931 8.74435 10.0931 8.3719 9.72066L0.279337 1.6281C-0.0931125 1.25565 -0.0931125 0.651788 0.279337 0.279338Z"
-                                                                    fill="currentColor"
-                                                                />
-                                                                <path
-                                                                    fill-rule="evenodd"
-                                                                    clip-rule="evenodd"
-                                                                    d="M0.279337 9.72066C-0.0931125 9.34821 -0.0931125 8.74435 0.279337 8.3719L8.3719 0.279338C8.74435 -0.0931127 9.34821 -0.0931123 9.72066 0.279338C10.0931 0.651787 10.0931 1.25565 9.72066 1.6281L1.6281 9.72066C1.25565 10.0931 0.651787 10.0931 0.279337 9.72066Z"
-                                                                    fill="currentColor"
-                                                                />
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                    <div className="flex item-center justify-between">
-                                                        <img src='#' />
-                                                    </div>
-                                                </div>
-                                            </div> */}
 
                                     <div className="col-span-6 sm:col-span-3">
                                         <label

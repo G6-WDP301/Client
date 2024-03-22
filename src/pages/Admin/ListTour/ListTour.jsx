@@ -41,7 +41,6 @@ const TableListTourAdmin = () => {
   const [transportion, setTransportion] = useState('');
 
   const headCells = [
-    { id: 'expand-button', filterable: false },
     { id: 'tour-name', label: 'Tour', filterable: true, defaultFilter: true },
     { id: 'tour-description', label: 'Tour Description', filterable: false },
     { id: 'tour-price', label: 'Tour Price', filterable: false },
