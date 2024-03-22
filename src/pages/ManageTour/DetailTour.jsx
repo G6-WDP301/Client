@@ -37,7 +37,8 @@ const DetailTour = () => {
 
   const [schedule, setSchedule] = useState([]);
 
-  const [tourData, setTourData] = useState([]);
+  const [tourData, setTourData] = useState([])
+
 
   const navigate = useNavigate();
 
@@ -54,13 +55,21 @@ const DetailTour = () => {
   const [description, setDescription] = useState('');
   const [tax, setTax] = useState('');
   const [duration, setDuration] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState('https://th.bing.com/th/id/OIP.yaxxrYEDxISa0ujcWl-zDAHaEK?w=252&h=180&c=7&r=0&o=5&pid=1.7');
   const [scheduleName, setScheduleName] = useState('');
   const [scheduleDate, setScheduleDate] = useState('');
   const [scheduleDetail, setScheduleDetail] = useState('');
 
   const [location, setLocation] = useState([]);
   const [vehicle, setVehicle] = useState([]);
+
+  const handleEditorChange = (event, editor) => {
+    const htmlData = editor.getData();
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlData;
+    const plainTextData = tempDiv.textContent || tempDiv.innerText || "";
+    setDescription(plainTextData);
+};
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -151,8 +160,11 @@ const DetailTour = () => {
   }, [location, vehicle]);
 
   const handleSubmit = (e) => {
+    e.preventDefault();
+  
     const updateTour = {
       nameTour,
+      description,
       price,
       discount,
       maxTourist,
@@ -161,18 +173,24 @@ const DetailTour = () => {
       endDate,
       startPosition,
       endPosition,
-      description,
+      tax,
+      duration
     };
-    console.log(updateTour);
-    axios
-      .put(`http://localhost:8080/api/tour/update/${id}`, updateTour)
+
+    console.log("data:", updateTour )
+  
+    axios.put(`http://localhost:8080/api/tour/update/${id}`, updateTour, {
+      headers: { 'Content-Type': 'application/json' },
+    })
       .then((response) => {
-        const editTour = response.data.tour.tour;
-        console.log('update data: ', editTour);
-        setTourData(editTour);
+        const updatedTour = response.data.tour.tour;
+        setTourData(updatedTour);
+        console.log("update tour:", updatedTour);
+        alert('Update successful');
       })
       .catch((error) => console.log(error));
   };
+
 
   return (
     <>
@@ -249,8 +267,8 @@ const DetailTour = () => {
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                         placeholder=""
                         required=""
-                        value={item?.tour_name}
-                        // onChange={(event) => {setNameTour(event.target.value)}}
+                        defaultValue={item?.tour_name}
+                        onChange={(event) => {setNameTour(event.target.value)}}
                       />
                     </div>
 
@@ -268,8 +286,8 @@ const DetailTour = () => {
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                         placeholder="$$$"
                         required=""
-                        value={item?.tour_price}
-                        // onChange={(event) => setPrice(event.target.value)}
+                        defaultValue={item?.tour_price}
+                        onChange={(event) => setPrice(event.target.value)}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -286,8 +304,8 @@ const DetailTour = () => {
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                         placeholder="$$$"
                         required=""
-                        value={item?.discount}
-                        // onChange={(event) => {setDiscount(event.target.value)}}
+                        defaultValue={item?.discount}
+                        onChange={(event) => {setDiscount(event.target.value)}}
                       />
                     </div>
 
@@ -305,8 +323,8 @@ const DetailTour = () => {
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                         placeholder=""
                         required=""
-                        value={item?.max_tourist}
-                        // onChange={(event) => setMaxTourist(event.target.value)}
+                        defaultValue={item?.max_tourist}
+                        onChange={(event) => setMaxTourist(event.target.value)}
                       />
                     </div>
 
@@ -350,7 +368,7 @@ const DetailTour = () => {
                         }}
                         name="transportion"
                         required
-                        // onChange={(e) => setTransportion(e.target.value)}
+                        onChange={(e) => setTransportion(e.target.value)}
                       >
                         <option>
                           {item?.tour_transportion?.[0]?.transportion_name}
@@ -376,8 +394,8 @@ const DetailTour = () => {
                         id="start-date"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                         required=""
-                        value={moment(item.start_date).format('YYYY-MM-DD')}
-                        // onChange={(event) => setStartDate(event.target.value)}
+                        defaultValue={moment(item.start_date).format('YYYY-MM-DD')}
+                        onChange={(event) => setStartDate(event.target.value)}
                       />
                     </div>
 
@@ -394,8 +412,8 @@ const DetailTour = () => {
                         id="end-date"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                         required=""
-                        value={moment(item?.end_date).format('YYYY-MM-DD')}
-                        // onChange={(event) => setEndDate(event.target.value)}
+                        defaultValue={moment(item?.end_date).format('YYYY-MM-DD')}
+                        onChange={(event) => setEndDate(event.target.value)}
                       />
                     </div>
 
@@ -417,7 +435,7 @@ const DetailTour = () => {
                         }}
                         name="start-position"
                         required
-                        // onChange={(event) => setStartPosition(event.target.value)}
+                        onChange={(event) => setStartPosition(event.target.value)}
                       >
                         <option>{item?.start_position?.location_name || "No Start Position"}</option>
                         {location.map((loc) => (
@@ -446,7 +464,7 @@ const DetailTour = () => {
                         }}
                         name="end-position"
                         required
-                        // onChange={(event) => {setEndPosition(event.target.value)}}
+                        onChange={(event) => {setEndPosition(event.target.value)}}
                       >
                         <option>{item?.end_position?.location_name || "No End Position"}</option>
                         {location.map((loc) => (
@@ -469,8 +487,8 @@ const DetailTour = () => {
                         name="tax"
                         id="tax"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={item?.return_tax}
-                        // onChange={(event) => {setTax(event.target.value)}}
+                        defaultValue={item?.return_tax}
+                        onChange={(event) => {setTax(event.target.value)}}
                       />
                     </div>
 
@@ -486,8 +504,8 @@ const DetailTour = () => {
                         name="Duration"
                         id="Duration"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={item?.duration}
-                        // onChange={(event) => {setEndPosition(event.target.value)}}
+                        defaultValue={item?.duration}
+                        onChange={(event) => {setDuration(event.target.value)}}
                       />
                     </div>
 
@@ -563,14 +581,64 @@ const DetailTour = () => {
                       <CKEditor
                         editor={ClassicEditor}
                         data={item?.tour_description}
-                        // onChange={(event) => {
-                        //     setDescription(event.target.value)
-                        // }}
+                        onChange={handleEditorChange}
                       />
                     </div>
                   </div>
 
-                  {schedule?.map((item) => (
+                  {schedule.length === 0 ? (
+                    <form
+                    className="pt-6 pb-8 grid grid-cols-6 gap-6"
+                    key={item?.tour_id}
+                  >
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="schedule-name"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Schedule name
+                      </label>
+                      <input
+                        type="text"
+                        name="schedule-name"
+                        id="schedule-name"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                        value="No schedule name"
+                      />
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="schedule-date"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Schedule date
+                      </label>
+                      <input
+                        type="text"
+                        name="schedule-date"
+                        id="schedule-date"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                        value="No schedule date"
+                      />
+                    </div>
+
+                    <div className="col-span-full">
+                      <label
+                        htmlFor="schedule-detail"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Schedule detail
+                      </label>
+                      <CKEditor
+                        editor={ClassicEditor}
+                        data="No schedule detail"
+                      />
+                    </div>
+                  </form>
+                  ) : (
+
+                  schedule?.map((item) => (
                     <form
                       className="pt-6 pb-8 grid grid-cols-6 gap-6"
                       key={item?.tour_id}
@@ -587,7 +655,7 @@ const DetailTour = () => {
                           name="schedule-name"
                           id="schedule-name"
                           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          value={item?.schedule_name}
+                          value={item?.schedule_name || 'No schedule name'}
                           // onChange={(event) => {setScheduleName(event.target.value)}}
                         />
                       </div>
@@ -620,19 +688,16 @@ const DetailTour = () => {
                         </label>
                         <CKEditor
                           editor={ClassicEditor}
-                          data={item?.schedule_detail}
+                          data={item?.schedule_detail || 'No schedule detail'}
                           // onChange={(event) => {
                           //     setScheduleDetail(event.target.value);
                           // }}
                         />
                       </div>
                     </form>
-                  ))}
-                </form>
-              ))}
-            </div>
-
-            <div className="p-6 border-t border-gray-200 rounded-b">
+                  ))
+                  )}
+                  <div className="p-6 border-t border-gray-200 rounded-b">
               <button
                 className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 type="submit"
@@ -647,6 +712,11 @@ const DetailTour = () => {
                 Return Manage Tour
               </button>
             </div>
+                </form>
+              ))}
+            </div>
+
+          
           </div>
         </div>
       </div>
