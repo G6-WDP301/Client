@@ -20,6 +20,9 @@ import ManageTourDetail from '../pages/ManageTour/DetailManageTour.jsx';
 import CreateTour from '../pages/ManageTour/CreateTour.jsx'
 import CreateSchedule from '../pages/ManageTour/CreateSchedule.jsx';
 
+import ProfileAdmin from '../layout/Sidebar/profileAdminNav.jsx'
+
+ 
 export const routes = [
     {
         path: "/",
@@ -110,16 +113,16 @@ export const adminRoutes = [
         page: ListTour
     },
     {
-        path: "/profile",
-        page: Profile
+        path: "/admin/profile",
+        page: ProfileAdmin
     },
     {
         path: "/tour-detail/:id",
         page: TourDetail
     },
     {
-        path: '/home-admin',
-        page: homeAdmin,
+        path: "/login",
+        page: Login,
     },
     {
         path: "*",

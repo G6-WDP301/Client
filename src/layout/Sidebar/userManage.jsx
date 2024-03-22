@@ -45,6 +45,11 @@ const menuItems = [
   { text: 'Report', link: '/admin/report' },
 ];
 
+const menuSetting = [
+  { text: 'Profile', link: '/admin/profile' },
+  { text: 'Logout', link: '/login'}
+]
+
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -243,16 +248,18 @@ const UserManage = () => {
           </List>
           <Divider />
           <List>
-            {['Setting', 'Logout'].map((text, index) => (
-              <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+          {menuSetting?.map((item, index) => (
+              <ListItem key={item.text} disablePadding sx={{ display: 'block' }} onClick={() => navigate(`${item.link}`)}>
                 <ListItemButton
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
                     px: 2.5,
                   }}
+
                 >
                   <ListItemIcon
+                    onClick={handleLogout}
                     sx={{
                       minWidth: 0,
                       mr: open ? 3 : 'auto',
@@ -261,7 +268,7 @@ const UserManage = () => {
                   >
                     {React.createElement(customIcons[index])}
                   </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
               </ListItem>
             ))}
