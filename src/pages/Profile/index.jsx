@@ -20,6 +20,22 @@ import {
   IconButton,
 } from '@material-tailwind/react';
 
+import { styled } from '@mui/material/styles';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import CloseIcon from '@mui/icons-material/Close';
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(2),
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(1),
+  },
+}));
+
 export default function index() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
@@ -72,6 +88,15 @@ export default function index() {
     return isPay ? 'Đã thanh toán' : 'Chưa thanh toán';
   };
 
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       {isLoggedIn ? (
@@ -107,7 +132,7 @@ export default function index() {
                 className="w-40 border-4 border-white rounded-full"
               />
               <div className="flex items-center space-x-2 mt-2">
-                <p className="text-2xl">{user.username}</p>
+                <p className="text-2xl text-white">{user.username}</p>
                 <span className="bg-blue-500 rounded-full p-1" title="Verified">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -128,11 +153,11 @@ export default function index() {
               {isPopupVisible && (
                 <div className="popup">{<h1>Popup nek</h1>}</div>
               )}
-              <p className="text-sm text-gray-500">{user.address}</p>
+              <p className="text-sm text-gray-100">{user.address}</p>
             </div>
             <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
               <div className="flex items-center space-x-4 mt-2">
-                <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                <button onClick={handleClickOpen} className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4"
@@ -223,7 +248,7 @@ export default function index() {
                 </svg>
               </a>
             </div>
-            <div className="grid grid-cols-3" style={{ margin: '5rem' }}>
+            <div className="grid grid-cols-3 gap-12" style={{ margin: '5rem' }}>
               {booked.length > 0 ? (
                 booked.map((tour) => (
                   <Card
@@ -233,7 +258,7 @@ export default function index() {
                     <CardHeader floated={false} color="blue-gray">
                       <img
                         src={tour.tour_id?.tour_img}
-                        style={{ width: '500px', height: 'auto' }}
+                        style={{ width: '500px', height: '250px' }}
                       />
                       <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
                       <IconButton
@@ -422,6 +447,43 @@ export default function index() {
           </div>
         </div>
       </section>
+
+      <React.Fragment>
+        <BootstrapDialog
+          onClose={handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={open}
+        >
+          <div className='flex gap-96 items-center'>
+            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+              Modal title
+            </DialogTitle>
+            <CloseIcon onClick={handleClose} className='hover:cursor-pointer'/>
+          </div>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+              dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
+              ac consectetur ac, vestibulum at eros.
+            </Typography>
+            <Typography gutterBottom>
+              Praesent commodo cursus magna, vel scelerisque nisl consectetur
+              et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
+              auctor.
+            </Typography>
+            <Typography gutterBottom>
+              Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
+              cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
+              dui. Donec ullamcorper nulla non metus auctor fringilla.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose}>
+              Save changes
+            </Button>
+          </DialogActions>
+        </BootstrapDialog>
+      </React.Fragment>
     </>
   );
 }

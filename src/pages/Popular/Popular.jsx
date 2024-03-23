@@ -115,9 +115,9 @@ export default function Popular() {
                   </div>
 
                   <div className="destFood">
-                    <div className="number">{tour.end_position[0]?.location_name}</div>
+                    <div className="number font-sans">{tour.end_position[0]?.location_name}</div>
                     <div className="destText flex">
-                      <h6>{tour.tour_name}</h6>
+                      <span>{tour.tour_name}</span>
                       <span className="flex">
                         <span className="dot">
                           <BsDot className="icon" />

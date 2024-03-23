@@ -114,7 +114,7 @@ const Index = () => {
                 className="w-full max-w-[26rem] shadow-lg px-6 py-6 mb-7 bg-slate-50 hover:bg-slate-200 hover:cursor-pointer"
               >
                 <CardHeader floated={false} color="blue-gray">
-                  <img src={tour.tour_id?.tour_img} style={{ width: '500px', height: 'auto' }}/>
+                  <img src={tour.tour_id?.tour_img} style={{ width: '500px', height: '300px' }}/>
                   <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
                   <IconButton
                     size="sm"
