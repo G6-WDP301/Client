@@ -91,14 +91,6 @@ export const routes = [
         path: "/aboutus",
         page: AboutUs,
     },
-    {
-        path: "/success",
-        page: Success
-    },
-    {
-        path: "/Cancel",
-        page: Cancel
-    },
   {
         path: "/dashboard",
         page: Sidebar

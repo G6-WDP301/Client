@@ -16,6 +16,7 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Tab,
 } from '@mui/material';
 import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
@@ -23,13 +24,13 @@ import ActionButton from './ActionButton';
 import axios from 'axios';
 import moment from 'moment';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { LoadingButton } from '@mui/lab';
+import { LoadingButton, TabContext, TabList, TabPanel } from '@mui/lab';
 import { StyledDialog } from '../../utils/components/StyledDialog';
 import { jwtDecode } from 'jwt-decode';
 
 const TableListTourAdmin = () => {
   const [target, setTarget] = useState('');
-  const [tours, setTours] = useState([]);
+  // const [tours, setTours] = useState([]);
   const [openCreateTour, setOpenCreateTour] = useState(false);
   const [tourName, setTourName] = useState('');
   const [tourDes, setTourDes] = useState('');
@@ -39,6 +40,7 @@ const TableListTourAdmin = () => {
   const [endDateTime, setEndDateTime] = useState('');
   const [duration, setDuration] = useState('');
   const [transportion, setTransportion] = useState('');
+  const [tabValue, setTabValue] = useState('1');
 
   const headCells = [
     { id: 'tour-name', label: 'Tour', filterable: true, defaultFilter: true },
@@ -52,17 +54,36 @@ const TableListTourAdmin = () => {
     { id: 'action-button', label: 'Action Button', filterable: false },
   ];
 
-  useEffect(() => {
-    axios
-      .get('http://localhost:8080/api/tour/find-all')
-      .then((response) => {
-        const tourData = response.data.tours;
-        setTours(tourData);
-        console.log("Data tour admin ne: ", tourData);
-      })
-      .catch((error) => console.log(error));
-  }, []);
+  const tours = [
+    {
+      tour_name: 'Chuyến phiêu lưu vào Hòa Lạc',
+      tour_description: 'Duy nhất duy nhất chỉ dành cho 10 người',
+      tour_price: 100,
+      max_tourist: 28,
+      return_tax: 10,
+      isAppove: 'APPROVE',
+      start_date: '2024-04-20T00:00:00.000Z',
+    },
+    {
+      tour_name: 'Chuyến phiêu lưu vào Hòa Lạcaa',
+      tour_description: 'Duy nhất duy nhất chỉ dành cho 10 người',
+      tour_price: 100,
+      max_tourist: 28,
+      return_tax: 10,
+      isAppove: 'NOTAPPROVE',
+    },
+  ];
 
+  // useEffect(() => {
+  //   axios
+  //     .get('http://localhost:8080/api/tour/find-all')
+  //     .then((response) => {
+  //       const tourData = response.data.tours;
+  //       setTours(tourData);
+  //       console.log("Data tour admin ne: ", tourData);
+  //     })
+  //     .catch((error) => console.log(error));
+  // }, []);
 
   return (
     <Grid container>
@@ -279,53 +300,187 @@ const TableListTourAdmin = () => {
                 </LoadingButton>
               </DialogActions>
             </StyledDialog>
-            <TableContainer>
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow>
-                    {headCells.map((headCell) => (
-                      <TableCell
-                        key={headCell.id}
-                        align={headCell.align ?? 'left'}
-                        style={{
-                          fontWeight: '700',
-                          fontSize: '18px',
-                        }}
-                      >
-                        {headCell.label}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {tours.map((row) => {
-                    return (
-                      <TableRow hover tabIndex={-1} key={row?._id}>
-                        <TableCell>{row.tour_name}</TableCell>
-                        <TableCell>{row.tour_description}</TableCell>
-                        <TableCell>{row.tour_price}$</TableCell>
-                        <TableCell>{row.max_tourist}</TableCell>
-                        <TableCell>
-                          {moment(row.start_date).format('DD/MM/YYYY')}
-                        </TableCell>
-                        <TableCell>
-                          {moment(row.end_date).format('DD/MM/YYYY')}
-                        </TableCell>
-                        <TableCell>
-                          {row.start_position?.location_name}
-                        </TableCell>
-                        <TableCell>
-                          {row.end_position[0]?.location_name}
-                        </TableCell>
-                        <TableCell align={'right'}>
-                          <ActionButton row={row} statusTour={row.isAppove} />
-                        </TableCell>
+            <TabContext value={tabValue}>
+              <TabList
+                onChange={(event, newValue) => {
+                  setTabValue(newValue);
+                }}
+                aria-label="card navigation example"
+              >
+                <Tab value="1" label="APPROVED" />
+                <Tab value="2" label="PENDING" />
+                <Tab value="3" label="REJECT" />
+                <Tab value="4" label="Certificate" />
+              </TabList>
+              <TabPanel value="1" sx={{ p: 0 }}>
+                <TableContainer>
+                  <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                      <TableRow>
+                        {headCells.map((headCell) => (
+                          <TableCell
+                            key={headCell.id}
+                            align={headCell.align ?? 'left'}
+                            style={{
+                              fontWeight: '700',
+                              fontSize: '18px',
+                            }}
+                          >
+                            {headCell.label}
+                          </TableCell>
+                        ))}
                       </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                      {tours.map((row) => {
+                        if (row.isAppove === 'APPROVE') {
+                          return (
+                            <TableRow hover tabIndex={-1} key={row?._id}>
+                              <TableCell>{row.tour_name}</TableCell>
+                              <TableCell>{row.tour_description}</TableCell>
+                              <TableCell>{row.tour_price}$</TableCell>
+                              <TableCell>{row.max_tourist}</TableCell>
+                              <TableCell>
+                                {/* {moment(row.start_date).format('DD/MM/YYYY')} */}
+                              </TableCell>
+                              <TableCell>
+                                {/* {moment(row.end_date).format('DD/MM/YYYY')} */}
+                              </TableCell>
+                              <TableCell>
+                                {/* {row.start_position?.location_name} */}
+                              </TableCell>
+                              <TableCell>
+                                {/* {row.end_position[0]?.location_name} */}
+                              </TableCell>
+                              <TableCell align={'right'}>
+                                <ActionButton
+                                  row={row}
+                                  statusTour={row.isAppove}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          );
+                        } else {
+                          return null; // Bỏ qua các tour không phải trạng thái "PENDING"
+                        }
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </TabPanel>
+              <TabPanel value="2" sx={{ p: 0 }}>
+                <TableContainer>
+                  <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                      <TableRow>
+                        {headCells.map((headCell) => (
+                          <TableCell
+                            key={headCell.id}
+                            align={headCell.align ?? 'left'}
+                            style={{
+                              fontWeight: '700',
+                              fontSize: '18px',
+                            }}
+                          >
+                            {headCell.label}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {tours.map((row) => {
+                        if (row.isAppove === 'NOTAPPROVE') {
+                          return (
+                            <TableRow hover tabIndex={-1} key={row?._id}>
+                              <TableCell>{row.tour_name}</TableCell>
+                              <TableCell>{row.tour_description}</TableCell>
+                              <TableCell>{row.tour_price}$</TableCell>
+                              <TableCell>{row.max_tourist}</TableCell>
+                              <TableCell>
+                                {/* {moment(row.start_date).format('DD/MM/YYYY')} */}
+                              </TableCell>
+                              <TableCell>
+                                {/* {moment(row.end_date).format('DD/MM/YYYY')} */}
+                              </TableCell>
+                              <TableCell>
+                                {/* {row.start_position?.location_name} */}
+                              </TableCell>
+                              <TableCell>
+                                {/* {row.end_position[0]?.location_name} */}
+                              </TableCell>
+                              <TableCell align={'right'}>
+                                <ActionButton
+                                  row={row}
+                                  statusTour={row.isAppove}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          );
+                        } else {
+                          return null; // Bỏ qua các tour không phải trạng thái "PENDING"
+                        }
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </TabPanel>
+              <TabPanel value="3" sx={{ p: 0 }}>
+                <TableContainer>
+                  <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                      <TableRow>
+                        {headCells.map((headCell) => (
+                          <TableCell
+                            key={headCell.id}
+                            align={headCell.align ?? 'left'}
+                            style={{
+                              fontWeight: '700',
+                              fontSize: '18px',
+                            }}
+                          >
+                            {headCell.label}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {tours.map((row) => {
+                        if (row.isAppove === 'DECLINE') {
+                          return (
+                            <TableRow hover tabIndex={-1} key={row?._id}>
+                              <TableCell>{row.tour_name}</TableCell>
+                              <TableCell>{row.tour_description}</TableCell>
+                              <TableCell>{row.tour_price}$</TableCell>
+                              <TableCell>{row.max_tourist}</TableCell>
+                              <TableCell>
+                                {/* {moment(row.start_date).format('DD/MM/YYYY')} */}
+                              </TableCell>
+                              <TableCell>
+                                {/* {moment(row.end_date).format('DD/MM/YYYY')} */}
+                              </TableCell>
+                              <TableCell>
+                                {/* {row.start_position?.location_name} */}
+                              </TableCell>
+                              <TableCell>
+                                {/* {row.end_position[0]?.location_name} */}
+                              </TableCell>
+                              <TableCell align={'right'}>
+                                <ActionButton
+                                  row={row}
+                                  statusTour={row.isAppove}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          );
+                        } else {
+                          return null; // Bỏ qua các tour không phải trạng thái "PENDING"
+                        }
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </TabPanel>
+            </TabContext>
           </Paper>
         </Card>
       </Grid>
