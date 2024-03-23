@@ -3,6 +3,7 @@ import './NavbarLogin.scss'
 import { SiYourtraveldottv } from 'react-icons/si'
 import { AiFillCloseCircle, AiOutlineSetting, AiOutlineUser, AiOutlineLogout } from 'react-icons/ai'
 import { TbGridDots } from 'react-icons/tb'
+import { MdHistory } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode'
 import axios from 'axios'
@@ -132,6 +133,10 @@ export default function index() {
             </li>
 
             <li className="navItem">
+              <a href="#" className="navLink" onClick={() => navigate('/history-booking-tour')}>History Booking</a>
+            </li>
+
+            <li className="navItem">
               <a href="#" className="navLink" onClick={() => navigate("/gallery")}>Gallery</a>
             </li>
 
@@ -169,10 +174,6 @@ export default function index() {
                       <AiOutlineUser className="menu-icon" />
                       <span className="ml-4">Profile</span>
                     </li>
-                    {/* <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={() => navigate("/login")}>
-                      <AiOutlineLogout className="menu-icon" />
-                      <span className="ml-4">Logout</span>
-                    </li>  */}
                     <div className='mt-2 mb-2' style={{ border: '1px solid lightgrey', boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.2)' }}></div>
                     <li className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400" onClick={handleLogout}>
                       <AiOutlineLogout className="menu-icon" />
