@@ -19,6 +19,10 @@ import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { useEffect } from 'react';
 
+const ADMIN = "65aa44271de57d06c7f378a7"
+const USER = "65aa441d1de57d06c7f378a6"
+const PARTNER = "65aa44431de57d06c7f378a8"
+
 
 const defaultTheme = createTheme();
 
@@ -77,7 +81,11 @@ export default function LogIn() {
           console.log("roleId ne: ", roleId);
           if (roleId === 'ADMIN') {
             window.location.href = '/dashboard';
-          } else {
+          }
+          else if (roleId === 'PARTNER'){
+            window.location.href = '/home-partner'
+            console.log(roleId)
+          }  else {
             navigate('/');
           }
         }

@@ -13,12 +13,48 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import axios from 'axios';
+
+import Aos from 'aos';
+
+import { jwtDecode } from 'jwt-decode';
+
 import img from '../../images/avatar_login.jpg';
 
-export default function index() {
+const Index = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [logPartner, setLogPartner] = useState(false);
+
+  const [user, setUser] = useState({});
+
   const navigate = useNavigate();
 
   const notify = () => toast('Feature being updated, please come back later!');
+
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.user_id;
+      axios
+        .get(`http://localhost:8080/api/user/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUser(userData);
+          const rid = decodedToken.role;
+          if (rid === 'PARTNER') {
+            setLogPartner(true);
+          } else {
+            setLogPartner(false);
+          }
+        })
+        .catch((error) => {
+          console.log('Error:', error);
+        });
+    }
+  }, []);
 
   // toggle show navbar
   const [active, setActive] = useState('navBar');
@@ -105,18 +141,8 @@ export default function index() {
         <div className={active}>
           <ul className="navLists flex">
             <li className="navItem">
-              <a href="#" className="navLink" onClick={() => navigate('/')}>
+              <a href="#" className="navLink" onClick={() => navigate('/home-partner')}>
                 Home
-              </a>
-            </li>
-
-            <li className="navItem">
-              <a
-                href="#"
-                className="navLink"
-                onClick={() => navigate('/sideBar')}
-              >
-                Dashboard
               </a>
             </li>
 
@@ -127,6 +153,16 @@ export default function index() {
                 onClick={() => navigate('/list-tour')}
               >
                 List Tour
+              </a>
+            </li>
+
+            <li className="navItem">
+              <a
+                href="#"
+                className="navLink"
+                onClick={() => navigate('/manage-tour')}
+              >
+                Manage Tour
               </a>
             </li>
 
@@ -150,7 +186,7 @@ export default function index() {
               <a
                 href="#"
                 className="navLink"
-                onClick={() => navigate('/AboutUs')}
+                onClick={() => navigate('/about')}
               >
                 About Us
               </a>
@@ -159,7 +195,7 @@ export default function index() {
             <div className="headerBtns flex items-center relative pl-4">
               <div className="avatar" onClick={toggleMenu}>
                 <img
-                  src={img}
+                  src={user.avatar}
                   alt="User Avatar"
                   className="rounded-full h-8 w-8 cursor-pointer hover:animate-bounce"
                 />
@@ -179,7 +215,7 @@ export default function index() {
                       style={{ boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.3)' }}
                     >
                       <span className="flex justify-center text-center font-medium">
-                        Admin
+                        Partner
                       </span>
                     </div>
                     <li
@@ -202,21 +238,6 @@ export default function index() {
                     >
                       <AiOutlineUser className="menu-icon" />
                       <span className="ml-4">Profile</span>
-                    </li>
-                    <div
-                      className="mt-2 mb-2"
-                      style={{
-                        border: '1px solid lightgrey',
-                        boxShadow: '2px 4px 4px rgba(0, 0, 0, 0.2)',
-                      }}
-                    ></div>
-                    <li
-                      className="menu-item flex items-center hover:underline hover:cursor-pointer hover:text-orange-400"
-                      onClick={() => navigate('/profile')}
-                      
-                    >
-                      <AiOutlineUser className="menu-icon" />
-                      <span className="ml-4">Dashboard</span>
                     </li>
                     <div
                       className="mt-2 mb-2"
@@ -250,3 +271,5 @@ export default function index() {
     </section>
   );
 }
+
+export default Index;

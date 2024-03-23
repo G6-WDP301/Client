@@ -44,7 +44,6 @@ const ChartSection = ({ metric, timeRange, min, max, title, unit }) => {
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
-        console.log(tourData);
       })
       .catch(error => console.log(error));
 
@@ -179,7 +178,7 @@ const ChartSection = ({ metric, timeRange, min, max, title, unit }) => {
   return (
     <>
       <div>
-        <Line data={newChart} options={options} />
+        {/* <Line data={newChart} options={options} /> */}
       </div>
     </>
   )

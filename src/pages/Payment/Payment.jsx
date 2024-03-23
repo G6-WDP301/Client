@@ -16,6 +16,8 @@ const Payment = () => {
     const [paypalRendered, setPayPalRendered] = useState(false);
     const [tourDataLoaded, setTourDataLoaded] = useState(false);
     const [order, setOrder] = useState(null);
+    const token = localStorage.getItem('token');
+    const quantity = localStorage.getItem('numberPeople')
 
     useEffect(() => {
         // Rest API Tour booked 
@@ -41,7 +43,7 @@ const Payment = () => {
                                     amount: {
                                         description: tourBooked.tour_name,
                                         currency_code: "CAD",
-                                        value: tourBooked.tour_price * 30 / 100
+                                        value: (quantity * tourBooked.tour_price) * 30 / 100
                                     },
                                 },
                             ],
@@ -61,9 +63,29 @@ const Payment = () => {
         }
     }, [tourDataLoaded, paypalRendered, tourBooked]);
 
+    let userId = null;
+    if (token) {
+        const decodedToken = jwtDecode(token);
+        userId = decodedToken?.user_id;
+    } else {
+        navigate('/login');
+    }
+
     useEffect(() => {
         if (order && order.status === 'COMPLETED') {
             toast.success('Payment successful ~ Wishing you a memorable experience');
+            axios.put(`http://localhost:8080/api/booking/pay/${id}`, {
+                "user_id": userId,
+                "tour_id": tourBooked?._id
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((response) => {
+                    const pay = response.data;
+                })
+                .catch(error => console.log(error.message));
             navigate('/');
         } else if (order && order.status !== 'COMPLETED') {
             toast.error('Payment failed');

@@ -14,6 +14,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Aos from 'aos';
 import 'aos/dist/aos.css';
+import axios from 'axios';
 
 const Data = [
   {
@@ -49,9 +50,26 @@ const Data = [
 export default function Popular() {
   const headerData = useContext(DataContext);
   const headerDataArray = JSON.parse(JSON.stringify(headerData));
+  const [tours, setTours] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState([]);
+
+  const handleClickUser = (tourId) => {
+    setSelectedUserId(tourId);
+    navigate(`/tour-detail/${tourId}`);
+  }
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
+    axios.get('http://localhost:8080/api/tour/find-all')
+      .then((response) => {
+        const tourData = response.data.tours;
+        const list = [];
+        for (let i = 0; i < 4; i++) {
+          list.push(tourData[i])
+        }
+        setTours(list);
+      })
+      .catch(error => console.log(error));
   }, []);
 
   const [selectedTourId, setSelectedTourId] = useState([]);
@@ -76,10 +94,10 @@ export default function Popular() {
               </p>
             </div>
 
-            <div data-aos="fade-left" data-aos-duration="2500" className="iconsDiv flex">
+            {/* <div data-aos="fade-left" data-aos-duration="2500" className="iconsDiv flex">
               <BsArrowLeftShort className="icon leftIcon" />
               <BsArrowRightShort className="icon" />
-            </div>
+            </div> */}
           </div>
 
           <div className="mainContent grid">
@@ -117,7 +135,7 @@ export default function Popular() {
         <div className="secContainer">
           <div className="secHeader flex">
             <div data-aos="fade-right" data-aos-duration="2500" className="textDiv">
-              <h2 className="secTitle font-bold">Popular Destination</h2>
+              <h2 className="secTitle font-bold">New Destination</h2>
               <p>
                 From historical cities to natural spectacles, come see the best
                 of the world!
@@ -125,31 +143,34 @@ export default function Popular() {
             </div>
 
             <div data-aos="fade-left" data-aos-duration="2500" className="iconsDiv flex">
-              <BsArrowLeftShort className="icon leftIcon" />
-              <BsArrowRightShort className="icon" />
+              <button
+                onClick={() => navigate('/list-tour')}
+                className='button-78'
+              >See more...
+              </button>
             </div>
           </div>
 
           <div className="mainContent grid">
-            {Data.map(({ id, imgSrc, destTitle, location, grade }) => {
+            {tours.map((list) => {
               return (
-                <div data-aos="fade-up" className="singleDestination" key={id}>
+                <div data-aos="fade-up" className="singleDestination" key={list._id}>
                   <div className="destImage">
-                    <img src={imgSrc} alt="Image title" />
+                    <img src={list.tour_img} alt="Image title" />
 
                     <div className="overlayInfo">
-                      <h3 className="font-bold text-lg">{destTitle}</h3>
-                      <p>{location}</p>
+                      <h3 className="font-bold text-lg">{list.tour_name}</h3>
+                      <p>{ }</p>
 
-                      <BsArrowRightShort className="icon" onClick={notify} />
+                      <BsArrowRightShort className="icon" onClick={() => handleClickUser(list._id)} />
                     </div>
                   </div>
 
                   <div className="destFood">
-                    <div className="number">0{id}</div>
+                    <div className="number">{list.start_position?.location_name}</div>
 
                     <div className="destText flex">
-                      <h6>{location}</h6>
+                      <h6>{ }</h6>
                       <span className="flex">
                         <span className="dot">
                           <BsDot className="icon" />

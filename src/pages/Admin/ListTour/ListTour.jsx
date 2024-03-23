@@ -41,10 +41,8 @@ const TableListTourAdmin = () => {
   const [transportion, setTransportion] = useState('');
 
   const headCells = [
-    { id: 'expand-button', filterable: false },
     { id: 'tour-name', label: 'Tour', filterable: true, defaultFilter: true },
     { id: 'tour-description', label: 'Tour Description', filterable: false },
-    // { id: 'tour-transportion', label: 'Tour Transportion', filterable: false },
     { id: 'tour-price', label: 'Tour Price', filterable: false },
     { id: 'max-tourist', label: 'Max Tourist', filterable: false },
     { id: 'start-date', label: 'Start Date', filterable: false },
@@ -60,38 +58,11 @@ const TableListTourAdmin = () => {
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
-        console.log(tourData);
+        console.log("Data tour admin ne: ", tourData);
       })
       .catch((error) => console.log(error));
   }, []);
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const decodedToken = jwtDecode(token);
-    const userId = decodedToken.user_id;
-    try {
-      const response = axios.post('http://localhost:9999/api/tour/create', {
-        user_id: userId
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (response.status === 200) {
-        const responseData = response.data;
-        console.log('Booking tour successful:', responseData);
-        toast.success('Booking successful ~')
-        navigate('/')
-      } else {
-        console.error('Booking tour failed:', response.data);
-        const errorData = response.error;
-        console.error('Error Data:', errorData);
-        toast.error(errorData.error);
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error.message);
-    }
-  }, []);
 
   return (
     <Grid container>
@@ -104,17 +75,6 @@ const TableListTourAdmin = () => {
           />
 
           <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <Toolbar sx={{ py: 3 }}>
-              <Button
-                text="Add"
-                onClick={() => setOpenCreateTour(true)}
-                variant="outlined"
-                sx={{ float: 'right' }}
-                id="listener-create"
-              >
-                Create tour
-              </Button>
-            </Toolbar>
             <StyledDialog open={openCreateTour}>
               <DialogTitle sx={{ display: 'flex' }}>
                 <Typography
@@ -327,6 +287,10 @@ const TableListTourAdmin = () => {
                       <TableCell
                         key={headCell.id}
                         align={headCell.align ?? 'left'}
+                        style={{
+                          fontWeight: '700',
+                          fontSize: '18px',
+                        }}
                       >
                         {headCell.label}
                       </TableCell>
@@ -337,10 +301,8 @@ const TableListTourAdmin = () => {
                   {tours.map((row) => {
                     return (
                       <TableRow hover tabIndex={-1} key={row?._id}>
-                        <TableCell>{/* {row._id} */}</TableCell>
                         <TableCell>{row.tour_name}</TableCell>
                         <TableCell>{row.tour_description}</TableCell>
-                        {/* <TableCell>{row.tour_transportion}</TableCell> */}
                         <TableCell>{row.tour_price}$</TableCell>
                         <TableCell>{row.max_tourist}</TableCell>
                         <TableCell>
@@ -356,7 +318,7 @@ const TableListTourAdmin = () => {
                           {row.end_position[0]?.location_name}
                         </TableCell>
                         <TableCell align={'right'}>
-                          <ActionButton row={row} />
+                          <ActionButton row={row} statusTour={row.isAppove} />
                         </TableCell>
                       </TableRow>
                     );

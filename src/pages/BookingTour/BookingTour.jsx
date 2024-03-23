@@ -33,6 +33,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { jwtDecode } from 'jwt-decode'
 import Aos from 'aos';
 
+import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 
 const BookingTour = () => {
 
@@ -117,14 +118,18 @@ const BookingTour = () => {
         }
       } catch (error) {
         console.error('Booking tour failed');
-        toast.error('You already booked this tour ~ You can book other tour !');
-        navigate('/list-tour');
+        toast.error('You already booked this tour ~ Pay now to complete your tour booking !');
+        navigate(`/payment/${id}`);
       }
     } else {
       toast('You are not logged in ~ Please log in to book a tour !!!')
       navigate('/login');
     }
   };
+
+  useEffect(() => {
+    localStorage.setItem('numberPeople', numberPeople);
+  }, [numberPeople]); 
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -134,13 +139,56 @@ const BookingTour = () => {
       .then((response) => {
         const tours = Object.values(response.data.tour);
         setTourData(tours);
+        console.log(tours);
       })
       .catch(error => console.log(error));
   }, []);
 
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(Boolean(token));
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.user_id;
+      axios
+        .get(`http://localhost:8080/api/user/${userId}`)
+        .then((response) => {
+          const userData = response.data.data;
+          setUser(userData);
+          const rid = decodedToken.role;
+          console.log(decodedToken)
+          if (rid === 'PARTNER') {
+            setLogPartner(true);
+          } else {
+            setLogPartner(false);
+          }
+        })
+        .catch((error) => {
+          console.log('Error:', error);
+        });
+    }
+  }, []);
+
+  const [logPartner, setLogPartner] = useState(false);
+
+  const handleNumberPeopleChange = (event) => {
+    const value = event.target.value;
+    setNumberPeople(value);
+  };
+
   return (
     <>
-      {isLoggedIn ? <NavbarLogin /> : <Navbar />}
+      {isLoggedIn ? (
+        logPartner ? (
+          <NavbarPartnerLogin />
+        ) : (
+          <NavbarLogin />
+        )
+      ) : (
+        <Navbar />
+      )}
+
       <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50">
         <div className="w-full container flex justify-center items-center flex-col">
           <p className="text-white font-secondary text-3xl 2xl:text-6xl" style={{ fontStyle: "italic", color: "#fff" }}>
@@ -231,6 +279,17 @@ const BookingTour = () => {
                   }}
                 >
                   Nơi khởi hành: <b>{tourData[0]?.start_position?.location_name}</b>
+                </Typography>
+                <Typography
+                  sx={{
+                    marginBottom: '8px',
+                    fontFamily: 'Arial',
+                    fontSize: '15px',
+                    color: '#000000',
+                    paddingLeft: '20px',
+                  }}
+                >
+                  Điểm đến: <b>{tourData[0]?.end_position[0]?.location_name}</b>
                 </Typography>
                 <Typography
                   sx={{
@@ -395,11 +454,11 @@ const BookingTour = () => {
                   InputProps={{
                     inputProps: {
                       min: 1,
-                      // max: tourItem.number,
+                      max: tourData[0]?.max_tourist,
                     },
                   }}
-                  customvalue={numberPeople}
-                  customsetvalue={setNumberPeople}
+                  value={numberPeople}
+                  onChange={handleNumberPeopleChange}
                 />
 
                 <Typography
@@ -423,7 +482,7 @@ const BookingTour = () => {
                       onChange={handleOption1Change}
                     />
                   }
-                  label="Nhập danh sách khách hàng"
+                  label="Tôi sẽ liên hệ với nhân viên khi cần tư vấn"
                 />
                 <FormControlLabel
                   control={
@@ -480,126 +539,8 @@ const BookingTour = () => {
                   }}
                 >
                   {type === 'option1' && (
-                    <FormGroup
-                      sx={{
-                        alignItems: 'center',
-                        borderRadius: '10px',
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        justifyContent: 'space-between',
-                        padding: '1rem',
-                      }}
-                    >
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} sm={4}>
-                          <TextField
-                            id="additionalText1"
-                            label="Họ và tên"
-                            fullWidth
-                            sx={{
-                              mt: 2,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              marginBottom: '20px',
-                              backgroundColor: '#ffffff',
-                            }}
-                            value={fullNamePeople}
-                            onChange={(event) => {
-                              setFullNamePeople(event.target.value);
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                          <TextField
-                            id="additionalText1"
-                            label="Giới tính"
-                            fullWidth
-                            sx={{
-                              mt: 2,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              marginBottom: '20px',
-                              backgroundColor: '#ffffff',
-                            }}
-                            value={gender}
-                            onChange={(event) => {
-                              setGender(event.target.value);
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                          <TextField
-                            label="Ngày sinh"
-                            type="datetime-local"
-                            value={birthDate}
-                            onChange={handleBirthDateChange}
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                            sx={{
-                              mt: 2,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              marginBottom: '20px',
-                              backgroundColor: '#ffffff',
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <TextField
-                            id="sdt"
-                            label="Số điện thoại"
-                            fullWidth
-                            sx={{
-                              mt: 2,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              marginBottom: '20px',
-                              backgroundColor: '#ffffff',
-                            }}
-                            value={numberPhone}
-                            onChange={(event) => {
-                              setNumberPhone(event.target.value);
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <TextField
-                            id="additionalText4"
-                            label="Địa chỉ"
-                            fullWidth
-                            sx={{
-                              mt: 2,
-                              display: 'flex',
-                              flexDirection: 'column',
-                              marginBottom: '20px',
-                              backgroundColor: '#ffffff',
-                            }}
-                            value={addressPeople}
-                            onChange={(event) => {
-                              setAddressPeople(event.target.value);
-                            }}
-                          />
-                        </Grid>
 
-                        <Grid item xs={12} sm={12}>
-                          <TextField
-                            fullWidth
-                            multiline
-                            id="loadbalancer-create-ip-address"
-                            label="Vui lòng nhập nội dung lời nhắn bằng tiếng Anh hoặc tiếng Việt"
-                            sx={{
-                              '& .MuiOutlinedInput-root': {
-                                alignItems: 'baseline',
-                              },
-                              backgroundColor: '#ffffff',
-                            }}
-                            customvalue={textComment}
-                            customsetvalue={setTextComment}
-                          />
-                        </Grid>
-                      </Grid>
-                    </FormGroup>
+                    <FormGroup></FormGroup>
                   )}
                 </Grid>
               </Grid>
