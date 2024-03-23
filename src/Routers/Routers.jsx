@@ -93,7 +93,11 @@ export const routes = [
   {
         path: "/dashboard",
         page: Sidebar
-    }
+    },
+    {
+        path: "/booking-tour",
+        page: BookingTour
+    },
 ]
 
 export const adminRoutes = [
