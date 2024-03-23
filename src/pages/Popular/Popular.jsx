@@ -68,7 +68,6 @@ export default function Popular() {
           list.push(tourData[i])
         }
         setTours(list);
-        console.log("tour ne", tours);
       })
       .catch(error => console.log(error));
   }, []);

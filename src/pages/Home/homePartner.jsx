@@ -37,7 +37,6 @@ const HomePartner = () => {
           const userData = response.data.data;
           setUser(userData);
           const rid = decodedToken.role;
-          console.log(decodedToken)
           if (rid === 'PARTNER') {
             setLogPartner(true);
           } else {
@@ -57,8 +56,6 @@ const HomePartner = () => {
   const handleApiData = (dataAfterSearch) => {
     setHeaderData(dataAfterSearch);
   };
-
-  console.log(logPartner)
 
   return (
     <>

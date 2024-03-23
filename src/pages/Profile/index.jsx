@@ -7,6 +7,8 @@ import { jwtDecode } from 'jwt-decode';
 import Aos from 'aos';
 import { useNavigate } from 'react-router-dom';
 
+import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
+
 import {
   Card,
   CardHeader,
@@ -26,17 +28,27 @@ export default function index() {
 
   const navigate = useNavigate();
 
+  const [logPartner, setLogPartner] = useState(false);  
+
   useEffect(() => {
-    const token = localStorage.getItem('token');
     Aos.init({ duration: 2000 });
+    const token = localStorage.getItem('token');
     setIsLoggedIn(Boolean(token));
     if (token) {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.user_id;
-      axios.get(`http://localhost:8080/api/user/${userId}`)
+      axios
+        .get(`http://localhost:8080/api/user/${userId}`)
         .then((response) => {
           const userData = response.data.data;
           setUser(userData);
+          const rid = decodedToken.role;
+          console.log(decodedToken)
+          if (rid === 'PARTNER') {
+            setLogPartner(true);
+          } else {
+            setLogPartner(false);
+          }
         })
         .catch((error) => {
           console.log('Error:', error);
@@ -57,7 +69,15 @@ export default function index() {
 
   return (
     <>
-      {isLoggedIn ? <NavbarLogin /> : <Navbar />}
+      {isLoggedIn ? (
+        logPartner ? (
+          <NavbarPartnerLogin />
+        ) : (
+          <NavbarLogin />
+        )
+      ) : (
+        <Navbar />
+      )}
       <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50" style={{ height: "70px" }}>
         <div className="w-full container flex justify-center items-center flex-col">
           <p className="text-white font-secondary text-3xl 2xl:text-6xl">
