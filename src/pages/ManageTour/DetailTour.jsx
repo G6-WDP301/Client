@@ -153,24 +153,6 @@ const DetailTour = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const data = {
-      nameTour,
-      description,
-      price,
-      discount,
-      maxTourist,
-      transportion,
-      startDate,
-      endDate,
-      startPosition,
-      endPosition,
-      tax,
-      duration,
-      image
-    }
-
-    console.log(data);
-
     // Put data tour
     axios.put(`http://localhost:8080/api/tour/update/${id}`, {
       "tour_name": nameTour,

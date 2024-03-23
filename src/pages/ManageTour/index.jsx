@@ -21,10 +21,10 @@ import Table from '@mui/material/Table';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-
 import { jwtDecode } from 'jwt-decode';
 import moment from 'moment';
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
+import { toast } from 'react-toastify';
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -32,6 +32,8 @@ const Index = () => {
   const [user, setUser] = useState({});
   const [tours, setTours] = useState([]);
   const [schedule, setSchedule] = useState([]);
+  const [searchTour, setSearchTour] = useState([]);
+  const [status, setStatus] = useState(true);
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -63,6 +65,8 @@ const Index = () => {
         });
     }
   }, []);
+
+
 
   const headCells = [
     { id: 'id', label: 'ID Number', filterable: true },
@@ -119,6 +123,27 @@ const Index = () => {
     return scheduleCheck ? true : false;
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.get(`http://localhost:8080/api/tour/search?page=1&pageSize=10&query=${searchTour}`);
+      const searchedTour = response.data.tours;
+      setSearchTour(searchedTour);
+      setStatus(false)
+      toast.success('Wait a few seconds ~')
+    } catch (error) {
+      const errorData = error.response.data.error;
+      console.log(errorData);
+      setStatus(true)
+      toast.error(errorData)
+    }
+  };
+
+  useEffect(() => {
+    console.log(searchTour);
+    // if(searchTour) 
+  }, [searchTour]);
 
 
   const navigate = useNavigate();
@@ -174,7 +199,7 @@ const Index = () => {
               </Grid>
               <Grid item xs={3} style={{ textAlign: 'right' }}>
                 <div style={{ marginBottom: '1rem', textAlign: 'right' }} >
-                  <form className="max-w-sm">
+                  <form className="max-w-sm" onSubmit={handleSubmit}>
                     <label
                       for="default-search"
                       className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -203,8 +228,9 @@ const Index = () => {
                         type="search"
                         id="default-search"
                         className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search Tour Name..."
+                        placeholder="Search tour name..."
                         required
+                        onChange={(e) => { setSearchTour(e.target.value) }}
                       />
                       <button
                         type="submit"
@@ -240,31 +266,62 @@ const Index = () => {
                         ))}
                       </TableRow>
                     </TableHead>
-                    <TableBody>
-                      {tours.map((tour, index) => {
-                        return (
-                          <TableRow hover tabIndex={-1} key={tour?._id}>
-                            <TableCell align={'left'}>{index + 1}</TableCell>
-                            <TableCell>{tour?.tour_name}</TableCell>
-                            <TableCell>{tour?.tour_description}</TableCell>
-                            <TableCell>{tour?.tour_price}$</TableCell>
-                            <TableCell>{tour?.discount}</TableCell>
-                            <TableCell>{tour?.max_tourist}</TableCell>
-                            <TableCell>
-                              {moment(tour?.start_date).format('DD/MM/YYYY')}
-                            </TableCell>
-                            <TableCell>{tour?.start_position?.location_name}</TableCell>
-                            {tour.end_position && tour.end_position.length !== 0 ? (
-                              <TableCell>{tour?.end_position[0]?.location_name}</TableCell>
-                            ) : (
-                              <TableCell>{tour?.end_position?.location_name}</TableCell>
-                            )}
 
-                            <TableCell align={'center'}>
-                              {isTourSchedule(tour?._id) ?
-                                (
-                                  <Box display="flex" justifyContent="center">
-                                    <Tooltip title="View Detail">
+                    {status ? (
+                      <TableBody>
+                        {tours.map((tour, index) => {
+                          return (
+                            <TableRow hover tabIndex={-1} key={tour?._id}>
+                              <TableCell align={'left'}>{index + 1}</TableCell>
+                              <TableCell>{tour?.tour_name}</TableCell>
+                              <TableCell>{tour?.tour_description}</TableCell>
+                              <TableCell>{tour?.tour_price}$</TableCell>
+                              <TableCell>{tour?.discount}</TableCell>
+                              <TableCell>{tour?.max_tourist}</TableCell>
+                              <TableCell>
+                                {moment(tour?.start_date).format('DD/MM/YYYY')}
+                              </TableCell>
+                              <TableCell>{tour?.start_position?.location_name}</TableCell>
+                              {tour.end_position && tour.end_position.length !== 0 ? (
+                                <TableCell>{tour?.end_position[0]?.location_name}</TableCell>
+                              ) : (
+                                <TableCell>{tour?.end_position?.location_name}</TableCell>
+                              )}
+
+                              <TableCell align={'center'}>
+                                {isTourSchedule(tour?._id) ?
+                                  (
+                                    <Box display="flex" justifyContent="center">
+                                      <Tooltip title="View Detail">
+                                        <Button
+                                          variant="contained"
+                                          color="primary"
+                                          sx={{
+                                            minWidth: '32px',
+                                            marginRight: '4px',
+                                          }}
+                                          onClick={() => navigate(`/manage-detail-tour/${tour?._id}`)}
+                                        >
+                                          <VisibilityIcon />
+                                        </Button>
+                                      </Tooltip>
+                                      &nbsp;
+                                      <Tooltip title="Edit Tour">
+                                        <Button
+                                          variant="contained"
+                                          color="primary"
+                                          sx={{
+                                            minWidth: '32px',
+                                            marginRight: '4px',
+                                          }}
+                                          onClick={() => navigate(`/manage-edit-tour/${tour?._id}`)}
+                                        >
+                                          <EditIcon />
+                                        </Button>
+                                      </Tooltip>
+                                    </Box>
+                                  ) : (
+                                    <Tooltip title="Create Schedule now ">
                                       <Button
                                         variant="contained"
                                         color="primary"
@@ -272,13 +329,72 @@ const Index = () => {
                                           minWidth: '32px',
                                           marginRight: '4px',
                                         }}
-                                        onClick={() => navigate(`/manage-detail-tour/${tour?._id}`)}
+                                        onClick={() => navigate(`/create-schedule/${tour?._id}`)}
                                       >
-                                        <VisibilityIcon />
+                                        <CalendarMonthIcon />
                                       </Button>
                                     </Tooltip>
-                                    &nbsp;
-                                    <Tooltip title="Edit Tour">
+                                  )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    ) : (
+                      <TableBody>
+                        {Array.isArray(searchTour) && searchTour.map((tour, index) => {
+                          return (
+                            <TableRow hover tabIndex={-1} key={tour?._id}>
+                              <TableCell align={'left'}>{index + 1}</TableCell>
+                              <TableCell>{tour?.tour_name}</TableCell>
+                              <TableCell>{tour?.tour_description}</TableCell>
+                              <TableCell>{tour?.tour_price}$</TableCell>
+                              <TableCell>{tour?.discount}</TableCell>
+                              <TableCell>{tour?.max_tourist}</TableCell>
+                              <TableCell>
+                                {moment(tour?.start_date).format('DD/MM/YYYY')}
+                              </TableCell>
+                              <TableCell>{tour?.start_position?.location_name}</TableCell>
+                              {tour.end_position && tour.end_position.length !== 0 ? (
+                                <TableCell>{tour?.end_position[0]?.location_name}</TableCell>
+                              ) : (
+                                <TableCell>{tour?.end_position?.location_name}</TableCell>
+                              )}
+
+                              <TableCell align={'center'}>
+                                {isTourSchedule(tour?._id) ?
+                                  (
+                                    <Box display="flex" justifyContent="center">
+                                      <Tooltip title="View Detail">
+                                        <Button
+                                          variant="contained"
+                                          color="primary"
+                                          sx={{
+                                            minWidth: '32px',
+                                            marginRight: '4px',
+                                          }}
+                                          onClick={() => navigate(`/manage-detail-tour/${tour?._id}`)}
+                                        >
+                                          <VisibilityIcon />
+                                        </Button>
+                                      </Tooltip>
+                                      &nbsp;
+                                      <Tooltip title="Edit Tour">
+                                        <Button
+                                          variant="contained"
+                                          color="primary"
+                                          sx={{
+                                            minWidth: '32px',
+                                            marginRight: '4px',
+                                          }}
+                                          onClick={() => navigate(`/manage-edit-tour/${tour?._id}`)}
+                                        >
+                                          <EditIcon />
+                                        </Button>
+                                      </Tooltip>
+                                    </Box>
+                                  ) : (
+                                    <Tooltip title="Create Schedule now ">
                                       <Button
                                         variant="contained"
                                         color="primary"
@@ -286,32 +402,18 @@ const Index = () => {
                                           minWidth: '32px',
                                           marginRight: '4px',
                                         }}
-                                        onClick={() => navigate(`/manage-edit-tour/${tour?._id}`)}
+                                        onClick={() => navigate(`/create-schedule/${tour?._id}`)}
                                       >
-                                        <EditIcon />
+                                        <CalendarMonthIcon />
                                       </Button>
                                     </Tooltip>
-                                  </Box>
-                                ) : (
-                                  <Tooltip title="Create Schedule now ">
-                                    <Button
-                                      variant="contained"
-                                      color="primary"
-                                      sx={{
-                                        minWidth: '32px',
-                                        marginRight: '4px',
-                                      }}
-                                      onClick={() => navigate(`/create-schedule/${tour?._id}`)}
-                                    >
-                                      <CalendarMonthIcon />
-                                    </Button>
-                                  </Tooltip>
-                                )}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
+                                  )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    )}
                   </Table>
                 </TableContainer>
               </Paper>
@@ -320,7 +422,7 @@ const Index = () => {
         </Grid>
 
         <Footer style={{ marginTop: '4rem' }} />
-      </div>
+      </div >
     </>
   );
 };
