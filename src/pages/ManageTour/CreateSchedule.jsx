@@ -33,16 +33,16 @@ const CreateSchedule = () => {
     };
 
     useEffect(() => {
-        Aos.init({ duration: 2000 });
-        const token = localStorage.getItem('token');
-        setIsLoggedIn(Boolean(token));
-        // Get user to set role
-        if (token) {
-            const decodedToken = jwtDecode(token);
-            const userId = decodedToken.user_id;
-            axios
-                .get(`http://localhost:8080/api/user/${userId}`)
-                .then((response) => {
+        const fetchData = async () => {
+            try {
+                Aos.init({ duration: 2000 });
+                const token = localStorage.getItem('token');
+                setIsLoggedIn(Boolean(token));
+                // Get user to set role
+                if (token) {
+                    const decodedToken = jwtDecode(token);
+                    const userId = decodedToken.user_id;
+                    const response = await axios.get(`http://localhost:8080/api/user/${userId}`);
                     const userData = response.data.data;
                     setUser(userData);
                     const rid = decodedToken.role;
@@ -51,22 +51,18 @@ const CreateSchedule = () => {
                     } else {
                         setLogPartner(false);
                     }
-                })
-                .catch((error) => {
-                    console.log('Error:', error);
-                });
-        }
+                }
 
-        // Get tour detail
-        axios
-            .get(`http://localhost:8080/api/tour/${id}`)
-            .then((response) => {
-                const tourData = response.data.tour.tour;
+                // Get tour detail
+                const tourResponse = await axios.get(`http://localhost:8080/api/tour/${id}`);
+                const tourData = tourResponse.data.tour.tour;
                 setTour(tourData);
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.log('Error:', error);
-            });
+            }
+        };
+
+        fetchData();
     }, []);
 
     const handleInputChange = (event) => {
@@ -86,7 +82,7 @@ const CreateSchedule = () => {
         }
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         console.log(`${id}`);
 
@@ -106,26 +102,27 @@ const CreateSchedule = () => {
         if (Object.keys(errors).length > 0) {
             setErrors(errors);
         } else {
-            axios.post('http://localhost:8080/api/schedule/create', {
-                "schedule_name": scheduleName,
-                "schedule_date": scheduleDate,
-                "schedule_detail": scheduleDetail,
-                "tour_id": `${id}`
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then((response) => {
-                    const schedule = response.data;
-                    toast.success("Create schedule successful ~")
-                })
-                .catch((error) => {
-                    const errorData = error.response.data.error;
-                    toast.error(errorData);
-                })
+            try {
+                const response = await axios.post('http://localhost:8080/api/schedule/create', {
+                    "schedule_name": scheduleName,
+                    "schedule_date": scheduleDate,
+                    "schedule_detail": scheduleDetail,
+                    "tour_id": `${id}`
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const schedule = response.data;
+                toast.success("Create schedule successful ~");
+                navigate('/manage-tour')
+            } catch (error) {
+                const errorData = error.response.data.error;
+                toast.error(errorData);
+            }
         }
     };
+
 
 
     return (

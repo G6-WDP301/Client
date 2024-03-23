@@ -43,16 +43,17 @@ const CreateTour = () => {
         setDescription(plainTextData);
     };
 
+    // Get api user to set role
     useEffect(() => {
-        Aos.init({ duration: 2000 });
-        const token = localStorage.getItem('token');
-        setIsLoggedIn(Boolean(token));
-        if (token) {
-            const decodedToken = jwtDecode(token);
-            const userId = decodedToken.user_id;
-            axios
-                .get(`http://localhost:8080/api/user/${userId}`)
-                .then((response) => {
+        const fetchData = async () => {
+            try {
+                Aos.init({ duration: 2000 });
+                const token = localStorage.getItem('token');
+                setIsLoggedIn(Boolean(token));
+                if (token) {
+                    const decodedToken = jwtDecode(token);
+                    const userId = decodedToken.user_id;
+                    const response = await axios.get(`http://localhost:8080/api/user/${userId}`);
                     const userData = response.data.data;
                     setUser(userData);
                     const rid = decodedToken.role;
@@ -61,12 +62,15 @@ const CreateTour = () => {
                     } else {
                         setLogPartner(false);
                     }
-                })
-                .catch((error) => {
-                    console.log('Error:', error);
-                });
-        }
+                }
+            } catch (error) {
+                console.log('Error:', error);
+            }
+        };
+
+        fetchData();
     }, []);
+
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -115,85 +119,83 @@ const CreateTour = () => {
         }
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(tax);
+        try {
+            // Validate the form
+            const errors = {};
+            if (!tourName) {
+                errors.tourName = 'Tour Name is required';
+            }
+            if (!price) {
+                errors.price = 'Price is required';
+            }
+            if (!discount) {
+                errors.discount = 'Discount is required';
+            }
+            if (!transportion) {
+                errors.transportion = 'Transportion is required';
+            }
+            if (!maxTourist) {
+                errors.maxTourist = 'Max tourist is required';
+            }
+            if (!startDate) {
+                errors.startDate = 'Start date is required';
+            }
+            if (!endDate) {
+                errors.endDate = 'End date is required';
+            }
+            if (!startPosition) {
+                errors.startPosition = 'Start position is required';
+            }
+            if (!endPosition) {
+                errors.endPosition = 'End position is required';
+            }
+            if (!description) {
+                errors.description = 'Description is required';
+            }
+            if (!image) {
+                errors.image = 'Image of tour is required';
+            }
+            if (!duration) {
+                errors.duration = 'Duration of tour is required';
+            }
+            if (!tax) {
+                errors.tax = 'Tax is required';
+            }
 
-        // Validate the form
-        const errors = {};
-        if (!tourName) {
-            errors.tourName = 'Tour Name is required';
-        }
-        if (!price) {
-            errors.price = 'Price is required';
-        }
-        if (!discount) {
-            errors.discount = 'Discount is required';
-        }
-        if (!transportion) {
-            errors.transportion = 'Transportion is required';
-        }
-        if (!maxTourist) {
-            errors.maxTourist = 'Max tourist is required';
-        }
-        if (!startDate) {
-            errors.startDate = 'Start date is required';
-        }
-        if (!endDate) {
-            errors.endDate = 'End date is required';
-        }
-        if (!startPosition) {
-            errors.startPosition = 'Start position is required';
-        }
-        if (!endPosition) {
-            errors.endPosition = 'End position is required';
-        }
-        if (!description) {
-            errors.description = 'Description is required';
-        }
-        if (!image) {
-            errors.image = 'Image of tour is required';
-        }
-        if (!duration) {
-            errors.duration = 'Duration of tour is required';
-        }
-        if (!tax) {
-            errors.tax = 'Tax is required';
-        }
-        // If errors
-        if (Object.keys(errors).length > 0) {
-            setErrors(errors);
-        } else {
-            axios.post('http://localhost:8080/api/tour/create', {
-                "tour_name": tourName,
-                "tour_description": description,
-                "tour_transportion": transportion,
-                "tour_price": price,
-                "discount": discount,
-                "tour_img": image,
-                "max_tourist": maxTourist,
-                "start_date": startDate,
-                "end_date": endDate,
-                "start_position": startPosition,
-                "end_position": endPosition,
-                "duration": duration,
-                "return_tax": tax
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then((response) => {
-                    const tour = response.data;
-                    toast.success("Create tour successful ~")
-                })
-                .catch((error) => {
-                    const errorData = error.response.data.error;
-                    toast.error(errorData);
-                })
+            // If errors
+            if (Object.keys(errors).length > 0) {
+                setErrors(errors);
+            } else {
+                const response = await axios.post('http://localhost:8080/api/tour/create', {
+                    "tour_name": tourName,
+                    "tour_description": description,
+                    "tour_transportion": transportion,
+                    "tour_price": price,
+                    "discount": discount,
+                    "tour_img": image,
+                    "max_tourist": maxTourist,
+                    "start_date": startDate,
+                    "end_date": endDate,
+                    "start_position": startPosition,
+                    "end_position": endPosition,
+                    "duration": duration,
+                    "return_tax": tax
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const tour = response.data;
+                toast.success("Create tour successful ~")
+                navigate('/manage-tour');
+            }
+        } catch (error) {
+            const errorData = error.response.data.error;
+            toast.error(errorData);
         }
     };
-
     useEffect(() => {
         Aos.init({ duration: 2000 });
         const token = localStorage.getItem('token');
@@ -340,26 +342,6 @@ const CreateTour = () => {
                                         />
                                         {errors.maxTourist && <p className="text-red-500 text-xs mt-1">{errors.maxTourist}</p>}
                                     </div>
-
-                                    {/* <div className="col-span-6 sm:col-span-3">
-                                        <label
-                                            htmlFor="transportion"
-                                            className="text-sm font-medium text-gray-900 block mb-2"
-                                        >
-                                            Transportion
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="transportion"
-                                            id="transportion"
-                                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                            placeholder=""
-                                            required
-                                            value={transportion}
-                                            onChange={(e) => setTransportion(e.target.value)}
-                                        />
-                                        {errors.transportion && <p className="text-red-500 text-xs mt-1">{errors.transportion}</p>}
-                                    </div> */}
 
                                     <div className="col-span-6 sm:col-span-3">
                                         <label

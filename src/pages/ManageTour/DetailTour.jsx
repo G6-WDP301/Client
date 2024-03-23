@@ -9,6 +9,8 @@ import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DetailTour = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,7 +21,6 @@ const DetailTour = () => {
   const [tourData, setTourData] = useState([])
   const navigate = useNavigate();
 
-  // const [value, setValue] = useState('');
   const [nameTour, setNameTour] = useState('');
   const [price, setPrice] = useState('');
   const [discount, setDiscount] = useState('');
@@ -32,7 +33,7 @@ const DetailTour = () => {
   const [description, setDescription] = useState('');
   const [tax, setTax] = useState('');
   const [duration, setDuration] = useState('');
-  const [image, setImage] = useState('https://th.bing.com/th/id/OIP.yaxxrYEDxISa0ujcWl-zDAHaEK?w=252&h=180&c=7&r=0&o=5&pid=1.7');
+  const [image, setImage] = useState('');
   const [scheduleName, setScheduleName] = useState('');
   const [scheduleDate, setScheduleDate] = useState('');
   const [scheduleDetail, setScheduleDetail] = useState('');
@@ -46,24 +47,24 @@ const DetailTour = () => {
     tempDiv.innerHTML = htmlData;
     const plainTextData = tempDiv.textContent || tempDiv.innerText || "";
     setDescription(plainTextData);
-};
+  };
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
     const token = localStorage.getItem('token');
     setIsLoggedIn(Boolean(token));
-  }, []);
+  }, [isLoggedIn, logPartner]);
 
+  // Get api user to set role
   useEffect(() => {
-    Aos.init({ duration: 2000 });
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(Boolean(token));
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      const userId = decodedToken.user_id;
-      axios
-        .get(`http://localhost:8080/api/user/${userId}`)
-        .then((response) => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        setIsLoggedIn(Boolean(token));
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          const userId = decodedToken.user_id;
+          const response = await axios.get(`http://localhost:8080/api/user/${userId}`);
           const userData = response.data.data;
           setUser(userData);
           const rid = decodedToken.role;
@@ -72,74 +73,87 @@ const DetailTour = () => {
           } else {
             setLogPartner(false);
           }
-        })
-        .catch((error) => {
-          console.log('Error:', error);
-        });
-    }
+        }
+      } catch (error) {
+        console.log('Error:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const { id } = useParams();
 
+  // Get api tour and schedule
   useEffect(() => {
-    const tourItems = () => {
-      axios
-        .get(`http://localhost:8080/api/tour/${id}`)
-        .then((response) => {
-          const toursData = response.data.tour.tour;
-          setTourData(toursData);
-          console.log('data tour:', tourData);
-        })
-        .catch((error) => console.log(error));
+    const fetchTourAndSchedule = async () => {
+      try {
+        const [tourResponse, scheduleResponse] = await Promise.all([
+          axios.get(`http://localhost:8080/api/tour/${id}`),
+          axios.get(`http://localhost:8080/api/schedule/${id}`)
+        ]);
+        const toursData = tourResponse.data.tour.tour;
+        const scheduleData = scheduleResponse.data.schedules;
+        setTourData(toursData);
+        setSchedule(scheduleData);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    const scheduleItems = () => {
-      axios
-        .get(`http://localhost:8080/api/schedule/${id}`)
-        .then((response) => {
-          const scheduleData = response.data.schedules;
-          setSchedule(scheduleData);
-          console.log('data schedule tour:', schedule);
-        })
-        .catch((error) => console.log(error));
-    };
-
-    tourItems();
-
-    scheduleItems();
+    fetchTourAndSchedule();
   }, [id]);
 
-  useEffect(() => {
-    Aos.init({ duration: 2000 });
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(Boolean(token));
-    // Get location
-    axios
-      .get('http://localhost:8080/api/location/all')
-      .then((res) => {
-        const locationData = res.data.locations.locationSaved;
-        setLocation(locationData);
-      })
-      .catch((error) => {
-        console.log('Error ne: ', error);
-      });
+  console.log(tourData);
 
-    // Get transportion
-    axios
-      .get('http://localhost:8080/api/transportion')
-      .then((res) => {
-        const vehicleData = res.data.transportions;
+  // Get api location and vehicle
+  useEffect(() => {
+    const fetchLocationAndVehicle = async () => {
+      try {
+        const [locationResponse, vehicleResponse] = await Promise.all([
+          axios.get('http://localhost:8080/api/location/all'),
+          axios.get('http://localhost:8080/api/transportion')
+        ]);
+        const locationData = locationResponse.data.locations.locationSaved;
+        const vehicleData = vehicleResponse.data.transportions;
+        setLocation(locationData);
         setVehicle(vehicleData);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log('Error ne: ', error);
-      });
-  }, [location, vehicle]);
+      }
+    };
+
+    fetchLocationAndVehicle();
+  }, []);
+
+  useEffect(() => {
+    if (tourData) {
+      setNameTour(tourData?.tour_name || '');
+      setPrice(tourData?.tour_price || '');
+      setDiscount(tourData?.discount || '');
+      setMaxTourist(tourData?.max_tourist || '');
+      if (tourData.tour_transportion && tourData.tour_transportion.length !== 0) {
+        setTransportion(tourData?.tour_transportion[0]?._id || '');
+      }
+      setStartDate(moment(tourData?.start_date).format('YYYY-MM-DD') || '');
+      setEndDate(moment(tourData?.end_date).format('YYYY-MM-DD') || '');
+      setStartPosition(tourData?.start_position?._id || '');
+      if (tourData.end_position && tourData.end_position.length !== 0) {
+        setEndPosition(tourData?.end_position[0]?._id || '');
+
+      }
+      setDescription(tourData?.tour_description || '');
+      setTax(tourData?.return_tax || '');
+      setDuration(tourData?.duration || '');
+      setImage(tourData?.tour_img || '');
+    }
+  }, [tourData]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    const updateTour = {
+
+    const data = {
       nameTour,
       description,
       price,
@@ -151,21 +165,41 @@ const DetailTour = () => {
       startPosition,
       endPosition,
       tax,
-      duration
-    };
+      duration,
+      image
+    }
 
-    console.log("data:", updateTour )
-  
-    axios.put(`http://localhost:8080/api/tour/update/${id}`, updateTour, {
+    console.log(data);
+
+    // Put data tour
+    axios.put(`http://localhost:8080/api/tour/update/${id}`, {
+      "tour_name": nameTour,
+      "tour_description": description,
+      "tour_transportion": transportion,
+      "tour_price": price,
+      "discount": discount,
+      "tour_img": image,
+      "max_tourist": maxTourist,
+      "start_date": startDate,
+      "end_date": endDate,
+      "start_position": startPosition,
+      "end_position": endPosition,
+      "duration": duration,
+      "return_tax": tax
+    }, {
       headers: { 'Content-Type': 'application/json' },
     })
       .then((response) => {
-        const updatedTour = response.data.tour.tour;
+        const updatedTour = response.data;
         setTourData(updatedTour);
         console.log("update tour:", updatedTour);
-        alert('Update successful');
+        toast.success('Update tour successfully!');
+        navigate('/manage-tour')
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error.response)
+        toast.error(error.response.data.error)
+      });
   };
 
 
@@ -245,7 +279,7 @@ const DetailTour = () => {
                         placeholder=""
                         required=""
                         defaultValue={item?.tour_name}
-                        onChange={(event) => {setNameTour(event.target.value)}}
+                        onChange={(event) => { setNameTour(event.target.value) }}
                       />
                     </div>
 
@@ -282,7 +316,7 @@ const DetailTour = () => {
                         placeholder="$$$"
                         required=""
                         defaultValue={item?.discount}
-                        onChange={(event) => {setDiscount(event.target.value)}}
+                        onChange={(event) => { setDiscount(event.target.value) }}
                       />
                     </div>
 
@@ -304,28 +338,6 @@ const DetailTour = () => {
                         onChange={(event) => setMaxTourist(event.target.value)}
                       />
                     </div>
-
-                    {/* <div className="col-span-6 sm:col-span-3">
-                        <label
-                          htmlFor="transportion"
-                          className="text-sm font-medium text-gray-900 block mb-2"
-                        >
-                          Transportion
-                        </label>
-
-
-                        {item && item.tour_transportion && item.tour_transportion.length > 0 && (
-                          <input
-                            type="text"
-                            name="transportion"
-                            id="transportion"
-                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                            placeholder=""
-                            required=""
-                            value={item?.tour_transportion[0]?.transportion_name}
-                            // onChange={(event) => {setTransportion(event.target.value)}}
-                            />
-                        )} */}
 
                     <div className="col-span-6 sm:col-span-3">
                       <label
@@ -441,9 +453,11 @@ const DetailTour = () => {
                         }}
                         name="end-position"
                         required
-                        onChange={(event) => {setEndPosition(event.target.value)}}
+                        onChange={(event) => { setEndPosition(event.target.value) }}
                       >
-                        <option>{item?.end_position?.location_name || "No End Position"}</option>
+                        {item?.end_position && item?.end_position[0]?.location_name && (
+                          <option>{item.end_position[0]?.location_name || "No End Position"}</option>
+                        )}
                         {location.map((loc) => (
                           <option value={loc._id} key={loc._id}>
                             {loc?.location_name}
@@ -465,7 +479,7 @@ const DetailTour = () => {
                         id="tax"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                         defaultValue={item?.return_tax}
-                        onChange={(event) => {setTax(event.target.value)}}
+                        onChange={(event) => { setTax(event.target.value) }}
                       />
                     </div>
 
@@ -482,11 +496,11 @@ const DetailTour = () => {
                         id="Duration"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
                         defaultValue={item?.duration}
-                        onChange={(event) => {setDuration(event.target.value)}}
+                        onChange={(event) => { setDuration(event.target.value) }}
                       />
                     </div>
 
-                    <div className="col-span-6 sm:col-span-3">
+                    {/* <div className="col-span-6 sm:col-span-3">
                       <label
                         for="image"
                         className="text-sm font-medium text-gray-900 block mb-2"
@@ -538,12 +552,31 @@ const DetailTour = () => {
                           id="preview"
                         />
                       </div>
+                    </div> */}
+
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="image"
+                        className="text-sm font-medium text-gray-900 block mb-2"
+                      >
+                        Url image
+                      </label>
+                      <input
+                        type="text"
+                        name="image"
+                        id="image"
+                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                        placeholder="Paste url image of tour"
+                        required
+                        defaultValue={item?.tour_img}
+                        onChange={(e) => setImage(e.target.value)}
+                      />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
                       <div className="mb-5 rounded-md bg-[#F5F7FB] py-4 px-8">
                         <div className="flex item-center justify-between">
-                          <img src={item?.tour_img} alt="tour image" />
+                          <img src={item?.tour_img} alt="Tour image" />
                         </div>
                       </div>
                     </div>
@@ -553,7 +586,7 @@ const DetailTour = () => {
                         htmlFor="description"
                         className="text-sm font-medium text-gray-900 block mb-2"
                       >
-                        Description
+                        Tour Description
                       </label>
                       <CKEditor
                         editor={ClassicEditor}
@@ -563,59 +596,8 @@ const DetailTour = () => {
                     </div>
                   </div>
 
-                  {schedule.length === 0 ? (
-                    <form
-                    className="pt-6 pb-8 grid grid-cols-6 gap-6"
-                    key={item?.tour_id}
-                  >
-                    <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="schedule-name"
-                        className="text-sm font-medium text-gray-900 block mb-2"
-                      >
-                        Schedule name
-                      </label>
-                      <input
-                        type="text"
-                        name="schedule-name"
-                        id="schedule-name"
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value="No schedule name"
-                      />
-                    </div>
-
-                    <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="schedule-date"
-                        className="text-sm font-medium text-gray-900 block mb-2"
-                      >
-                        Schedule date
-                      </label>
-                      <input
-                        type="text"
-                        name="schedule-date"
-                        id="schedule-date"
-                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value="No schedule date"
-                      />
-                    </div>
-
-                    <div className="col-span-full">
-                      <label
-                        htmlFor="schedule-detail"
-                        className="text-sm font-medium text-gray-900 block mb-2"
-                      >
-                        Schedule detail
-                      </label>
-                      <CKEditor
-                        editor={ClassicEditor}
-                        data="No schedule detail"
-                      />
-                    </div>
-                  </form>
-                  ) : (
-
-                  schedule?.map((item) => (
+                  {/* Edit schedule detail */}
+                  {/* {schedule.length === 0 ? (
                     <form
                       className="pt-6 pb-8 grid grid-cols-6 gap-6"
                       key={item?.tour_id}
@@ -632,8 +614,7 @@ const DetailTour = () => {
                           name="schedule-name"
                           id="schedule-name"
                           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          value={item?.schedule_name || 'No schedule name'}
-                          // onChange={(event) => {setScheduleName(event.target.value)}}
+                          value="No schedule name"
                         />
                       </div>
 
@@ -649,10 +630,7 @@ const DetailTour = () => {
                           name="schedule-date"
                           id="schedule-date"
                           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                          value={moment(item?.schedule_date).format(
-                            'DD/MM/YYYY'
-                          )}
-                          // onChange={(event) => event.target.value}
+                          value="No schedule date"
                         />
                       </div>
 
@@ -665,35 +643,87 @@ const DetailTour = () => {
                         </label>
                         <CKEditor
                           editor={ClassicEditor}
-                          data={item?.schedule_detail || 'No schedule detail'}
-                          // onChange={(event) => {
-                          //     setScheduleDetail(event.target.value);
-                          // }}
+                          data="No schedule detail"
                         />
                       </div>
                     </form>
-                  ))
-                  )}
+                  ) : (
+
+                    schedule?.map((item) => (
+                      <form
+                        className="pt-6 pb-8 grid grid-cols-6 gap-6"
+                        key={item?.tour_id}
+                      >
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="schedule-name"
+                            className="text-sm font-medium text-gray-900 block mb-2"
+                          >
+                            Schedule name
+                          </label>
+                          <input
+                            type="text"
+                            name="schedule-name"
+                            id="schedule-name"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            value={item?.schedule_name || 'No schedule name'}
+                          />
+                        </div>
+
+                        <div className="col-span-6 sm:col-span-3">
+                          <label
+                            htmlFor="schedule-date"
+                            className="text-sm font-medium text-gray-900 block mb-2"
+                          >
+                            Schedule date
+                          </label>
+                          <input
+                            type="text"
+                            name="schedule-date"
+                            id="schedule-date"
+                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                            value={moment(item?.schedule_date).format(
+                              'DD/MM/YYYY'
+                            )}
+                          // onChange={(event) => event.target.value}
+                          />
+                        </div>
+
+                        <div className="col-span-full">
+                          <label
+                            htmlFor="schedule-detail"
+                            className="text-sm font-medium text-gray-900 block mb-2"
+                          >
+                            Schedule detail
+                          </label>
+                          <CKEditor
+                            editor={ClassicEditor}
+                            data={item?.schedule_detail || 'No schedule detail'}
+                          />
+                        </div>
+                      </form>
+                    ))
+                  )} */}
                   <div className="p-6 border-t border-gray-200 rounded-b">
-              <button
-                className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                type="submit"
-                onClick={handleSubmit}
-              >
-                Save all
-              </button>
-              <button
-                className="ml-4 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                onClick={() => navigate('/manage-tour')}
-              >
-                Return Manage Tour
-              </button>
-            </div>
+                    <button
+                      className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                      type="submit"
+                      onClick={handleSubmit}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="ml-4 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                      onClick={() => navigate('/manage-tour')}
+                    >
+                      Return Manage Tour
+                    </button>
+                  </div>
                 </form>
               ))}
             </div>
 
-          
+
           </div>
         </div>
       </div>
