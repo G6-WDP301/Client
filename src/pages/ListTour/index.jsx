@@ -60,6 +60,7 @@ export default function index() {
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
+        console.log("tour data", tourData)
         setHasFilteredTours(tourData.length > 0);
       })
       .catch(error => console.log(error));

@@ -66,6 +66,11 @@ const Index = () => {
     }
   }, []);
 
+  const handlePaymentStatus = (isPay) => {
+    return isPay ? 'Đã thanh toán' : 'Chưa thanh toán';
+  };
+  
+
   const [logPartner, setLogPartner] = useState(false);
   const [user, setUser] = useState({});
   const [booked, setBooked] = useState([]);
@@ -101,15 +106,15 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-3" style={{margin: '5rem'}}>
+        <div className="grid grid-cols-3" style={{ margin: '5rem' }}>
           {booked.length > 0 ? (
             booked.map((tour) => (
               <Card
                 key={tour?._id}
-                className="w-full max-w-[26rem] shadow-lg px-6 py-6 mb-7 hover:bg-slate-100 hover:cursor-pointer"
+                className="w-full max-w-[26rem] shadow-lg px-6 py-6 mb-7 bg-slate-50 hover:bg-slate-200 hover:cursor-pointer"
               >
                 <CardHeader floated={false} color="blue-gray">
-                  <img src={tour.tour_id?.tour_img} />
+                  <img src={tour.tour_id?.tour_img} style={{ width: '500px', height: 'auto' }}/>
                   <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
                   <IconButton
                     size="sm"
@@ -132,31 +137,23 @@ const Index = () => {
                     <Typography
                       variant="h5"
                       color="blue-gray"
-                      className="font-medium pb-2 pt-5"
+                      className="font-bold font-sans text-2xl text-center pb-2"
                     >
                       {tour.tour_id?.tour_name}
-                    </Typography>
-                    <Typography
-                      color="blue-gray"
-                      className="flex items-center gap-1.5 font-normal"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="-mt-0.5 h-5 w-5 text-yellow-700"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      {tour.tour_id?.duration}
                     </Typography>
                   </div>
                   <Typography color="gray">
                     {tour.tour_id?.tour_description}
+                  </Typography>
+                  <Typography
+                    color="gray"
+                    className="bg-slate-100 p-2"
+                    style={{ marginTop: '1rem', borderRadius: '5px' }}
+                  >
+                    <span>Payment status: </span>{' '}
+                    <span className="text-red-500">
+                        {handlePaymentStatus(tour?.tour_id?.isPay)}
+                    </span>
                   </Typography>
                   <div className="group mt-8 inline-flex flex-wrap items-center gap-3">
                     <Tooltip content="$129 per night">
@@ -239,23 +236,33 @@ const Index = () => {
                         </svg>
                       </span>
                     </Tooltip>
-                    <Tooltip content="And +20 more">
-                      <span className="cursor-pointer rounded-full border border-gray-900/5 bg-gray-900/5 p-3 text-gray-900 transition-colors hover:border-gray-900/10 hover:bg-gray-900/10 hover:!opacity-100 group-hover:opacity-70">
-                        +20
-                      </span>
-                    </Tooltip>
                   </div>
                 </CardBody>
-                <CardFooter className="pt-3">
+                <CardFooter className="pt-3 gap-6 grid grid-cols-2">
+                  {tour?.tour_id?.isPay !== 'true' && (
+                    <Button
+                      size="md"
+                      fullWidth={true}
+                      style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)' }}
+                      className="text-slate-500 bg-slate-300 hover:bg-slate-600 hover:text-slate-50"
+                      onClick={() =>
+                        navigate(`/payment/${tour.tour_id?._id}`)
+                      }
+                    >
+                      Payment
+                    </Button>
+                  )}
+
                   <Button
                     size="md"
                     fullWidth={true}
-                    className="text-slate-500 hover:bg-slate-300 hover:text-slate-50"
+                    style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)' }}
+                    className="text-slate-500 bg-slate-300 hover:bg-slate-600 hover:text-slate-50"
                     onClick={() =>
                       navigate(`/tour-detail/${tour.tour_id?._id}`)
                     }
                   >
-                    Detour tour
+                    Detail Tour
                   </Button>
                 </CardFooter>
               </Card>
