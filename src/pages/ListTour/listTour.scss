@@ -1,65 +1,66 @@
-.y-gap-20{
+.y-gap-20 {
     margin-top: -10px;
     margin-bottom: -10px;
 }
 
-.col-auto{
+.col-auto {
     flex: 0 0 auto;
     width: auto;
 }
 
-.row{
+.row {
     display: flex;
     flex-wrap: wrap;
 }
 
-.text-18{
+.text-18 {
     font-size: 18px !important;
 }
 
-.fw-500{
+.fw-500 {
     font-weight: 500;
 }
 
-.x-gap-15{
+.x-gap-15 {
     margin-left: -7.5px;
     margin-right: -7.5px;
 }
 
-.y-gap-15{
+.y-gap-15 {
     margin-top: -7.5px;
     margin-bottom: -7.5px;
 }
 
-.dropdown{
-    cursor:pointer;
+.dropdown {
+    cursor: pointer;
     position: relative;
     display: flex;
     align-items: center;
     border-radius: 0.8px;
 }
 
-.text-14{
+.text-14 {
     font-size: 14px;
 }
 
-.rounded-100{
+.rounded-100 {
     border-radius: 100px;
 }
 
-.border-light{
+.border-light {
     border: 1px solid #ddd;
 }
 
-.h-34{
+.h-34 {
     height: 34px !important;
 }
 
-.px-15{
+.px-15 {
     padding-left: 15px !important;
     padding-right: 15px !important;
 }
-.dropdown-item{
+
+.dropdown-item {
     border: 1px solid lightgray;
     // box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
     padding: 0.4rem 1rem;
@@ -67,12 +68,21 @@
     margin-bottom: 10px;
 }
 
-.dropdown-item button{
-    font-size: 14px ;
-    line-height: 26.25px;  
+.dropdown-item button {
+    font-size: 14px;
+    line-height: 26.25px;
 }
 
-#dropdown{
+#dropdown {
     border: 1px solid lightgray;
     box-shadow: 0 2px 4px 3px rgba(194, 193, 193, 0.2);
+}
+
+.rounded-lg {
+    border-radius: 5rem !important;
+
+}
+
+.inputStyle {
+    width: 350px !important;
 }
