@@ -34,10 +34,6 @@ const DetailTour = () => {
   const [tax, setTax] = useState('');
   const [duration, setDuration] = useState('');
   const [image, setImage] = useState('');
-  const [scheduleName, setScheduleName] = useState('');
-  const [scheduleDate, setScheduleDate] = useState('');
-  const [scheduleDetail, setScheduleDetail] = useState('');
-
   const [location, setLocation] = useState([]);
   const [vehicle, setVehicle] = useState([]);
 
