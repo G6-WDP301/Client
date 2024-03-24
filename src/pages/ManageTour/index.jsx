@@ -37,6 +37,7 @@ const Index = () => {
   const [schedule, setSchedule] = useState([]);
   const [tabValue, setTabValue] = useState('1');
   const currentDate = new Date().toISOString();
+  const navigate = useNavigate();
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -133,8 +134,6 @@ const Index = () => {
   useEffect(() => {
     console.log(searchTour);
   }, [searchTour]);
-
-  const navigate = useNavigate();
 
   return (
     <>
@@ -283,7 +282,7 @@ const Index = () => {
                                   </TableCell>
                                   <TableCell>{tour?.tour_price}$</TableCell>
                                   <TableCell>
-                                    {/* {tour?.discount} */}
+                                    {tour?.discount}
                                   </TableCell>
                                   <TableCell>{tour?.max_tourist}</TableCell>
                                   <TableCell>
@@ -295,7 +294,7 @@ const Index = () => {
                                     {tour?.start_position?.location_name}
                                   </TableCell>
                                   {tour.end_position &&
-                                  tour.end_position.length !== 0 ? (
+                                    tour.end_position.length !== 0 ? (
                                     <TableCell>
                                       {tour?.end_position[0]?.location_name}
                                     </TableCell>
@@ -415,7 +414,7 @@ const Index = () => {
                                   </TableCell>
                                   <TableCell>{tour?.tour_price}$</TableCell>
                                   <TableCell>
-                                    {/* {tour?.discount} */}
+                                    {tour?.discount}
                                   </TableCell>
                                   <TableCell>{tour?.max_tourist}</TableCell>
                                   <TableCell>
@@ -427,7 +426,7 @@ const Index = () => {
                                     {tour?.start_position?.location_name}
                                   </TableCell>
                                   {tour.end_position &&
-                                  tour.end_position.length !== 0 ? (
+                                    tour.end_position.length !== 0 ? (
                                     <TableCell>
                                       {tour?.end_position[0]?.location_name}
                                     </TableCell>
@@ -546,9 +545,7 @@ const Index = () => {
                                     {tour?.tour_description}
                                   </TableCell>
                                   <TableCell>{tour?.tour_price}$</TableCell>
-                                  <TableCell>
-                                    {/* {tour?.discount} */}
-                                  </TableCell>
+                                  <TableCell>{tour?.discount}</TableCell>
                                   <TableCell>{tour?.max_tourist}</TableCell>
                                   <TableCell>
                                     {moment(tour?.start_date).format(
@@ -559,7 +556,7 @@ const Index = () => {
                                     {tour?.start_position?.location_name}
                                   </TableCell>
                                   {tour.end_position &&
-                                  tour.end_position.length !== 0 ? (
+                                    tour.end_position.length !== 0 ? (
                                     <TableCell>
                                       {tour?.end_position[0]?.location_name}
                                     </TableCell>
@@ -676,7 +673,7 @@ const Index = () => {
                                   </TableCell>
                                   <TableCell>{tour?.tour_price}$</TableCell>
                                   <TableCell>
-                                    {/* {tour?.discount} */}
+                                    {tour?.discount}
                                   </TableCell>
                                   <TableCell>{tour?.max_tourist}</TableCell>
                                   <TableCell>
@@ -688,7 +685,7 @@ const Index = () => {
                                     {tour?.start_position?.location_name}
                                   </TableCell>
                                   {tour.end_position &&
-                                  tour.end_position.length !== 0 ? (
+                                    tour.end_position.length !== 0 ? (
                                     <TableCell>
                                       {tour?.end_position[0]?.location_name}
                                     </TableCell>
