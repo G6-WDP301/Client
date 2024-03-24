@@ -73,7 +73,7 @@ export const routes = [
     },
     {
         path: "/view-tour",
-        page: ViewTour
+        page: TourDetail
     },
     {
         path: "/forgot-password",
