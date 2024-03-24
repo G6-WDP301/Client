@@ -88,7 +88,7 @@ const ProfileAdmin = () => {
               )}
               <p className="text-sm text-gray-500">{user.address}</p>
             </div>
-            <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
+            {/* <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
               <div className="flex items-center space-x-4 mt-2">
                 <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
                   <svg
@@ -105,7 +105,7 @@ const ProfileAdmin = () => {
                   <span>Edit</span>
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4">

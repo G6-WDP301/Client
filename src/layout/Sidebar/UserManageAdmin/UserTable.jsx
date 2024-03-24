@@ -71,7 +71,7 @@ const UserTable = () => {
     return (
       <Grid container>
       <Grid item xs={12} sx={{ p: 6 }}>
-          <Button variant="outlined" color="primary" style={{marginBottom:'1rem'}}>Create User</Button>
+          {/* <Button variant="outlined" color="primary" style={{marginBottom:'1rem'}}>Create User</Button> */}
         <Card>
           <CardHeader className='bg-slate-200 text-slate-400 font-bold' title='List User Admin' titleTypographyProps={{ variant: 'h6', color: 'primary' }} />
 
@@ -103,7 +103,7 @@ const UserTable = () => {
                         <TableCell>{user?.phoneNumber}</TableCell>
                         <TableCell>{user?.address}</TableCell>
                         <TableCell>{getRoleName(user?.role_id)}</TableCell>
-                        <TableCell align={'right'}>
+                        <TableCell align={'center'}>
                           <ActionButton user={user} onUpdateUser={handleUpdateUser} setUserData={setUserData} />
                         </TableCell>
                       </TableRow>
