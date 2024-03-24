@@ -221,7 +221,7 @@ export default function index() {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-xl p-8">
+          {/* <div className="bg-white rounded-lg shadow-xl p-8">
             <div className="flex items-center justify-between">
               <h4 className="text-xl text-gray-900 font-bold">
                 Tours you booked
@@ -439,7 +439,7 @@ export default function index() {
                 </Card>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
 

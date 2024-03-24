@@ -457,7 +457,7 @@ const TableListTourAdmin = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {tours.map((row) => {
+                        {Array.isArray(searchTour) && searchTour.map((row) => {
                           if (row.isAppove === 'NOTAPPROVE' && row.start_date > currentDate) {
                             return (
                               <TableRow hover tabIndex={-1} key={row?._id}>
@@ -510,7 +510,7 @@ const TableListTourAdmin = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {tours.map((row) => {
+                        {Array.isArray(searchTour) && searchTour.map((row) => {
                           if (row.isAppove === 'DECLINE' && row.start_date > currentDate) {
                             return (
                               <TableRow hover tabIndex={-1} key={row?._id}>
@@ -563,7 +563,7 @@ const TableListTourAdmin = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {tours.map((row) => {
+                        {Array.isArray(searchTour) && searchTour.map((row) => {
                           if (row.start_date < currentDate) {
                             return (
                               <TableRow hover tabIndex={-1} key={row?._id}>

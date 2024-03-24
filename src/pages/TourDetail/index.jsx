@@ -352,43 +352,38 @@ export default function index() {
                     Thời gian: {calculateDate}
                   </Typography>
                 </Grid>
-                
-                {[mergedBooked].map((listBooked) => 
-                <div key={listBooked?._id}
-                className="flex justify-around mt-[0.4rem]">
 
-
-                </div>
+                {[tourData].map((listBooked) =>
+                  <Grid key={listBooked?._id} item xs={12} sm={12} sx={{ textAlign: 'right' }}>
+                    {/* {isPaid(listBooked?._id) } */}
+                    <Typography
+                      sx={{
+                        marginBottom: '8px',
+                        fontFamily: 'Arial',
+                        fontSize: '20px',
+                        fontWeight: 'bold',
+                        color: '#fa4807',
+                      }}
+                    >
+                      {tourData?.tour_price} $ / person
+                    </Typography>
+                    <Button
+                      style={{
+                        background:
+                          'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+                        border: 0,
+                        borderRadius: 3,
+                        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+                        color: 'white',
+                        height: 48,
+                        padding: '0 30px',
+                      }}
+                      onClick={() => handleBooking(tourData?._id)}
+                    >
+                      Booking now
+                    </Button>
+                  </Grid>
                 )}
-                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-                  <Typography
-                    sx={{
-                      marginBottom: '8px',
-                      fontFamily: 'Arial',
-                      fontSize: '20px',
-                      fontWeight: 'bold',
-                      color: '#fa4807',
-                    }}
-                  >
-                    {tourData?.tour_price} $ / person
-                  </Typography>
-                  <Button
-                    style={{
-                      background:
-                        'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-                      border: 0,
-                      borderRadius: 3,
-                      boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-                      color: 'white',
-                      height: 48,
-                      padding: '0 30px',
-                    }}
-                    onClick={() => handleBooking(tourData?._id)}
-                  >
-                    Booking now
-                  </Button>
-                </Grid>
-
               </Grid>
 
               <Typography
