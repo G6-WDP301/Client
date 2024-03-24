@@ -178,8 +178,8 @@ export default function index() {
     const newPoints = open
       ? allPoints
       : allPoints.filter(
-          (item, index) => index === 0 || index === allTourLength - 1
-        );
+        (item, index) => index === 0 || index === allTourLength - 1
+      );
     setTours(newPoints);
   }, [open, allPoints, allTourLength]);
 
@@ -254,7 +254,7 @@ export default function index() {
     const dataSchedule = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/api/schedule/${id}`)
-        const dSchedule = response.data.schedules[0];
+        const dSchedule = response.data.schedules;
         setSchedule(dSchedule);
         console.log(dSchedule);
       } catch (error) {
@@ -432,8 +432,8 @@ export default function index() {
                                       index === 0
                                         ? 'success'
                                         : index === schedule.length - 1
-                                        ? 'error'
-                                        : 'primary'
+                                          ? 'error'
+                                          : 'primary'
                                     }
                                   ></TimelineDot>
                                   {!isEnd && <TimelineConnector />}
@@ -479,9 +479,8 @@ export default function index() {
                                 >
                                   {open
                                     ? 'Thu gọn'
-                                    : `Chi tiết hành trình (+${
-                                        allTourLength - 2
-                                      } chặng)`}
+                                    : `Chi tiết hành trình (+${allTourLength - 2
+                                    } chặng)`}
                                 </Button>
                               )}
                             </React.Fragment>
