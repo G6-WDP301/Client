@@ -169,6 +169,9 @@ export default function index() {
   const token = localStorage.getItem('token');
   const [schedule, setSchedule] = useState([]);
   const [calculateDate, setCaculateDate] = useState('')
+  const [booked, setBooked] = useState([]);
+  const [bookedPaid, setBookedPaid] = useState([]);
+  const [mergedBooked, setMergedBooked] = useState();
 
   const handleToggle = () => {
     setOpen(!open);
@@ -223,7 +226,6 @@ export default function index() {
           const userData = response.data.data;
           setUser(userData);
           const rid = decodedToken.role;
-          console.log(decodedToken)
           if (rid === 'PARTNER') {
             setLogPartner(true);
           } else {
@@ -233,6 +235,26 @@ export default function index() {
         .catch((error) => {
           console.log('Error:', error);
         });
+
+      const fetchBookedData = async () => {
+        try {
+          const [bookedResponse, bookedPaidResponse] = await Promise.all([
+            axios.get(`http://localhost:8080/api/booking/user/${userId}?page=1&pageSize=10&status=true`),
+            axios.get(`http://localhost:8080/api/booking/user/${userId}?page=1&pageSize=10&status=false`),
+          ]);
+
+          const bookedData = bookedResponse.data.tour;
+          const bookedPaidData = bookedPaidResponse.data.tour;
+
+          setBooked(bookedData);
+          setBookedPaid(bookedPaidData);
+          setMergedBooked(bookedData.concat(bookedPaidData));
+        } catch (error) {
+          console.log('Error:', error);
+        }
+      }
+
+      fetchBookedData();
     }
   }, [id]);
 
@@ -268,6 +290,13 @@ export default function index() {
 
     dataSchedule();
   }, [])
+
+  const isPaid = (tourId) => {
+    const bookedData = mergedBooked.find(t => {
+      return t.tour_id._id === tourId
+    })
+    return bookedData
+  }
 
   return (
     <>
@@ -305,6 +334,7 @@ export default function index() {
                   backgroundColor: 'rgba(255, 255, 255, 0.8',
                 }}
               >
+
                 <Grid item xs={12} sm={6} sx={{ textAlign: 'left' }}>
                   <Typography
                     variant="h5"
@@ -322,6 +352,8 @@ export default function index() {
                     Thời gian: {calculateDate}
                   </Typography>
                 </Grid>
+
+                {/* {isPaid(tourData._id) ? true : false} */}
                 <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
                   <Typography
                     sx={{
@@ -350,6 +382,7 @@ export default function index() {
                     Booking now
                   </Button>
                 </Grid>
+
               </Grid>
 
               <Typography

@@ -24,7 +24,6 @@ const Payment = () => {
         axios.get(`http://localhost:8080/api/tour/${id}`)
             .then((response) => {
                 const tour = response.data.tour.tour;
-                console.log(tour);
                 setTourBooked(tour);
                 setTourDataLoaded(true);
             })
@@ -51,7 +50,6 @@ const Payment = () => {
                     },
                     onApprove: async (data, actions) => {
                         const order = await actions.order.capture();
-                        console.log("status ne:", order.status);
                         setOrder(order);
                     },
                     onError: (err) => {
