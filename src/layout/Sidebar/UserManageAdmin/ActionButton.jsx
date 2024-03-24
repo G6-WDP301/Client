@@ -135,17 +135,17 @@ const ActionButton = ({ user, onUpdateUser, setUserData }) => {
   };
 
 
-  const handleDeleteClick = () => {
-    setShowDeleteDialog(true);
-  };
+  // const handleDeleteClick = () => {
+  //   setShowDeleteDialog(true);
+  // };
 
-  const handleDeleteConfirm = () => {
-    setShowDeleteDialog(false);
-  };
+  // const handleDeleteConfirm = () => {
+  //   setShowDeleteDialog(false);
+  // };
 
-  const handleDeleteCancel = () => {
-    setShowDeleteDialog(false);
-  };
+  // const handleDeleteCancel = () => {
+  //   setShowDeleteDialog(false);
+  // };
 
   const handleEditClick = () => {
     setShowEditDialog(true);
@@ -158,9 +158,10 @@ const ActionButton = ({ user, onUpdateUser, setUserData }) => {
   const handleIconButtonOnClick = (modalType) => {
     if (modalType === 'edit') {
       handleEditClick();
-    } else if (modalType === 'delete') {
-      handleDeleteClick();
-    }
+    } 
+    // else if (modalType === 'delete') {
+    //   handleDeleteClick();
+    // }
   };
 
   return (
@@ -169,19 +170,20 @@ const ActionButton = ({ user, onUpdateUser, setUserData }) => {
         <CustomButton
           id="loadbalancer-action-edit"
           title={'Edit'}
-          icon={<EditIcon fontSize="small" />}
+          icon={<EditIcon fontSize="small"/>}
           onClick={() => handleIconButtonOnClick('edit')}
           disabled={false}
         />
-        <CustomButton
+        {/* <CustomButton
           id="loadbalancer-action-resize"
           title={'Delete'}
           icon={<DeleteForeverIcon fontSize="small" />}
           onClick={() => handleIconButtonOnClick('delete')}
           disabled={false}
-        />
+        /> */}
       </div>
-      <Dialog
+
+      {/* <Dialog
         open={showDeleteDialog}
         onClose={handleDeleteCancel}
         aria-labelledby="alert-dialog-title"
@@ -206,7 +208,7 @@ const ActionButton = ({ user, onUpdateUser, setUserData }) => {
             Confirm
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
 
       <Dialog
         open={showEditDialog}
@@ -250,7 +252,7 @@ const ActionButton = ({ user, onUpdateUser, setUserData }) => {
                   type="email"
                   id="email"
                   className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  required
+                  readOnly
                   value={email}
                   onChange={(event) => {
                     setEmail(event.target.value);
@@ -269,12 +271,11 @@ const ActionButton = ({ user, onUpdateUser, setUserData }) => {
                   type="password"
                   id="password"
                   className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  required
+                  readOnly
                   value={password}
                   onChange={(event) => {
                     setEmail(event.target.value);
                   }}
-                  readOnly
                 />
               </div>
               <div className="mb-5">
@@ -288,7 +289,7 @@ const ActionButton = ({ user, onUpdateUser, setUserData }) => {
                   type="text"
                   id="dateOfBirth"
                   className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  required
+                  readOnly
                   value={moment(dob).format("DD/MM/YYYY")}
                   onChange={(event) => {
                     setDob(event.target.value);
@@ -359,17 +360,6 @@ const ActionButton = ({ user, onUpdateUser, setUserData }) => {
                 >
                   Role
                 </label>
-                {/* <input
-                  type="text"
-                  id="roleId"
-                  className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  required
-                  value={role_id === "65aa441d1de57d06c7f378a6" ? "User" : "Admin"}
-                  onChange={(event) => {
-                    setRoleId(event.target.value);
-                  }}
-                  readOnly
-                /> */}
                 <select
                   id="roleId"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"

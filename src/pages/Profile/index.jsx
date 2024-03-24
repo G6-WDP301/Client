@@ -5,6 +5,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { jwtDecode } from 'jwt-decode';
 import Aos from 'aos';
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
@@ -42,6 +43,14 @@ export default function index() {
   const [booked, setBooked] = useState([]);
   const navigate = useNavigate();
   const [logPartner, setLogPartner] = useState(false);
+
+  const [username, setUsername] = useState('');
+  const [dob, setDob] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [avatar, setAvatar] = useState('');
+  const [gender, setGender] = useState('');
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -81,6 +90,18 @@ export default function index() {
     }
   }, []);
 
+  useEffect(() => {
+    if(user) {
+      setUsername(user?.username || '');
+      setDob(user?.dob || '');
+      setPhoneNumber(user?.phoneNumber || '');
+      setEmail(user?.email || '');
+      setAvatar(user?.avatar || '');
+      setGender(user?.gender || 'Male');
+      setAddress(user?.address || '') 
+    }
+  },[user]);
+
   const handlePaymentStatus = (isPay) => {
     return isPay ? 'Đã thanh toán' : 'Chưa thanh toán';
   };
@@ -93,6 +114,52 @@ export default function index() {
   const handleClose = () => {
     setOpen(false);
   };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email) || email.includes('@@') || email.endsWith('.vn') || /(\.com.)[^.]*/.test(email)) {
+      toast.error('Invalid email format');
+      return;
+    }
+  
+    const phonePattern = /^[0-9]{10}$/;
+  
+    if (!phonePattern.test(phoneNumber)) {
+      toast.error('Invalid phone number format');
+      return;
+    }
+  
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/api/user/update/${user._id}`,
+        {
+          username,
+          dob,
+          phoneNumber,
+          email,
+          address,
+          avatar,
+          gender,
+        },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+  
+      const updatedUser = response.data.data;
+      setUser(updatedUser);
+      console.log('update user:', updatedUser);
+      window.location.href = '/profile';
+      toast.success('Update profile successfully!');
+    } catch (error) {
+      console.log(error.response);
+      toast.error(error.response.data.message);
+    }
+  };
+  
 
   return (
     <>
@@ -123,13 +190,13 @@ export default function index() {
                 className="w-full h-full rounded-tl-lg rounded-tr-lg"
               />
             </div>
-            <div className="flex flex-col items-center -mt-20">
+            <div className="flex flex-col items-center mt-10">
               <img
-                src={user.avatar}
-                className="w-40 border-4 border-white rounded-full"
+                src={user?.avatar}
+                className="w-20 h-20 border-4 border-white rounded-full"
               />
               <div className="flex items-center space-x-2 mt-2">
-                <p className="text-2xl text-white">{user.username}</p>
+                <p className="text-2xl text-slate-600">{user?.username}</p>
                 <span className="bg-blue-500 rounded-full p-1" title="Verified">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -147,12 +214,15 @@ export default function index() {
                   </svg>
                 </span>
               </div>
-        
-              <p className="text-sm text-gray-100">{user.address}</p>
+
+              <p className="text-sm text-slate-600">{user?.address}</p>
             </div>
             <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
               <div className="flex items-center space-x-4 mt-2">
-                <button onClick={handleClickOpen} className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                <button
+                  onClick={handleClickOpen}
+                  className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4"
@@ -191,12 +261,18 @@ export default function index() {
                 <ul className="mt-2 text-gray-700">
                   <li className="flex border-y py-2">
                     <span className="font-bold w-24">Full name:</span>
-                    <span className="text-gray-700">{user.username}</span>
+                    <span className="text-gray-700">{user?.username}</span>
+                  </li>
+                  <li className="flex border-y py-2">
+                    <span className="font-bold w-24">Gender:</span>
+                    <span className="text-gray-700">
+                      {user?.gender === 'true' ? 'Male' : 'Female'}
+                    </span>
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Birthday:</span>
                     <span className="text-gray-700">
-                      {moment(user.dob).format('DD/MM/YYYY')}
+                      {moment(user?.dob).format('DD/MM/YYYY')}
                     </span>
                   </li>
                   <li className="flex border-b py-2">
@@ -207,15 +283,15 @@ export default function index() {
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Phone:</span>
-                    <span className="text-gray-700">{user.phoneNumber}</span>
+                    <span className="text-gray-700">{user?.phoneNumber}</span>
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Email:</span>
-                    <span className="text-gray-700">{user.email}</span>
+                    <span className="text-gray-700">{user?.email}</span>
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Address:</span>
-                    <span className="text-gray-700">{user.address}</span>
+                    <span className="text-gray-700">{user?.address}</span>
                   </li>
                 </ul>
               </div>
@@ -449,31 +525,162 @@ export default function index() {
           aria-labelledby="customized-dialog-title"
           open={open}
         >
-          <div className='flex gap-96 items-center'>
+          <div className="flex gap-x-96 items-center">
             <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-              Modal title
+              Edit Profile
             </DialogTitle>
-            <CloseIcon onClick={handleClose} className='hover:cursor-pointer'/>
+            <CloseIcon onClick={handleClose} className="hover:cursor-pointer" />
           </div>
           <DialogContent dividers>
-            <Typography gutterBottom>
-              Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-              dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-              ac consectetur ac, vestibulum at eros.
-            </Typography>
-            <Typography gutterBottom>
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur
-              et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-              auctor.
-            </Typography>
-            <Typography gutterBottom>
-              Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
-              cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
-              dui. Donec ullamcorper nulla non metus auctor fringilla.
-            </Typography>
+            {user && (
+              <form onSubmit={handleSubmit} key={user?._id}>
+                {/* <form  key={user?._id}> */}
+                <div className="grid grid-cols-6 gap-6">
+                  <div className="col-span-full">
+                    <label
+                      htmlFor="fullname"
+                      className="text-sm font-medium text-gray-900 block mb-2"
+                    >
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      name="fullname"
+                      id="fullname"
+                      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                      required=""
+                      defaultValue={user?.username}
+                      onChange={(event) => {
+                        setUsername(event.target.value);
+                      }}
+                    />
+                  </div>
+
+                  <div className="col-span-full">
+                    <label
+                      htmlFor="gender"
+                      className="text-sm font-medium text-gray-900 block mb-2"
+                    >
+                      Gender
+                    </label>
+                    <select
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        fontSize: '14px',
+                        borderRadius: '8px',
+                        backgroundColor: '#f9fafb',
+                        border: '1px solid #e5e7eb',
+                      }}
+                      name="gender"
+                      required
+                      onChange={(e) => setGender(e.target.value === 'Male')}
+                      value={gender ? 'Male' : 'Female'}
+                    >
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select> 
+                  </div>
+
+                  <div className="col-span-full">
+                    <label
+                      htmlFor="birthday"
+                      className="text-sm font-medium text-gray-900 block mb-2"
+                    >
+                      Birthday
+                    </label>
+                    <input
+                      type="date"
+                      name="birthday"
+                      id="birthday"
+                      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                      defaultValue={moment(user?.dob)?.format('YYYY-MM-DD')}
+                      onChange={(event) => {
+                        setDob(event.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="col-span-full">
+                    <label
+                      htmlFor="Phone"
+                      className="text-sm font-medium text-gray-900 block mb-2"
+                    >
+                      Phone
+                    </label>
+                    <input
+                      type="text"
+                      name="Phone"
+                      id="Phone"
+                      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                      required=""
+                      defaultValue={user?.phoneNumber}
+                      onChange={(event) => {
+                        setPhoneNumber(event.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="col-span-full">
+                    <label
+                      htmlFor="Email"
+                      className="text-sm font-medium text-gray-900 block mb-2"
+                    >
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      name="Email"
+                      id="Email"
+                      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                      required=""
+                      defaultValue={user?.email}
+                      onChange={(event) => {
+                        setEmail(event.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="col-span-full">
+                    <label
+                      htmlFor="Address"
+                      className="text-sm font-medium text-gray-900 block mb-2"
+                    >
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      name="Address"
+                      id="Address"
+                      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                      defaultValue={user?.address}
+                      onChange={(event) => {
+                        setAddress(event.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="col-span-full">
+                    <label
+                      htmlFor="Address"
+                      className="text-sm font-medium text-gray-900 block mb-2"
+                    >
+                      Image
+                    </label>
+                    <input
+                      type="text"
+                      name="Address"
+                      id="Address"
+                      className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+                      defaultValue={user?.avatar}
+                      onChange={(event) => {
+                        setAvatar(event.target.value);
+                      }}
+                    />
+                  </div>
+                </div>
+              </form>
+            )}
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={handleClose}>
+            {/* <Button autoFocus type='submit'> */}
+            <Button onClick={handleSubmit}>
               Save changes
             </Button>
           </DialogActions>
