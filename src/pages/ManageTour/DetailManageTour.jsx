@@ -147,6 +147,7 @@ const DetailManageTour = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [logPartner, setLogPartner] = useState(false);
   const [user, setUser] = useState({});
+  const [schedule, setSchedule] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -193,15 +194,11 @@ const DetailManageTour = () => {
   };
 
   React.useEffect(() => {
-    setAllPoints(tour[0].locations);
-  }, []);
-
-  React.useEffect(() => {
     const newPoints = open
       ? allPoints
       : allPoints.filter(
-        (item, index) => index === 0 || index === allTourLength - 1
-      );
+          (item, index) => index === 0 || index === allTourLength - 1
+        );
     setTours(newPoints);
   }, [open, allPoints, allTourLength]);
 
@@ -221,6 +218,57 @@ const DetailManageTour = () => {
 
     tourItems();
   }, [id]);
+
+  useEffect(() => {
+    const dataSchedule = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/schedule/${id}`
+        );
+        const dSchedule = response.data.schedules;
+        setSchedule(dSchedule);
+        console.log(dSchedule);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    dataSchedule();
+  }, []);
+
+  // const schedule = [
+  //   {
+  //     _id: {
+  //       $oid: '65f3be5815908324cf2d3aee',
+  //     },
+  //     schedule_name: 'Day by day',
+  //     schedule_detail: 'Wonderful',
+  //     schedule_date: '2024-04-10T00:00:00.000Z',
+  //     tour_id: '65e0916596ae35c745213581',
+  //   },
+  //   {
+  //     _id: '65fd161bda56b659567a5819',
+  //     schedule_name: 'Vào dải ngân hà',
+  //     schedule_detail:
+  //       'SB NỘI BÀI – HÀ NỘI',
+  //     schedule_date: '2024-04-25T00:00:00.000Z',
+  //     tour_id: '65e1527d8e0780c0e38d6f69',
+  //   },
+  //   {
+  //     _id: '65fd161bda56b659567a5819',
+  //     schedule_name: 'Vào oke',
+  //     schedule_detail: 'SB NỘI BÀI ',
+  //     schedule_date: '2024-04-25T00:00:00.000Z',
+  //     tour_id: '65e1527d8e0780c0e38d6f69',
+  //   },
+  //   {
+  //     _id: '65fd161bda56b659567a5819',
+  //     schedule_name: 'Vào day',
+  //     schedule_detail: 'SB NỘI BÀI ',
+  //     schedule_date: '2024-05-25T00:00:00.000Z',
+  //     tour_id: '65e1527d8e0780c0e38d6f69',
+  //   },
+  // ];
 
   return (
     <>
@@ -361,7 +409,10 @@ const DetailManageTour = () => {
                         name="transportion"
                         id="transportion"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={item?.tour_transportion && item?.tour_transportion[0]?.transportion_name}
+                        value={
+                          item?.tour_transportion &&
+                          item?.tour_transportion[0]?.transportion_name
+                        }
                         readOnly
                       />
                     </div>
@@ -429,7 +480,10 @@ const DetailManageTour = () => {
                         name="end-position"
                         id="end-position"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={item?.end_position && item?.end_position[0]?.location_name}
+                        value={
+                          item?.end_position &&
+                          item?.end_position[0]?.location_name
+                        }
                         readOnly
                       />
                     </div>
@@ -513,97 +567,109 @@ const DetailManageTour = () => {
                       textAlign: 'center',
                     }}
                   >
-                    Lịch trình
+                    Detail Schedule
                   </Typography>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={5} sx={{ textAlign: 'left' }}>
+                      <Card elevation={3}>
+                        <CardContent>
+                          <Timeline
+                            sx={(theme) => ({
+                              m: 0,
+                              pl: 0,
+                              pr: 0,
+                              [`& .${timelineItemClasses.root}`]: {
+                                minHeight: theme.spacing(6),
+                                '&:before': {
+                                  flex: 0,
+                                  padding: 0,
+                                },
+                              },
+                            })}
+                          >
+                            {schedule.map((schedule, index) => {
+                              const isPrimaryPoint =
+                                index === 0 || index === schedule.length - 1;
+                              const isStart = index === 0;
+                              const isEnd = index === schedule.length - 1;
+
+                              return (
+                                <React.Fragment key={schedule._id}>
+                                  <TimelineItem>
+                                    <TimelineSeparator>
+                                      <TimelineDot
+                                        color={
+                                          index === 0
+                                            ? 'success'
+                                            : index === schedule.length - 1
+                                            ? 'error'
+                                            : 'primary'
+                                        }
+                                      ></TimelineDot>
+                                      {!isEnd && <TimelineConnector />}
+                                    </TimelineSeparator>
+                                    <TimelineContent
+                                      sx={{
+                                        fontWeight: isPrimaryPoint
+                                          ? 'bold'
+                                          : undefined,
+                                      }}
+                                    >
+                                      <Typography variant="body1">
+                                        {schedule.schedule_name}
+                                      </Typography>
+                                      <Typography
+                                        variant="body2"
+                                        color="textSecondary"
+                                      >
+                                        {new Date(
+                                          schedule.schedule_date
+                                        ).toLocaleDateString('en-US', {
+                                          year: 'numeric',
+                                          month: 'long',
+                                          day: 'numeric',
+                                        })}
+                                      </Typography>
+                                    </TimelineContent>
+                                  </TimelineItem>
+                                  {isStart && allTourLength > 2 && (
+                                    <Button
+                                      sx={{
+                                        textTransform: 'none',
+                                        // justifyContent: "flex-start"
+                                      }}
+                                      onClick={handleToggle}
+                                      endIcon={
+                                        open ? (
+                                          <ExpandLessIcon />
+                                        ) : (
+                                          <ExpandMoreIcon />
+                                        )
+                                      }
+                                    >
+                                      {open
+                                        ? 'Thu gọn'
+                                        : `Chi tiết hành trình (+${
+                                            allTourLength - 2
+                                          } chặng)`}
+                                    </Button>
+                                  )}
+                                </React.Fragment>
+                              );
+                            })}
+                          </Timeline>
+                        </CardContent>
+                      </Card>
                       <Box
                         display="flex"
                         justifyContent="flex-start"
                         alignItems="flex-start"
+                        marginTop="10px"
                       >
-                        <Card elevation={3}>
-                          <CardContent>
-                            <Timeline
-                              sx={(theme) => ({
-                                m: 0,
-                                pl: 0,
-                                pr: 0,
-                                [`& .${timelineItemClasses.root}`]: {
-                                  minHeight: theme.spacing(6),
-                                  '&:before': {
-                                    flex: 0,
-                                    padding: 0,
-                                  },
-                                },
-                              })}
-                            >
-                              {points.map((point, index) => {
-                                const isPrimaryPoint =
-                                  index === 0 || index === points.length - 1;
-                                const isStart = index === 0;
-                                const isEnd = index === points.length - 1;
-
-                                return (
-                                  <React.Fragment key={point}>
-                                    <TimelineItem>
-                                      <TimelineSeparator>
-                                        <TimelineDot
-                                          color={
-                                            index === 0
-                                              ? 'success'
-                                              : index === points.length - 1
-                                                ? 'error'
-                                                : 'primary'
-                                          }
-                                        ></TimelineDot>
-                                        {!isEnd && <TimelineConnector />}
-                                      </TimelineSeparator>
-                                      <TimelineContent
-                                        sx={{
-                                          fontWeight: isPrimaryPoint
-                                            ? 'bold'
-                                            : undefined,
-                                        }}
-                                      >
-                                        <Typography variant="body1">
-                                          {point.location}
-                                        </Typography>
-                                        <Typography
-                                          variant="body2"
-                                          color="textSecondary"
-                                        >
-                                          {point.time}
-                                        </Typography>
-                                      </TimelineContent>
-                                    </TimelineItem>
-                                    {isStart && allTourLength > 2 && (
-                                      <Button
-                                        sx={{
-                                          textTransform: 'none',
-                                          // justifyContent: "flex-start"
-                                        }}
-                                        onClick={handleToggle}
-                                        endIcon={
-                                          open ? (
-                                            <ExpandLessIcon />
-                                          ) : (
-                                            <ExpandMoreIcon />
-                                          )
-                                        }
-                                      >
-                                        {open
-                                          ? 'Thu gọn'
-                                          : `Chi tiết hành trình (+${allTourLength - 2
-                                          } chặng)`}
-                                      </Button>
-                                    )}
-                                  </React.Fragment>
-                                );
-                              })}
-                            </Timeline>
-                          </CardContent>
-                        </Card>
+                        <img
+                          src={tourData?.tour_img}
+                          alt="Tour photo description"
+                        />
                       </Box>
                       <Box
                         sx={{
@@ -630,7 +696,7 @@ const DetailManageTour = () => {
                     <Grid item xs={12} sm={7} sx={{ textAlign: 'left' }}>
                       <Card>
                         <CardContent>
-                          {tourItem.locations.map((locationItem, index) => (
+                          {schedule.map((data, index) => (
                             <div key={index}>
                               <Typography
                                 component="div"
@@ -643,13 +709,13 @@ const DetailManageTour = () => {
                                   WebkitTextFillColor: 'transparent',
                                 }}
                               >
-                                <b>{locationItem.location}</b>
+                                <b>{data.schedule_name}</b>
                               </Typography>
                               <Typography
                                 variant="body1"
                                 sx={{ marginTop: '10px', marginBottom: '15px' }}
                               >
-                                {locationItem.details}
+                                {data.schedule_detail}
                               </Typography>
                             </div>
                           ))}
