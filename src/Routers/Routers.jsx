@@ -89,6 +89,22 @@ export const routes = [
         isShowHeader: true
     },
     {
+        path: "/aboutus",
+        page: AboutUs,
+    },
+  {
+        path: "/dashboard",
+        page: Sidebar
+    },
+    {
+        path: "/booking-tour",
+        page: BookingTour
+    },
+    {
+        path: "/manage-tour",
+        page: ManageTour
+    },
+    {
         path: "/history-booking-tour",
         page: HistoryTour
     },
