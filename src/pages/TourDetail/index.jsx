@@ -10,6 +10,15 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
+import {
+  Timeline,
+  TimelineConnector,
+  TimelineContent,
+  TimelineDot,
+  TimelineItem,
+  TimelineSeparator,
+  timelineItemClasses,
+} from '@mui/lab';
 import Navbar from '../../layout/Navbar';
 import NavbarLogin from '../../layout/NavbarLogin/index'
 import img from '../../images/image_hotel(1).jpg';
@@ -21,25 +30,15 @@ import maldivies from '../../images/maldives1.jpg'
 import canada from '../../images/canada1.jpg';
 import map from '../../images/map.jpg';
 import france from '../../images/france1.jpg';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import React, { useEffect, useState } from 'react';
-import {
-  Timeline,
-  TimelineConnector,
-  TimelineContent,
-  TimelineDot,
-  TimelineItem,
-  TimelineSeparator,
-  timelineItemClasses,
-} from '@mui/lab';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Footer from '../../layout/Footer';
 import Aos from 'aos';
-
+import moment from 'moment';
 import { jwtDecode } from 'jwt-decode';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 
 const tour = [
@@ -160,16 +159,16 @@ export default function index() {
   const [allPoints, setAllPoints] = React.useState([]);
   const [points, setTours] = React.useState([]);
   const [open, setOpen] = React.useState(false);
-
+  const [logPartner, setLogPartner] = useState(false);
+  const [user, setUser] = useState({});
   const navigate = useNavigate();
-
   const { id } = useParams();
-
   const [tourData, setTourData] = useState([]);
-
   const [bookingId, setBookingId] = useState([])
-
   const allTourLength = allPoints.length;
+  const token = localStorage.getItem('token');
+  const [schedule, setSchedule] = useState([]);
+  const [calculateDate, setCaculateDate] = useState('')
 
   const handleToggle = () => {
     setOpen(!open);
@@ -194,22 +193,26 @@ export default function index() {
     setIsLoggedIn(Boolean(token));
     axios.get(`http://localhost:8080/api/tour/${id}`)
       .then((response) => {
-        const tours = Object.values(response.data.tour);
+        const tours = response.data.tour.tour;
         setTourData(tours);
       })
       .catch(error => console.log(error));
   }, []);
 
-  console.log(tourData[0]?._id);
-
   const handleBooking = (tourId) => {
-    setBookingId(tourId);
-    navigate(`/booking-tour/${tourId}`);
+    if (token) {
+      setBookingId(tourId);
+      toast.success('Wait few seconds ~')
+      navigate(`/booking-tour/${tourId}`);
+    }
+    else {
+      toast('You are not logged in ~ Please log in to book a tour !!!')
+      navigate('/login');
+    }
   }
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
-    const token = localStorage.getItem('token');
     setIsLoggedIn(Boolean(token));
     if (token) {
       const decodedToken = jwtDecode(token);
@@ -231,14 +234,43 @@ export default function index() {
           console.log('Error:', error);
         });
     }
-  }, []);
+  }, [id]);
 
-  const [logPartner, setLogPartner] = useState(false);
-  const [user, setUser] = useState({});
+  useEffect(() => {
+    const cDate = async () => {
+      try {
+        const startDate = moment(tourData?.start_date);
+        const endDate = moment(tourData?.end_date);
+        const timeDiff = endDate.diff(startDate, 'milliseconds');
+        const totalDays = Math.ceil(moment.duration(timeDiff).asDays());
+        const totalNights = totalDays - 1;
+        const calDate = `${totalDays} ngày ${totalNights} đêm`;
+        setCaculateDate(calDate);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    cDate();
+  }, [tourData])
+
+  useEffect(() => {
+    const dataSchedule = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/schedule/${id}`)
+        const dSchedule = response.data.schedules[0];
+        setSchedule(dSchedule);
+        console.log(dSchedule);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    dataSchedule();
+  }, [])
 
   return (
     <>
-      {/* {isLoggedIn ? <NavbarLogin /> : <Navbar />} */}
       {isLoggedIn ? (
         logPartner ? (
           <NavbarPartnerLogin />
@@ -250,8 +282,15 @@ export default function index() {
       )}
       <Paper sx={styles.paperContainer}>
         <div style={{ padding: '2rem' }} className="flex-column">
-          <Typography variant="h4" sx={{ color: 'whitesmoke', mt: 2 }}>
-            You can view detail tour ~
+          <Typography
+            variant="h4"
+            sx={{ color: 'whitesmoke', mt: 2 }}
+            style={{
+              fontWeight: 'bold',
+              fontStyle: 'italic',
+            }}
+          >
+            {tourData.tour_name}
           </Typography>
         </div>
       </Paper>
@@ -277,10 +316,10 @@ export default function index() {
                       color: '#333',
                     }}
                   >
-                    {tourItem.destTitle}
+                    Schedule of tour '{tourData?.tour_name}'
                   </Typography>
                   <Typography variant="body1">
-                    Thời gian: {tourItem.Time}
+                    Thời gian: {calculateDate}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
@@ -293,7 +332,7 @@ export default function index() {
                       color: '#fa4807',
                     }}
                   >
-                    $100.00 / khách
+                    {tourData?.tour_price} $ / person
                   </Typography>
                   <Button
                     style={{
@@ -306,9 +345,9 @@ export default function index() {
                       height: 48,
                       padding: '0 30px',
                     }}
-                    onClick={() => handleBooking(tourData[0]?._id)}
+                    onClick={() => handleBooking(tourData?._id)}
                   >
-                    Đăng kí ngay
+                    Booking now
                   </Button>
                 </Grid>
               </Grid>
@@ -323,99 +362,81 @@ export default function index() {
                   fontWeight: 'bold',
                   color: 'red',
                   textAlign: 'center',
+                  marginLeft: '100px'
                 }}
               >
-                Lịch trình
+                Detail Schedule
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={5} sx={{ textAlign: 'left' }}>
+                  <Card elevation={3}>
+                    <CardContent>
+                      <Timeline
+                        sx={(theme) => ({
+                          m: 0,
+                          pl: 0,
+                          pr: 0,
+                          [`& .${timelineItemClasses.root}`]: {
+                            minHeight: theme.spacing(6),
+                            '&:before': {
+                              flex: 0,
+                              padding: 0,
+                            },
+                          },
+                        })}
+                      >
+                        {points.map((point, index) => {
+                          const isPrimaryPoint =
+                            index === 0 || index === points.length - 1;
+                          const isStart = index === 0;
+                          const isEnd = index === points.length - 1;
+
+                          return (
+                            <React.Fragment key={point}>
+                              <TimelineItem>
+                                <TimelineSeparator>
+                                  <TimelineDot
+                                    color={
+                                      index === 0
+                                        ? 'success'
+                                        : index === points.length - 1
+                                          ? 'error'
+                                          : 'primary'
+                                    }
+                                  ></TimelineDot>
+                                  {!isEnd && <TimelineConnector />}
+                                </TimelineSeparator>
+                                <TimelineContent
+                                  sx={{
+                                    fontWeight: isPrimaryPoint
+                                      ? 'bold'
+                                      : undefined,
+                                  }}
+                                >
+                                  <Typography variant="body1">
+                                    {point.location}
+                                  </Typography>
+                                  <Typography
+                                    variant="body2"
+                                    color="textSecondary"
+                                  >
+                                    {point.time}
+                                  </Typography>
+                                </TimelineContent>
+                              </TimelineItem>
+                            </React.Fragment>
+                          );
+                        })}
+                      </Timeline>
+                    </CardContent>
+                  </Card>
                   <Box
                     display="flex"
                     justifyContent="flex-start"
                     alignItems="flex-start"
+                    marginTop="10px"
                   >
-                    <Card elevation={3}>
-                      <CardContent>
-                        <Timeline
-                          sx={(theme) => ({
-                            m: 0,
-                            pl: 0,
-                            pr: 0,
-                            [`& .${timelineItemClasses.root}`]: {
-                              minHeight: theme.spacing(6),
-                              '&:before': {
-                                flex: 0,
-                                padding: 0,
-                              },
-                            },
-                          })}
-                        >
-                          {points.map((point, index) => {
-                            const isPrimaryPoint =
-                              index === 0 || index === points.length - 1;
-                            const isStart = index === 0;
-                            const isEnd = index === points.length - 1;
-
-                            return (
-                              <React.Fragment key={point}>
-                                <TimelineItem>
-                                  <TimelineSeparator>
-                                    <TimelineDot
-                                      color={
-                                        index === 0
-                                          ? 'success'
-                                          : index === points.length - 1
-                                            ? 'error'
-                                            : 'primary'
-                                      }
-                                    ></TimelineDot>
-                                    {!isEnd && <TimelineConnector />}
-                                  </TimelineSeparator>
-                                  <TimelineContent
-                                    sx={{
-                                      fontWeight: isPrimaryPoint
-                                        ? 'bold'
-                                        : undefined,
-                                    }}
-                                  >
-                                    <Typography variant="body1">
-                                      {point.location}
-                                    </Typography>
-                                    <Typography
-                                      variant="body2"
-                                      color="textSecondary"
-                                    >
-                                      {point.time}
-                                    </Typography>
-                                  </TimelineContent>
-                                </TimelineItem>
-                                {isStart && allTourLength > 2 && (
-                                  <Button
-                                    sx={{
-                                      textTransform: 'none',
-                                      // justifyContent: "flex-start"
-                                    }}
-                                    onClick={handleToggle}
-                                    endIcon={
-                                      open ? (
-                                        <ExpandLessIcon />
-                                      ) : (
-                                        <ExpandMoreIcon />
-                                      )
-                                    }
-                                  >
-                                    {open
-                                      ? 'Thu gọn'
-                                      : `Chi tiết hành trình (+${allTourLength - 2
-                                      } chặng)`}
-                                  </Button>
-                                )}
-                              </React.Fragment>
-                            );
-                          })}
-                        </Timeline>
-                      </CardContent>
-                    </Card>
+                    <img src={tourData?.tour_img} alt="Tour photo description" />
                   </Box>
                   <Box sx={{ width: 500, height: 450, overflowY: 'scroll', marginTop: '20px' }}>
                     <ImageList variant="masonry" cols={3} gap={8} >
@@ -435,7 +456,7 @@ export default function index() {
                 <Grid item xs={12} sm={7} sx={{ textAlign: 'left' }}>
                   <Card>
                     <CardContent>
-                      {tourItem.locations.map((locationItem, index) => (
+                      {[schedule].map(data => (
                         <div key={index}>
                           <Typography
                             component="div"
@@ -448,13 +469,13 @@ export default function index() {
                               WebkitTextFillColor: 'transparent',
                             }}
                           >
-                            <b>{locationItem.location}</b>
+                            <b>{data.schedule_name}</b>
                           </Typography>
                           <Typography
                             variant="body1"
                             sx={{ marginTop: '10px', marginBottom: '15px' }}
                           >
-                            {locationItem.details}
+                            {data.schedule_detail}
                           </Typography>
                         </div>
                       ))}

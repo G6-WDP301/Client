@@ -129,6 +129,10 @@ const Index = () => {
     });
     return scheduleCheck ? true : false;
   };
+  
+  useEffect(() => {
+    console.log(searchTour);
+  }, [searchTour]);
 
   const navigate = useNavigate();
 
