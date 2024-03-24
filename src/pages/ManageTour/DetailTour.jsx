@@ -34,10 +34,6 @@ const DetailTour = () => {
   const [tax, setTax] = useState('');
   const [duration, setDuration] = useState('');
   const [image, setImage] = useState('');
-  const [scheduleName, setScheduleName] = useState('');
-  const [scheduleDate, setScheduleDate] = useState('');
-  const [scheduleDetail, setScheduleDetail] = useState('');
-
   const [location, setLocation] = useState([]);
   const [vehicle, setVehicle] = useState([]);
 
@@ -152,24 +148,6 @@ const DetailTour = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const data = {
-      nameTour,
-      description,
-      price,
-      discount,
-      maxTourist,
-      transportion,
-      startDate,
-      endDate,
-      startPosition,
-      endPosition,
-      tax,
-      duration,
-      image
-    }
-
-    console.log(data);
 
     // Put data tour
     axios.put(`http://localhost:8080/api/tour/update/${id}`, {

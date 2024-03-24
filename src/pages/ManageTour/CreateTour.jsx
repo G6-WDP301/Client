@@ -276,7 +276,7 @@ const CreateTour = () => {
                                             name="tour-name"
                                             id="tour-name"
                                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                            placeholder=""
+                                            placeholder="Fill name of tour"
                                             required
                                             value={tourName}
                                             onChange={(e) => setTourName(e.target.value)}
@@ -296,7 +296,7 @@ const CreateTour = () => {
                                             name="price"
                                             id="price"
                                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                            placeholder="$"
+                                            placeholder="Fill price of tour $"
                                             required
                                             value={price}
                                             onChange={(e) => setPrice(e.target.value)}
@@ -315,7 +315,7 @@ const CreateTour = () => {
                                             name="discount"
                                             id="discount"
                                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                            placeholder="$"
+                                            placeholder="Discount $"
                                             required
                                             value={discount}
                                             onChange={(e) => setDiscount(e.target.value)}
@@ -335,7 +335,7 @@ const CreateTour = () => {
                                             name="max-tourist"
                                             id="max-tourist"
                                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                            placeholder=""
+                                            placeholder="Max tourist in tour"
                                             required
                                             value={maxTourist}
                                             onChange={(e) => setMaxTourist(e.target.value)}
@@ -485,7 +485,7 @@ const CreateTour = () => {
                                             name="duration"
                                             id="duration"
                                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                            placeholder=""
+                                            placeholder="How long?"
                                             required
                                             value={duration}
                                             onChange={(e) => setDuration(e.target.value)}
@@ -506,7 +506,7 @@ const CreateTour = () => {
                                             name="tax"
                                             id="tax"
                                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                                            placeholder=""
+                                            placeholder="Tax of the tour"
                                             required
                                             value={tax}
                                             onChange={(e) => setTax(e.target.value)}
