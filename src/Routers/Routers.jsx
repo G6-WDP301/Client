@@ -21,6 +21,7 @@ import CreateTour from '../pages/ManageTour/CreateTour.jsx'
 import CreateSchedule from '../pages/ManageTour/CreateSchedule.jsx';
 
 import ProfileAdmin from '../layout/Sidebar/profileAdminNav.jsx'
+import HistoryTour from '../pages/HistoryTour/index.jsx'
 
  
 export const routes = [
@@ -86,7 +87,11 @@ export const routes = [
         path: "/payment/:id",
         page: Payment,
         isShowHeader: true
-    }
+    },
+    {
+        path: "/history-booking-tour",
+        page: HistoryTour
+    },
 ]
 
 export const adminRoutes = [
