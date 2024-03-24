@@ -20,13 +20,13 @@ import {
   timelineItemClasses,
 } from '@mui/lab';
 import Navbar from '../../layout/Navbar';
-import NavbarLogin from '../../layout/NavbarLogin/index'
+import NavbarLogin from '../../layout/NavbarLogin/index';
 import img from '../../images/image_hotel(1).jpg';
 import img1 from '../../images/image_hotel(2).jpg';
 import img2 from '../../images/image_hotel(3).jpg';
 import img3 from '../../images/image_hotel(4).jpg';
 import bgImage from '../../images/Ireland.jpg';
-import maldivies from '../../images/maldives1.jpg'
+import maldivies from '../../images/maldives1.jpg';
 import canada from '../../images/canada1.jpg';
 import map from '../../images/map.jpg';
 import france from '../../images/france1.jpg';
@@ -40,6 +40,8 @@ import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 const tour = [
   {
@@ -131,7 +133,6 @@ const itemData = [
     img: img3,
     title: 'Bed',
   },
-
 ];
 
 const styles = {
@@ -147,7 +148,6 @@ const styles = {
 };
 
 export default function index() {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const formatPrice = (price) => {
@@ -164,19 +164,15 @@ export default function index() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [tourData, setTourData] = useState([]);
-  const [bookingId, setBookingId] = useState([])
+  const [bookingId, setBookingId] = useState([]);
   const allTourLength = allPoints.length;
   const token = localStorage.getItem('token');
   const [schedule, setSchedule] = useState([]);
-  const [calculateDate, setCaculateDate] = useState('')
+  const [calculateDate, setCaculateDate] = useState('');
 
   const handleToggle = () => {
     setOpen(!open);
   };
-
-  React.useEffect(() => {
-    setAllPoints(tour[0].locations);
-  }, []);
 
   React.useEffect(() => {
     const newPoints = open
@@ -191,25 +187,25 @@ export default function index() {
     Aos.init({ duration: 2000 });
     const token = localStorage.getItem('token');
     setIsLoggedIn(Boolean(token));
-    axios.get(`http://localhost:8080/api/tour/${id}`)
+    axios
+      .get(`http://localhost:8080/api/tour/${id}`)
       .then((response) => {
         const tours = response.data.tour.tour;
         setTourData(tours);
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }, []);
 
   const handleBooking = (tourId) => {
     if (token) {
       setBookingId(tourId);
-      toast.success('Wait few seconds ~')
+      toast.success('Wait few seconds ~');
       navigate(`/booking-tour/${tourId}`);
-    }
-    else {
-      toast('You are not logged in ~ Please log in to book a tour !!!')
+    } else {
+      toast('You are not logged in ~ Please log in to book a tour !!!');
       navigate('/login');
     }
-  }
+  };
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -223,7 +219,7 @@ export default function index() {
           const userData = response.data.data;
           setUser(userData);
           const rid = decodedToken.role;
-          console.log(decodedToken)
+          console.log(decodedToken);
           if (rid === 'PARTNER') {
             setLogPartner(true);
           } else {
@@ -249,16 +245,16 @@ export default function index() {
       } catch (error) {
         console.log(error);
       }
-    }
+    };
 
     cDate();
-  }, [tourData])
+  }, [tourData]);
 
   useEffect(() => {
     const dataSchedule = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/api/schedule/${id}`)
-        const dSchedule = response.data.schedules[0];
+        const dSchedule = response.data.schedules;
         setSchedule(dSchedule);
         console.log(dSchedule);
       } catch (error) {
@@ -268,6 +264,40 @@ export default function index() {
 
     dataSchedule();
   }, [])
+
+  // const schedule = [
+  //   {
+  //     _id: {
+  //       $oid: '65f3be5815908324cf2d3aee',
+  //     },
+  //     schedule_name: 'Day by day',
+  //     schedule_detail: 'Wonderful',
+  //     schedule_date: '2024-04-10T00:00:00.000Z',
+  //     tour_id: '65e0916596ae35c745213581',
+  //   },
+  //   {
+  //     _id: '65fd161bda56b659567a5819',
+  //     schedule_name: 'Vào dải ngân hà',
+  //     schedule_detail:
+  //       'SB NỘI BÀI – HÀ NỘI',
+  //     schedule_date: '2024-04-25T00:00:00.000Z',
+  //     tour_id: '65e1527d8e0780c0e38d6f69',
+  //   },
+  //   {
+  //     _id: '65fd161bda56b659567a5819',
+  //     schedule_name: 'Vào oke',
+  //     schedule_detail: 'SB NỘI BÀI ',
+  //     schedule_date: '2024-04-25T00:00:00.000Z',
+  //     tour_id: '65e1527d8e0780c0e38d6f69',
+  //   },
+  //   {
+  //     _id: '65fd161bda56b659567a5819',
+  //     schedule_name: 'Vào day',
+  //     schedule_detail: 'SB NỘI BÀI ',
+  //     schedule_date: '2024-05-25T00:00:00.000Z',
+  //     tour_id: '65e1527d8e0780c0e38d6f69',
+  //   },
+  // ];
 
   return (
     <>
@@ -294,7 +324,9 @@ export default function index() {
           </Typography>
         </div>
       </Paper>
-      <Container style={{ padding: '2px', marginTop: '20px', marginBottom: '20px' }}>
+      <Container
+        style={{ padding: '2px', marginTop: '20px', marginBottom: '20px' }}
+      >
         <Grid container spacing={3}>
           {tour.map((tourItem) => (
             <Grid key={tourItem.id} item xs={12} sm={12}>
@@ -362,7 +394,7 @@ export default function index() {
                   fontWeight: 'bold',
                   color: 'red',
                   textAlign: 'center',
-                  marginLeft: '100px'
+                  marginLeft: '100px',
                 }}
               >
                 Detail Schedule
@@ -385,21 +417,21 @@ export default function index() {
                           },
                         })}
                       >
-                        {points.map((point, index) => {
+                        {schedule.map((schedule, index) => {
                           const isPrimaryPoint =
-                            index === 0 || index === points.length - 1;
+                            index === 0 || index === schedule.length - 1;
                           const isStart = index === 0;
-                          const isEnd = index === points.length - 1;
+                          const isEnd = index === schedule.length - 1;
 
                           return (
-                            <React.Fragment key={point}>
+                            <React.Fragment key={schedule._id}>
                               <TimelineItem>
                                 <TimelineSeparator>
                                   <TimelineDot
                                     color={
                                       index === 0
                                         ? 'success'
-                                        : index === points.length - 1
+                                        : index === schedule.length - 1
                                           ? 'error'
                                           : 'primary'
                                     }
@@ -414,16 +446,43 @@ export default function index() {
                                   }}
                                 >
                                   <Typography variant="body1">
-                                    {point.location}
+                                    {schedule.schedule_name}
                                   </Typography>
                                   <Typography
                                     variant="body2"
                                     color="textSecondary"
                                   >
-                                    {point.time}
+                                    {new Date(
+                                      schedule.schedule_date
+                                    ).toLocaleDateString('en-US', {
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric',
+                                    })}
                                   </Typography>
                                 </TimelineContent>
                               </TimelineItem>
+                              {isStart && allTourLength > 2 && (
+                                <Button
+                                  sx={{
+                                    textTransform: 'none',
+                                    // justifyContent: "flex-start"
+                                  }}
+                                  onClick={handleToggle}
+                                  endIcon={
+                                    open ? (
+                                      <ExpandLessIcon />
+                                    ) : (
+                                      <ExpandMoreIcon />
+                                    )
+                                  }
+                                >
+                                  {open
+                                    ? 'Thu gọn'
+                                    : `Chi tiết hành trình (+${allTourLength - 2
+                                    } chặng)`}
+                                </Button>
+                              )}
                             </React.Fragment>
                           );
                         })}
@@ -436,7 +495,10 @@ export default function index() {
                     alignItems="flex-start"
                     marginTop="10px"
                   >
-                    <img src={tourData?.tour_img} alt="Tour photo description" />
+                    <img
+                      src={tourData?.tour_img}
+                      alt="Tour photo description"
+                    />
                   </Box>
                   <Box sx={{ width: 500, height: 450, overflowY: 'scroll', marginTop: '20px' }}>
                     <ImageList variant="masonry" cols={3} gap={8} >
@@ -456,7 +518,7 @@ export default function index() {
                 <Grid item xs={12} sm={7} sx={{ textAlign: 'left' }}>
                   <Card>
                     <CardContent>
-                      {[schedule].map(data => (
+                      {schedule.map((data, index) => (
                         <div key={index}>
                           <Typography
                             component="div"
@@ -489,5 +551,5 @@ export default function index() {
       </Container>
       <Footer />
     </>
-  )
+  );
 }
