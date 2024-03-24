@@ -147,7 +147,6 @@ const DetailManageTour = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [logPartner, setLogPartner] = useState(false);
   const [user, setUser] = useState({});
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -201,8 +200,8 @@ const DetailManageTour = () => {
     const newPoints = open
       ? allPoints
       : allPoints.filter(
-          (item, index) => index === 0 || index === allTourLength - 1
-        );
+        (item, index) => index === 0 || index === allTourLength - 1
+      );
     setTours(newPoints);
   }, [open, allPoints, allTourLength]);
 
@@ -263,6 +262,15 @@ const DetailManageTour = () => {
               <div className="text-right">
                 <button
                   className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  style={{
+                    marginRight: '1rem',
+                  }}
+                  onClick={() => navigate(`/manage-edit-tour/${id}`)}
+                >
+                  Update tour
+                </button>
+                <button
+                  className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                   onClick={() => navigate('/manage-tour')}
                 >
                   Return Manage Tour
@@ -296,7 +304,7 @@ const DetailManageTour = () => {
                         htmlFor="price"
                         className="text-sm font-medium text-gray-900 block mb-2"
                       >
-                        Price
+                        Price ($)
                       </label>
                       <input
                         type="number"
@@ -353,7 +361,7 @@ const DetailManageTour = () => {
                         name="transportion"
                         id="transportion"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={item?.tour_transportion}
+                        value={item?.tour_transportion && item?.tour_transportion[0]?.transportion_name}
                         readOnly
                       />
                     </div>
@@ -366,7 +374,7 @@ const DetailManageTour = () => {
                         Start Date
                       </label>
                       <input
-                        type="date"
+                        type="text"
                         name="start-date"
                         id="start-date"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
@@ -383,7 +391,7 @@ const DetailManageTour = () => {
                         End Date
                       </label>
                       <input
-                        type="date"
+                        type="text"
                         name="end-date"
                         id="end-date"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
@@ -404,7 +412,7 @@ const DetailManageTour = () => {
                         name="start-position"
                         id="start-position"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={item?.start_position}
+                        value={item?.start_position?.location_name}
                         readOnly
                       />
                     </div>
@@ -421,7 +429,7 @@ const DetailManageTour = () => {
                         name="end-position"
                         id="end-position"
                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-                        value={item?.end_position}
+                        value={item?.end_position && item?.end_position[0]?.location_name}
                         readOnly
                       />
                     </div>
@@ -545,8 +553,8 @@ const DetailManageTour = () => {
                                             index === 0
                                               ? 'success'
                                               : index === points.length - 1
-                                              ? 'error'
-                                              : 'primary'
+                                                ? 'error'
+                                                : 'primary'
                                           }
                                         ></TimelineDot>
                                         {!isEnd && <TimelineConnector />}
@@ -586,9 +594,8 @@ const DetailManageTour = () => {
                                       >
                                         {open
                                           ? 'Thu gọn'
-                                          : `Chi tiết hành trình (+${
-                                              allTourLength - 2
-                                            } chặng)`}
+                                          : `Chi tiết hành trình (+${allTourLength - 2
+                                          } chặng)`}
                                       </Button>
                                     )}
                                   </React.Fragment>

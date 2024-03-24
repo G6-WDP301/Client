@@ -39,11 +39,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 export default function index() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [booked, setBooked] = useState([]);
-
   const navigate = useNavigate();
-
   const [logPartner, setLogPartner] = useState(false);
 
   useEffect(() => {
@@ -150,9 +147,7 @@ export default function index() {
                   </svg>
                 </span>
               </div>
-              {isPopupVisible && (
-                <div className="popup">{<h1>Popup nek</h1>}</div>
-              )}
+        
               <p className="text-sm text-gray-100">{user.address}</p>
             </div>
             <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
@@ -207,7 +202,7 @@ export default function index() {
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Joined:</span>
                     <span className="text-gray-700">
-                      10 Jan 2022 (25 days ago)
+                      15 Mar 2024 (10 days ago)
                     </span>
                   </li>
                   <li className="flex border-b py-2">

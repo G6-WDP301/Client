@@ -16,29 +16,31 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Tab,
 } from '@mui/material';
+import Box from '@mui/material/Box';
+import SearchIcon from '@mui/icons-material/Search';
 import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
 import ActionButton from './ActionButton';
 import axios from 'axios';
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Avatar from '@mui/material/Avatar';
 import moment from 'moment';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { LoadingButton } from '@mui/lab';
+import { LoadingButton, TabContext, TabList, TabPanel } from '@mui/lab';
 import { StyledDialog } from '../../utils/components/StyledDialog';
 import { jwtDecode } from 'jwt-decode';
+import { STATE_ADMIN_TOUR } from '../../utils/components/StateAdmin';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TableListTourAdmin = () => {
-  const [target, setTarget] = useState('');
   const [tours, setTours] = useState([]);
-  const [openCreateTour, setOpenCreateTour] = useState(false);
-  const [tourName, setTourName] = useState('');
-  const [tourDes, setTourDes] = useState('');
-  const [tourPrice, setTourPrice] = useState('');
-  const [maxTourist, setMaxTourist] = useState('');
-  const [startDateTime, setStartDateTime] = useState('');
-  const [endDateTime, setEndDateTime] = useState('');
-  const [duration, setDuration] = useState('');
-  const [transportion, setTransportion] = useState('');
+  const [tabValue, setTabValue] = useState('1');
+
 
   const headCells = [
     { id: 'tour-name', label: 'Tour', filterable: true, defaultFilter: true },
@@ -49,8 +51,24 @@ const TableListTourAdmin = () => {
     { id: 'end-date', label: 'End Date', filterable: false },
     { id: 'start-position', label: 'Start Position', filterable: false },
     { id: 'end-position', label: 'End Position', filterable: false },
-    { id: 'action-button', label: 'Action Button', filterable: false },
+    { id: 'action-button', label: 'Action Button', filterable: false, align: 'center' },
   ];
+
+  const headCellsOverdue = [
+    { id: 'tour-name', label: 'Tour', filterable: true, defaultFilter: true },
+    { id: 'tour-description', label: 'Tour Description', filterable: false },
+    { id: 'tour-price', label: 'Tour Price', filterable: false },
+    { id: 'max-tourist', label: 'Max Tourist', filterable: false },
+    { id: 'start-date', label: 'Start Date', filterable: false },
+    { id: 'end-date', label: 'End Date', filterable: false },
+    { id: 'start-position', label: 'Start Position', filterable: false },
+    { id: 'end-position', label: 'End Position', filterable: false },
+    { id: 'review-status', label: 'Review Status', filterable: false, align: 'center' },
+  ];
+
+  const currentDate = new Date().toISOString();
+  const [status, setStatus] = useState(true)
+  const [searchTour, setSearchTour] = useState([])
 
   useEffect(() => {
     axios
@@ -58,11 +76,31 @@ const TableListTourAdmin = () => {
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
-        console.log("Data tour admin ne: ", tourData);
       })
       .catch((error) => console.log(error));
   }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.get(`http://localhost:8080/api/tour/search?page=1&pageSize=10&query=${searchTour}`);
+      const searchedTour = response.data.tours;
+      setSearchTour(searchedTour);
+      setStatus(false)
+      console.log(searchedTour);
+      toast.success('Wait a few seconds ~')
+    } catch (error) {
+      const errorData = error.response.data.error;
+      console.log(errorData);
+      setStatus(true)
+      toast.error(errorData)
+    }
+  };
+
+  useEffect(() => {
+    console.log(searchTour);
+  }, [searchTour]);
 
   return (
     <Grid container>
@@ -74,259 +112,718 @@ const TableListTourAdmin = () => {
             titleTypographyProps={{ variant: 'h6', color: 'primary' }}
           />
 
-          <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <StyledDialog open={openCreateTour}>
-              <DialogTitle sx={{ display: 'flex' }}>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  style={{ flexGrow: 1 }}
+          <Box sx={{
+            marginTop: '20px',
+            marginBottom: '10px',
+            gap: '3',
+          }}>
+            <form onSubmit={handleSubmit}>
+              <div
+                className="relative flex items-center w-80 h-9 rounded-lg focus-within:shadow-lg bg-white overflow-hidden"
+                style={{
+                  border: '1px solid lightgrey',
+                  boxShadow: '0px 1px 1px 1px rgba(0, 0, 0, 0.1)',
+                  height: '60px',
+                  borderRadius: '100px'
+                }}
+              >
+                <div className="grid place-items-center h-full w-12 text-gray-300">
+                  <SearchIcon />
+                </div>
+                <input
+                  className="peer h-full w-full outline-none text-sm text-gray-700 pr-2"
+                  type="text"
+                  id="search"
+                  placeholder="Search tour name.."
+                  onChange={(e) => { setSearchTour(e.target.value) }}
+                />
+                <button
+                  type="submit"
+                  className="btnSearch text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                  Create Tour
-                </Typography>
-                <Button
-                  color="secondary"
-                  onClick={() => setOpenCreateTour(false)}
-                >
-                  <CloseOutlinedIcon />
-                </Button>
-              </DialogTitle>
-              <DialogContent dividers>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      id="Name"
-                      label="Tour Name"
-                      fullWidth
-                      sx={{
-                        mt: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        backgroundColor: '#ffffff',
-                      }}
-                      value={tourName}
-                      onChange={(event) => {
-                        setTourName(event.target.value);
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      id="Description"
-                      label="Tour Description"
-                      fullWidth
-                      sx={{
-                        mt: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        backgroundColor: '#ffffff',
-                      }}
-                      value={tourDes}
-                      onChange={(event) => {
-                        setTourDes(event.target.value);
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      id="Price"
-                      label="Tour Price"
-                      type="number"
-                      onKeyDown={(e) =>
-                        ['e', 'E', '+', '-'].includes(e.key) &&
-                        e.preventDefault()
-                      }
-                      InputProps={{
-                        inputProps: {
-                          min: 1,
-                        },
-                      }}
-                      sx={{
-                        mt: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        backgroundColor: '#ffffff',
-                      }}
-                      value={tourPrice}
-                      onChange={(event) => {
-                        setTourPrice(event.target.value);
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      id="Max Tourist"
-                      label="Max Tourist"
-                      type="number"
-                      onKeyDown={(e) =>
-                        ['e', 'E', '+', '-'].includes(e.key) &&
-                        e.preventDefault()
-                      }
-                      InputProps={{
-                        inputProps: {
-                          min: 1,
-                        },
-                      }}
-                      sx={{
-                        mt: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        backgroundColor: '#ffffff',
-                      }}
-                      value={maxTourist}
-                      onChange={(event) => {
-                        setMaxTourist(event.target.value);
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      id="datetime-local"
-                      label="Start date"
-                      type="datetime-local"
-                      value={startDateTime}
-                      onChange={(event) => {
-                        setStartDateTime(event.target.value);
-                      }}
-                      sx={{ width: '100%' }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      id="datetime-local"
-                      label="End date"
-                      type="datetime-local"
-                      value={endDateTime}
-                      onChange={(event) => {
-                        setEndDateTime(event.target.value);
-                      }}
-                      sx={{ width: '100%' }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      id="Duration"
-                      label="Duration"
-                      fullWidth
-                      sx={{
-                        mt: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        backgroundColor: '#ffffff',
-                      }}
-                      value={duration}
-                      onChange={(event) => {
-                        setDuration(event.target.value);
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      id="Transportion"
-                      label="Transportion"
-                      fullWidth
-                      sx={{
-                        mt: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        backgroundColor: '#ffffff',
-                      }}
-                      value={transportion}
-                      onChange={(event) => {
-                        setTransportion(event.target.value);
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                    <TextField
-                      id="tour-image"
-                      type="file"
-                      fullWidth
-                      sx={{
-                        mt: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        backgroundColor: '#ffffff',
-                      }}
-                      onChange={(event) => {
-                        const selectedImage = event.target.files[0];
-                        console.log(selectedImage);
-                      }}
-                    />
-                  </Grid>
-                </Grid>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  color="secondary"
-                  id="listener-cancel-create-button"
-                  onClick={() => setOpenCreateTour(false)}
-                >
-                  Cancel
-                </Button>
-                <LoadingButton
-                  size="medium"
-                  id="listener-create-button"
-                  variant="contained"
-                >
-                  Create
-                </LoadingButton>
-              </DialogActions>
-            </StyledDialog>
-            <TableContainer>
-              <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                  <TableRow>
-                    {headCells.map((headCell) => (
-                      <TableCell
-                        key={headCell.id}
-                        align={headCell.align ?? 'left'}
-                        style={{
-                          fontWeight: '700',
-                          fontSize: '18px',
-                        }}
-                      >
-                        {headCell.label}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {tours.map((row) => {
-                    return (
-                      <TableRow hover tabIndex={-1} key={row?._id}>
-                        <TableCell>{row.tour_name}</TableCell>
-                        <TableCell>{row.tour_description}</TableCell>
-                        <TableCell>{row.tour_price}$</TableCell>
-                        <TableCell>{row.max_tourist}</TableCell>
-                        <TableCell>
-                          {moment(row.start_date).format('DD/MM/YYYY')}
-                        </TableCell>
-                        <TableCell>
-                          {moment(row.end_date).format('DD/MM/YYYY')}
-                        </TableCell>
-                        <TableCell>
-                          {row.start_position?.location_name}
-                        </TableCell>
-                        <TableCell>
-                          {row.end_position[0]?.location_name}
-                        </TableCell>
-                        <TableCell align={'right'}>
-                          <ActionButton row={row} statusTour={row.isAppove} />
-                        </TableCell>
+                  Search
+                </button>
+              </div>
+            </form>
+          </Box>
+
+          {/* <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <TabContext value={tabValue}>
+              <TabList
+                onChange={(event, newValue) => {
+                  setTabValue(newValue);
+                }}
+                aria-label="card navigation example"
+              >
+                <Tab value="1" label="Approved tour" />
+                <Tab value="2" label="Pending tour" />
+                <Tab value="3" label="rejected tour" />
+                <Tab value="4" label="Overdue tour" />
+              </TabList>
+              <TabPanel value="1" sx={{ p: 0 }}>
+                <TableContainer>
+                  <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                      <TableRow>
+                        {headCells.map((headCell) => (
+                          <TableCell
+                            key={headCell.id}
+                            align={headCell.align ?? 'left'}
+                            style={{ fontWeight: 'bold' }}
+                          >
+                            {headCell.label}
+                          </TableCell>
+                        ))}
                       </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
+                    </TableHead>
+                    <TableBody>
+                      {tours.map((row) => {
+                        if (row.isAppove === 'APPROVE' && row.start_date > currentDate) {
+                          return (
+                            <TableRow hover tabIndex={-1} key={row?._id}>
+                              <TableCell>{row.tour_name}</TableCell>
+                              <TableCell>{row.tour_description}</TableCell>
+                              <TableCell>{row.tour_price}$</TableCell>
+                              <TableCell>{row.max_tourist}</TableCell>
+                              <TableCell>
+                                {moment(row.start_date).format('DD/MM/YYYY')}
+                              </TableCell>
+                              <TableCell>
+                                {moment(row.end_date).format('DD/MM/YYYY')}
+                              </TableCell>
+                              <TableCell>
+                                {row.start_position?.location_name}
+                              </TableCell>
+                              <TableCell>
+                                {row.end_position[0]?.location_name}
+                              </TableCell>
+                              <TableCell align={'right'}>
+                                <ActionButton
+                                  row={row}
+                                  statusTour={row.isAppove}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          );
+                        } else {
+                          return null;
+                        }
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </TabPanel>
+              <TabPanel value="2" sx={{ p: 0 }}>
+                <TableContainer>
+                  <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                      <TableRow>
+                        {headCells.map((headCell) => (
+                          <TableCell
+                            key={headCell.id}
+                            align={headCell.align ?? 'left'}
+                            style={{ fontWeight: 'bold' }}
+                          >
+                            {headCell.label}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {tours.map((row) => {
+                        if (row.isAppove === 'NOTAPPROVE' && row.start_date > currentDate) {
+                          return (
+                            <TableRow hover tabIndex={-1} key={row?._id}>
+                              <TableCell>{row.tour_name}</TableCell>
+                              <TableCell>{row.tour_description}</TableCell>
+                              <TableCell>{row.tour_price}$</TableCell>
+                              <TableCell>{row.max_tourist}</TableCell>
+                              <TableCell>
+                                {moment(row.start_date).format('DD/MM/YYYY')}
+                              </TableCell>
+                              <TableCell>
+                                {moment(row.end_date).format('DD/MM/YYYY')}
+                              </TableCell>
+                              <TableCell>
+                                {row.start_position?.location_name}
+                              </TableCell>
+                              <TableCell>
+                                {row.end_position[0]?.location_name}
+                              </TableCell>
+                              <TableCell align={'right'}>
+                                <ActionButton
+                                  row={row}
+                                  statusTour={row.isAppove}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          );
+                        } else {
+                          return null;
+                        }
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </TabPanel>
+              <TabPanel value="3" sx={{ p: 0 }}>
+                <TableContainer>
+                  <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                      <TableRow>
+                        {headCells.map((headCell) => (
+                          <TableCell
+                            key={headCell.id}
+                            align={headCell.align ?? 'left'}
+                            style={{ fontWeight: 'bold' }}
+                          >
+                            {headCell.label}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {tours.map((row) => {
+                        if (row.isAppove === 'DECLINE' && row.start_date > currentDate) {
+                          return (
+                            <TableRow hover tabIndex={-1} key={row?._id}>
+                              <TableCell>{row.tour_name}</TableCell>
+                              <TableCell>{row.tour_description}</TableCell>
+                              <TableCell>{row.tour_price}$</TableCell>
+                              <TableCell>{row.max_tourist}</TableCell>
+                              <TableCell>
+                                {moment(row.start_date).format('DD/MM/YYYY')}
+                              </TableCell>
+                              <TableCell>
+                                {moment(row.end_date).format('DD/MM/YYYY')}
+                              </TableCell>
+                              <TableCell>
+                                {row.start_position?.location_name}
+                              </TableCell>
+                              <TableCell>
+                                {row.end_position[0]?.location_name}
+                              </TableCell>
+                              <TableCell align={'right'}>
+                                <ActionButton
+                                  row={row}
+                                  statusTour={row.isAppove}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          );
+                        } else {
+                          return null;
+                        }
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </TabPanel>
+              <TabPanel value="4" sx={{ p: 0 }}>
+                <TableContainer>
+                  <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                      <TableRow>
+                        {headCellsOverdue.map((headCell) => (
+                          <TableCell
+                            key={headCell.id}
+                            align={headCell.align ?? 'left'}
+                            style={{ fontWeight: 'bold' }}
+                          >
+                            {headCell.label}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {tours.map((row) => {
+                        if (row.start_date < currentDate) {
+                          return (
+                            <TableRow hover tabIndex={-1} key={row?._id}>
+                              <TableCell>{row.tour_name}</TableCell>
+                              <TableCell>{row.tour_description}</TableCell>
+                              <TableCell>{row.tour_price}$</TableCell>
+                              <TableCell>{row.max_tourist}</TableCell>
+                              <TableCell>
+                                {moment(row.start_date).format('DD/MM/YYYY')}
+                              </TableCell>
+                              <TableCell>
+                                {moment(row.end_date).format('DD/MM/YYYY')}
+                              </TableCell>
+                              <TableCell>
+                                {row.start_position?.location_name}
+                              </TableCell>
+                              <TableCell>
+                                {row.end_position[0]?.location_name}
+                              </TableCell>
+                              <TableCell align={'center'}>
+                                {STATE_ADMIN_TOUR.find(state => state.value === row.isAppove)?.label || 'UNKNOWN'}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        } else {
+                          return null;
+                        }
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </TabPanel>
+            </TabContext>
+          </Paper> */}
+
+          {status ? (
+            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+              <TabContext value={tabValue}>
+                <TabList
+                  onChange={(event, newValue) => {
+                    setTabValue(newValue);
+                  }}
+                  aria-label="card navigation example"
+                >
+                  <Tab value="1" label="Approved tour" />
+                  <Tab value="2" label="Pending tour" />
+                  <Tab value="3" label="rejected tour" />
+                  <Tab value="4" label="Overdue tour" />
+                </TabList>
+                <TabPanel value="1" sx={{ p: 0 }}>
+                  <TableContainer>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {headCells.map((headCell) => (
+                            <TableCell
+                              key={headCell.id}
+                              align={headCell.align ?? 'left'}
+                              style={{ fontWeight: 'bold' }}
+                            >
+                              {headCell.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {tours.map((row) => {
+                          if (row.isAppove === 'APPROVE' && row.start_date > currentDate) {
+                            return (
+                              <TableRow hover tabIndex={-1} key={row?._id}>
+                                <TableCell>{row.tour_name}</TableCell>
+                                <TableCell>{row.tour_description}</TableCell>
+                                <TableCell>{row.tour_price}$</TableCell>
+                                <TableCell>{row.max_tourist}</TableCell>
+                                <TableCell>
+                                  {moment(row.start_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(row.end_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {row.start_position?.location_name}
+                                </TableCell>
+                                <TableCell>
+                                  {row.end_position[0]?.location_name}
+                                </TableCell>
+                                <TableCell align={'right'}>
+                                  <ActionButton
+                                    row={row}
+                                    statusTour={row.isAppove}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
+                <TabPanel value="2" sx={{ p: 0 }}>
+                  <TableContainer>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {headCells.map((headCell) => (
+                            <TableCell
+                              key={headCell.id}
+                              align={headCell.align ?? 'left'}
+                              style={{ fontWeight: 'bold' }}
+                            >
+                              {headCell.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {tours.map((row) => {
+                          if (row.isAppove === 'NOTAPPROVE' && row.start_date > currentDate) {
+                            return (
+                              <TableRow hover tabIndex={-1} key={row?._id}>
+                                <TableCell>{row.tour_name}</TableCell>
+                                <TableCell>{row.tour_description}</TableCell>
+                                <TableCell>{row.tour_price}$</TableCell>
+                                <TableCell>{row.max_tourist}</TableCell>
+                                <TableCell>
+                                  {moment(row.start_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(row.end_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {row.start_position?.location_name}
+                                </TableCell>
+                                <TableCell>
+                                  {row.end_position[0]?.location_name}
+                                </TableCell>
+                                <TableCell align={'right'}>
+                                  <ActionButton
+                                    row={row}
+                                    statusTour={row.isAppove}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
+                <TabPanel value="3" sx={{ p: 0 }}>
+                  <TableContainer>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {headCells.map((headCell) => (
+                            <TableCell
+                              key={headCell.id}
+                              align={headCell.align ?? 'left'}
+                              style={{ fontWeight: 'bold' }}
+                            >
+                              {headCell.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {tours.map((row) => {
+                          if (row.isAppove === 'DECLINE' && row.start_date > currentDate) {
+                            return (
+                              <TableRow hover tabIndex={-1} key={row?._id}>
+                                <TableCell>{row.tour_name}</TableCell>
+                                <TableCell>{row.tour_description}</TableCell>
+                                <TableCell>{row.tour_price}$</TableCell>
+                                <TableCell>{row.max_tourist}</TableCell>
+                                <TableCell>
+                                  {moment(row.start_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(row.end_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {row.start_position?.location_name}
+                                </TableCell>
+                                <TableCell>
+                                  {row.end_position[0]?.location_name}
+                                </TableCell>
+                                <TableCell align={'right'}>
+                                  <ActionButton
+                                    row={row}
+                                    statusTour={row.isAppove}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
+                <TabPanel value="4" sx={{ p: 0 }}>
+                  <TableContainer>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {headCellsOverdue.map((headCell) => (
+                            <TableCell
+                              key={headCell.id}
+                              align={headCell.align ?? 'left'}
+                              style={{ fontWeight: 'bold' }}
+                            >
+                              {headCell.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {tours.map((row) => {
+                          if (row.start_date < currentDate) {
+                            return (
+                              <TableRow hover tabIndex={-1} key={row?._id}>
+                                <TableCell>{row.tour_name}</TableCell>
+                                <TableCell>{row.tour_description}</TableCell>
+                                <TableCell>{row.tour_price}$</TableCell>
+                                <TableCell>{row.max_tourist}</TableCell>
+                                <TableCell>
+                                  {moment(row.start_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(row.end_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {row.start_position?.location_name}
+                                </TableCell>
+                                <TableCell>
+                                  {row.end_position[0]?.location_name}
+                                </TableCell>
+                                <TableCell align={'center'}>
+                                  {STATE_ADMIN_TOUR.find(state => state.value === row.isAppove)?.label || 'UNKNOWN'}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
+              </TabContext>
+            </Paper>
+          ) : (
+            // Search results
+            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+              <TabContext value={tabValue}>
+                <TabList
+                  onChange={(event, newValue) => {
+                    setTabValue(newValue);
+                  }}
+                  aria-label="card navigation example"
+                >
+                  <Tab value="1" label="Approved tour" />
+                  <Tab value="2" label="Pending tour" />
+                  <Tab value="3" label="rejected tour" />
+                  <Tab value="4" label="Overdue tour" />
+                </TabList>
+                <TabPanel value="1" sx={{ p: 0 }}>
+                  <TableContainer>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {headCells.map((headCell) => (
+                            <TableCell
+                              key={headCell.id}
+                              align={headCell.align ?? 'left'}
+                              style={{ fontWeight: 'bold' }}
+                            >
+                              {headCell.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {Array.isArray(searchTour) && searchTour.map((row) => {
+                          if (row.isAppove === 'APPROVE' && row.start_date > currentDate) {
+                            return (
+                              <TableRow hover tabIndex={-1} key={row?._id}>
+                                <TableCell>{row.tour_name}</TableCell>
+                                <TableCell>{row.tour_description}</TableCell>
+                                <TableCell>{row.tour_price}$</TableCell>
+                                <TableCell>{row.max_tourist}</TableCell>
+                                <TableCell>
+                                  {moment(row.start_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(row.end_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {row.start_position?.location_name}
+                                </TableCell>
+                                <TableCell>
+                                  {row.end_position[0]?.location_name}
+                                </TableCell>
+                                <TableCell align={'right'}>
+                                  <ActionButton
+                                    row={row}
+                                    statusTour={row.isAppove}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
+                <TabPanel value="2" sx={{ p: 0 }}>
+                  <TableContainer>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {headCells.map((headCell) => (
+                            <TableCell
+                              key={headCell.id}
+                              align={headCell.align ?? 'left'}
+                              style={{ fontWeight: 'bold' }}
+                            >
+                              {headCell.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {tours.map((row) => {
+                          if (row.isAppove === 'NOTAPPROVE' && row.start_date > currentDate) {
+                            return (
+                              <TableRow hover tabIndex={-1} key={row?._id}>
+                                <TableCell>{row.tour_name}</TableCell>
+                                <TableCell>{row.tour_description}</TableCell>
+                                <TableCell>{row.tour_price}$</TableCell>
+                                <TableCell>{row.max_tourist}</TableCell>
+                                <TableCell>
+                                  {moment(row.start_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(row.end_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {row.start_position?.location_name}
+                                </TableCell>
+                                <TableCell>
+                                  {row.end_position[0]?.location_name}
+                                </TableCell>
+                                <TableCell align={'right'}>
+                                  <ActionButton
+                                    row={row}
+                                    statusTour={row.isAppove}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
+                <TabPanel value="3" sx={{ p: 0 }}>
+                  <TableContainer>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {headCells.map((headCell) => (
+                            <TableCell
+                              key={headCell.id}
+                              align={headCell.align ?? 'left'}
+                              style={{ fontWeight: 'bold' }}
+                            >
+                              {headCell.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {tours.map((row) => {
+                          if (row.isAppove === 'DECLINE' && row.start_date > currentDate) {
+                            return (
+                              <TableRow hover tabIndex={-1} key={row?._id}>
+                                <TableCell>{row.tour_name}</TableCell>
+                                <TableCell>{row.tour_description}</TableCell>
+                                <TableCell>{row.tour_price}$</TableCell>
+                                <TableCell>{row.max_tourist}</TableCell>
+                                <TableCell>
+                                  {moment(row.start_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(row.end_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {row.start_position?.location_name}
+                                </TableCell>
+                                <TableCell>
+                                  {row.end_position[0]?.location_name}
+                                </TableCell>
+                                <TableCell align={'right'}>
+                                  <ActionButton
+                                    row={row}
+                                    statusTour={row.isAppove}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
+                <TabPanel value="4" sx={{ p: 0 }}>
+                  <TableContainer>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {headCellsOverdue.map((headCell) => (
+                            <TableCell
+                              key={headCell.id}
+                              align={headCell.align ?? 'left'}
+                              style={{ fontWeight: 'bold' }}
+                            >
+                              {headCell.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {tours.map((row) => {
+                          if (row.start_date < currentDate) {
+                            return (
+                              <TableRow hover tabIndex={-1} key={row?._id}>
+                                <TableCell>{row.tour_name}</TableCell>
+                                <TableCell>{row.tour_description}</TableCell>
+                                <TableCell>{row.tour_price}$</TableCell>
+                                <TableCell>{row.max_tourist}</TableCell>
+                                <TableCell>
+                                  {moment(row.start_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(row.end_date).format('DD/MM/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                  {row.start_position?.location_name}
+                                </TableCell>
+                                <TableCell>
+                                  {row.end_position[0]?.location_name}
+                                </TableCell>
+                                <TableCell align={'center'}>
+                                  {STATE_ADMIN_TOUR.find(state => state.value === row.isAppove)?.label || 'UNKNOWN'}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </TabPanel>
+              </TabContext>
+            </Paper>
+          )}
         </Card>
       </Grid>
     </Grid>

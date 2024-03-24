@@ -34,14 +34,11 @@ import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Chart from './chart.jsx';
-import BarChartComponent  from './barChart.jsx';
+import BarChartComponent from './barChart.jsx';
 import TableAvatarUSer from './tableAvatarUSer.jsx';
-
 import { useNavigate } from 'react-router-dom';
-
 import { SiYourtraveldottv } from 'react-icons/si';
 import './sidebar.scss';
-
 import avatar from '../../images/avatar.jpg';
 import { Link } from 'react-router-dom';
 
@@ -54,7 +51,7 @@ const menuItems = [
 
 const menuSetting = [
   { text: 'Profile', link: '/admin/profile' },
-  { text: 'Logout', link: '/login'}
+  { text: 'Logout', link: '/login' }
 ]
 
 const drawerWidth = 240;
@@ -184,7 +181,7 @@ const Index = () => {
                 }}
               >
                 <div className="grid place-items-center h-full w-12 text-gray-300">
-                  <SearchIcon className="" />
+                  <SearchIcon />
                 </div>
                 <input
                   className="peer h-full w-full outline-none text-sm text-gray-700 pr-2"
@@ -267,9 +264,6 @@ const Index = () => {
                     justifyContent: open ? 'initial' : 'center',
                     px: 2.5,
                   }}
-                  // component={Link}
-                  // to={text.link}
-
                 >
                   <ListItemIcon
                     onClick={handleLogout}
@@ -406,13 +400,13 @@ const Index = () => {
 
                 <div className="mt-8 flex justify-around">
                   {/* <MonitorChart /> */}
-                  <Chart/>
-                  <TableAvatarUSer/>
-                  <BarChartComponent/>
+                  <Chart />
+                  <TableAvatarUSer />
+                  <BarChartComponent />
                 </div>
 
                 <div className="flex justify-between mb-10">
-                    <TourList />
+                  <TourList />
                 </div>
 
                 <section className="text-neutral-700 dark:text-neutral-300">
