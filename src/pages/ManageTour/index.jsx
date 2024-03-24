@@ -130,13 +130,10 @@ const Index = () => {
     });
     return scheduleCheck ? true : false;
   };
-
-  // useEffect(() => {
-  //   console.log(searchTour);
-  // }, [searchTour]);
-
-
-
+  
+  useEffect(() => {
+    console.log(searchTour);
+  }, [searchTour]);
 
   return (
     <>
