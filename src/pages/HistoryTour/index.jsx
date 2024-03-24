@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Footer, Navbar, NavbarLogin } from '@/layout';
 import Aos from 'aos';
 import { useEffect } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -15,54 +14,67 @@ import {
   Tooltip,
   IconButton,
 } from '@material-tailwind/react';
-
 import { jwtDecode } from 'jwt-decode';
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 import axios from 'axios';
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [logPartner, setLogPartner] = useState(false);
+  const [user, setUser] = useState({});
+  const [booked, setBooked] = useState([]);
+  const [bookedPaid, setBookedPaid] = useState([]);
+  const [mergedBooked, setMergedBooked] = useState();
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
-    const token = localStorage.getItem('token');
     setIsLoggedIn(Boolean(token));
   }, []);
 
   useEffect(() => {
-    Aos.init({ duration: 2000 });
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(Boolean(token));
     if (token) {
       const decodedToken = jwtDecode(token);
       const userId = decodedToken.user_id;
-      axios
-        .get(`http://localhost:8080/api/user/${userId}`)
-        .then((response) => {
-          const userData = response.data.data;
+
+      const fetchUserData = async () => {
+        try {
+          const userDataResponse = await axios.get(`http://localhost:8080/api/user/${userId}`);
+          const userData = userDataResponse.data.data;
           setUser(userData);
+
           const rid = decodedToken.role;
-          console.log(decodedToken);
           if (rid === 'PARTNER') {
             setLogPartner(true);
           } else {
             setLogPartner(false);
           }
-        })
-        .catch((error) => {
+        } catch (error) {
           console.log('Error:', error);
-        });
+        }
+      };
 
-      axios
-        .get(
-          `http://localhost:8080/api/booking/user/${userId}?page=1&pageSize=10`
-        )
-        .then((response) => {
-          const tourBooked = response.data.tour;
-          setBooked(tourBooked);
-          console.log('tourBooked ne ', tourBooked);
-        })
-        .catch((error) => console.log(error));
+      const fetchBookedData = async () => {
+        try {
+          const [bookedResponse, bookedPaidResponse] = await Promise.all([
+            axios.get(`http://localhost:8080/api/booking/user/${userId}?page=1&pageSize=10&status=true`),
+            axios.get(`http://localhost:8080/api/booking/user/${userId}?page=1&pageSize=10&status=false`),
+          ]);
+
+          const bookedData = bookedResponse.data.tour;
+          const bookedPaidData = bookedPaidResponse.data.tour;
+
+          setBooked(bookedData);
+          setBookedPaid(bookedPaidData);
+          setMergedBooked(bookedData.concat(bookedPaidData));
+        } catch (error) {
+          console.log('Error:', error);
+        }
+      };
+
+      fetchUserData();
+      fetchBookedData();
     }
   }, []);
 
@@ -70,11 +82,12 @@ const Index = () => {
     return isPay ? 'Đã thanh toán' : 'Chưa thanh toán';
   };
 
-
-  const [logPartner, setLogPartner] = useState(false);
-  const [user, setUser] = useState({});
-  const [booked, setBooked] = useState([]);
-  const navigate = useNavigate();
+  const isPaid = (payId) => {
+    const bookPaid = booked.find(p => {
+      return p.isPay === true
+    })
+    return bookPaid
+  }
 
   return (
     <>
@@ -107,8 +120,8 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-3" style={{ margin: '5rem' }}>
-          {booked.length > 0 ? (
-            booked.map((tour) => (
+          {Array.isArray(mergedBooked) ? (
+            mergedBooked.map((tour) => (
               <Card
                 key={tour?._id}
                 className="w-full max-w-[26rem] shadow-lg px-6 py-6 mb-7 bg-slate-50 hover:bg-slate-200 hover:cursor-pointer"
@@ -152,7 +165,7 @@ const Index = () => {
                   >
                     <span>Payment status : </span>{' '}
                     <span className="text-red-500">
-                      {handlePaymentStatus(tour?.tour_id?.isPay)}
+                      {handlePaymentStatus(tour?.isPay)}
                     </span>
                   </Typography>
                   <div className="group mt-8 inline-flex flex-wrap items-center gap-3">
@@ -238,8 +251,23 @@ const Index = () => {
                     </Tooltip>
                   </div>
                 </CardBody>
-                <CardFooter className="pt-3 gap-6 grid grid-cols-2">
-                  {tour?.tour_id?.isPay !== 'true' && (
+                {tour?.isPay ? (
+                  <CardFooter className="pt-3 flex justify-center">
+                    <Button
+                      size="md"
+                      fullWidth={true}
+                      style={{
+                        boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)',
+                      }}
+                      className="text-slate-500 bg-slate-300 hover:bg-slate-600 hover:text-slate-50"
+                      onClick={() => navigate(`/tour-detail/${tour.tour_id?._id}`)}
+                    >
+                      Detail Tour
+                    </Button>
+                  </CardFooter>
+
+                ) : (
+                  <CardFooter className="pt-3 gap-6 grid grid-cols-2">
                     <Button
                       size="md"
                       fullWidth={true}
@@ -251,20 +279,21 @@ const Index = () => {
                     >
                       Payment
                     </Button>
-                  )}
 
-                  <Button
-                    size="md"
-                    fullWidth={true}
-                    style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)' }}
-                    className="text-slate-500 bg-slate-300 hover:bg-slate-600 hover:text-slate-50"
-                    onClick={() =>
-                      navigate(`/tour-detail/${tour.tour_id?._id}`)
-                    }
-                  >
-                    Detail Tour
-                  </Button>
-                </CardFooter>
+                    <Button
+                      size="md"
+                      fullWidth={true}
+                      style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)' }}
+                      className="text-slate-500 bg-slate-300 hover:bg-slate-600 hover:text-slate-50"
+                      onClick={() =>
+                        navigate(`/tour-detail/${tour.tour_id?._id}`)
+                      }
+                    >
+                      Detail Tour
+                    </Button>
+                  </CardFooter>
+                )}
+
               </Card>
             ))
           ) : (

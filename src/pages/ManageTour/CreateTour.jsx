@@ -34,6 +34,7 @@ const CreateTour = () => {
     const [duration, setDuration] = useState('');
     const [tax, setTax] = useState('');
     const [errors, setErrors] = useState({});
+    const token = localStorage.getItem('token');
 
     const handleEditorChange = (event, editor) => {
         const htmlData = editor.getData();
@@ -48,7 +49,6 @@ const CreateTour = () => {
         const fetchData = async () => {
             try {
                 Aos.init({ duration: 2000 });
-                const token = localStorage.getItem('token');
                 setIsLoggedIn(Boolean(token));
                 if (token) {
                     const decodedToken = jwtDecode(token);
@@ -196,6 +196,7 @@ const CreateTour = () => {
             toast.error(errorData);
         }
     };
+
     useEffect(() => {
         Aos.init({ duration: 2000 });
         const token = localStorage.getItem('token');

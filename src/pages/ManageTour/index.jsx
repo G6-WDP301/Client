@@ -966,7 +966,7 @@ const Index = () => {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {tours.map((tour, index) => {
+                            {Array.isArray(searchTour) && searchTour.map((tour, index) => {
                               if (
                                 tour.isAppove === 'NOTAPPROVE' &&
                                 tour.start_date > currentDate
@@ -1098,7 +1098,7 @@ const Index = () => {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {tours.map((tour, index) => {
+                            {Array.isArray(searchTour) && searchTour.map((tour, index) => {
                               if (
                                 tour.isAppove === 'DECLINE' &&
                                 tour.start_date > currentDate
@@ -1228,7 +1228,7 @@ const Index = () => {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {tours.map((tour, index) => {
+                            {Array.isArray(searchTour) && searchTour.map((tour, index) => {
                               if (tour.start_date < currentDate) {
                                 return (
                                   <TableRow hover tabIndex={-1} key={tour?._id}>

@@ -120,13 +120,14 @@ export default function index() {
 
   const isTourBooked = (tourId) => {
     const tour = booked.find(t => {
-      return t.user_id === userId & t.tour_id === tourId
+      return t.user_id === userId && t.tour_id === tourId
     })
     return tour ? true : false;
   }
+
   const getBookedTour = (tourId) => {
     const tour = booked.find(t => {
-      return t.user_id === userId & t.tour_id === tourId
+      return t.user_id === userId && t.tour_id === tourId
     })
     return tour;
   }

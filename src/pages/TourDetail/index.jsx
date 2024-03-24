@@ -156,6 +156,7 @@ export default function index() {
       currency: 'VND',
     }).format(price);
   };
+
   const [allPoints, setAllPoints] = React.useState([]);
   const [points, setTours] = React.useState([]);
   const [open, setOpen] = React.useState(false);
@@ -168,7 +169,10 @@ export default function index() {
   const allTourLength = allPoints.length;
   const token = localStorage.getItem('token');
   const [schedule, setSchedule] = useState([]);
-  const [calculateDate, setCaculateDate] = useState('');
+  const [calculateDate, setCaculateDate] = useState('')
+  const [booked, setBooked] = useState([]);
+  const [bookedPaid, setBookedPaid] = useState([]);
+  const [mergedBooked, setMergedBooked] = useState();
 
   const handleToggle = () => {
     setOpen(!open);
@@ -219,7 +223,6 @@ export default function index() {
           const userData = response.data.data;
           setUser(userData);
           const rid = decodedToken.role;
-          console.log(decodedToken);
           if (rid === 'PARTNER') {
             setLogPartner(true);
           } else {
@@ -229,8 +232,30 @@ export default function index() {
         .catch((error) => {
           console.log('Error:', error);
         });
+
+      const fetchBookedData = async () => {
+        try {
+          const [bookedResponse, bookedPaidResponse] = await Promise.all([
+            axios.get(`http://localhost:8080/api/booking/user/${userId}?page=1&pageSize=10&status=true`),
+            axios.get(`http://localhost:8080/api/booking/user/${userId}?page=1&pageSize=10&status=false`),
+          ]);
+
+          const bookedData = bookedResponse.data.tour;
+          const bookedPaidData = bookedPaidResponse.data.tour;
+
+          setBooked(bookedData);
+          setBookedPaid(bookedPaidData);
+          setMergedBooked(bookedData.concat(bookedPaidData));
+        } catch (error) {
+          console.log('Error:', error);
+        }
+      }
+
+      fetchBookedData();
     }
   }, [id]);
+
+  console.log(mergedBooked);
 
   useEffect(() => {
     const cDate = async () => {
@@ -256,7 +281,6 @@ export default function index() {
         const response = await axios.get(`http://localhost:8080/api/schedule/${id}`)
         const dSchedule = response.data.schedules;
         setSchedule(dSchedule);
-        console.log(dSchedule);
       } catch (error) {
         console.log(error);
       }
@@ -265,39 +289,12 @@ export default function index() {
     dataSchedule();
   }, [])
 
-  // const schedule = [
-  //   {
-  //     _id: {
-  //       $oid: '65f3be5815908324cf2d3aee',
-  //     },
-  //     schedule_name: 'Day by day',
-  //     schedule_detail: 'Wonderful',
-  //     schedule_date: '2024-04-10T00:00:00.000Z',
-  //     tour_id: '65e0916596ae35c745213581',
-  //   },
-  //   {
-  //     _id: '65fd161bda56b659567a5819',
-  //     schedule_name: 'Vào dải ngân hà',
-  //     schedule_detail:
-  //       'SB NỘI BÀI – HÀ NỘI',
-  //     schedule_date: '2024-04-25T00:00:00.000Z',
-  //     tour_id: '65e1527d8e0780c0e38d6f69',
-  //   },
-  //   {
-  //     _id: '65fd161bda56b659567a5819',
-  //     schedule_name: 'Vào oke',
-  //     schedule_detail: 'SB NỘI BÀI ',
-  //     schedule_date: '2024-04-25T00:00:00.000Z',
-  //     tour_id: '65e1527d8e0780c0e38d6f69',
-  //   },
-  //   {
-  //     _id: '65fd161bda56b659567a5819',
-  //     schedule_name: 'Vào day',
-  //     schedule_detail: 'SB NỘI BÀI ',
-  //     schedule_date: '2024-05-25T00:00:00.000Z',
-  //     tour_id: '65e1527d8e0780c0e38d6f69',
-  //   },
-  // ];
+  const isPaid = (tourId) => {
+    const bookedData = mergedBooked.find(t => {
+      return t.tour_id._id === tourId && t.tour_id.isPay === true
+    })
+    return bookedData ? true : false
+  }
 
   return (
     <>
@@ -337,6 +334,7 @@ export default function index() {
                   backgroundColor: 'rgba(255, 255, 255, 0.8',
                 }}
               >
+
                 <Grid item xs={12} sm={6} sx={{ textAlign: 'left' }}>
                   <Typography
                     variant="h5"
@@ -354,34 +352,38 @@ export default function index() {
                     Thời gian: {calculateDate}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-                  <Typography
-                    sx={{
-                      marginBottom: '8px',
-                      fontFamily: 'Arial',
-                      fontSize: '20px',
-                      fontWeight: 'bold',
-                      color: '#fa4807',
-                    }}
-                  >
-                    {tourData?.tour_price} $ / person
-                  </Typography>
-                  <Button
-                    style={{
-                      background:
-                        'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-                      border: 0,
-                      borderRadius: 3,
-                      boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-                      color: 'white',
-                      height: 48,
-                      padding: '0 30px',
-                    }}
-                    onClick={() => handleBooking(tourData?._id)}
-                  >
-                    Booking now
-                  </Button>
-                </Grid>
+
+                {[tourData].map((listBooked) =>
+                  <Grid key={listBooked?._id} item xs={12} sm={12} sx={{ textAlign: 'right' }}>
+                    {/* {isPaid(listBooked?._id) } */}
+                    <Typography
+                      sx={{
+                        marginBottom: '8px',
+                        fontFamily: 'Arial',
+                        fontSize: '20px',
+                        fontWeight: 'bold',
+                        color: '#fa4807',
+                      }}
+                    >
+                      {tourData?.tour_price} $ / person
+                    </Typography>
+                    <Button
+                      style={{
+                        background:
+                          'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+                        border: 0,
+                        borderRadius: 3,
+                        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+                        color: 'white',
+                        height: 48,
+                        padding: '0 30px',
+                      }}
+                      onClick={() => handleBooking(tourData?._id)}
+                    >
+                      Booking now
+                    </Button>
+                  </Grid>
+                )}
               </Grid>
 
               <Typography
@@ -466,7 +468,6 @@ export default function index() {
                                 <Button
                                   sx={{
                                     textTransform: 'none',
-                                    // justifyContent: "flex-start"
                                   }}
                                   onClick={handleToggle}
                                   endIcon={
