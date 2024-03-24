@@ -73,6 +73,7 @@ export default function index() {
       .then((response) => {
         const tourData = response.data.tours;
         setTours(tourData);
+        console.log("tour data", tourData)
         setHasFilteredTours(tourData.length > 0);
       })
       .catch(error => console.log(error));
@@ -347,17 +348,17 @@ export default function index() {
             applyPriceFilter(tours).map((list) => (
               <figure className="w-full md:w-[45%] xl:w-[30%] h-[450px] relative photo transition-all duration-1000">
                 <div className="w-[100%] h-[100%] bottom-photo absolute bg-color7 flex flex-col justify-center px-5">
-                  <p className="text-3xl text-color3 capitalize font-secondary">
+                  <p className="text-2xl text-center uppercase font-bold font-sans text-color3 font-secondary">
                     {list.tour_name}
                   </p>
                   <p className="text-color1 mb-4" style={{ paddingTop: "10px" }}>{list.tour_price}$</p>
                   <p className="text-color6">{list.tour_description}</p>
-                  <div className="flex flex-wrap my-4">
-                    <div className="w-[50%] flex">
+                  <div className="flex my-4 gap-4">
+                    <div className="w-[100%] flex">
                       <i className="bi bi-clock text-color4"></i>
-                      <p className="text-color6 ms-2">Time:{list.duration}h</p>
+                      <p className="text-color6 ms-2">Time: {list.duration}h</p>
                     </div>
-                    <div className="w-[50%] flex">
+                    <div className="w-[100%] flex">
                       <i className="bi bi-geo-alt text-color4"></i>
                       <p className="text-color6 ms-2">{list.start_position?.location_name}</p>
                     </div>
@@ -398,7 +399,7 @@ export default function index() {
                   {list.start_position?.location_name}
                 </p>
                 <figcaption className="absolute text-white bottom-8 right-10 fig">
-                  <p className="capitalize font-secondary text-3xl" style={{ paddingLeft: "20px", paddingBottom: "90px" }}>
+                  <p className="uppercase font-bold font-sans text-3xl text-center text-slate-100" style={{ paddingLeft: "20px", paddingBottom: "90px" }}>
                     {list.tour_name}
                   </p>
                   <p className="text-right">{list.tour_price} $ / person</p>

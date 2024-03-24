@@ -20,6 +20,22 @@ import {
   IconButton,
 } from '@material-tailwind/react';
 
+import { styled } from '@mui/material/styles';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import CloseIcon from '@mui/icons-material/Close';
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(2),
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(1),
+  },
+}));
+
 export default function index() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({});
@@ -28,7 +44,7 @@ export default function index() {
 
   const navigate = useNavigate();
 
-  const [logPartner, setLogPartner] = useState(false);  
+  const [logPartner, setLogPartner] = useState(false);
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -43,7 +59,7 @@ export default function index() {
           const userData = response.data.data;
           setUser(userData);
           const rid = decodedToken.role;
-          console.log(decodedToken)
+          console.log(decodedToken);
           if (rid === 'PARTNER') {
             setLogPartner(true);
           } else {
@@ -55,17 +71,31 @@ export default function index() {
         });
 
       // Get tours that user booked
-      axios.get(`http://localhost:8080/api/booking/user/${userId}?page=1&pageSize=10`)
+      axios
+        .get(
+          `http://localhost:8080/api/booking/user/${userId}?page=1&pageSize=10`
+        )
         .then((response) => {
           const tourBooked = response.data.tour;
           setBooked(tourBooked);
-          console.log("tourBooked ne ", tourBooked);
+          console.log('tourBooked ne ', tourBooked);
         })
-        .catch(error => console.log(error));
+        .catch((error) => console.log(error));
     }
-
-
   }, []);
+
+  const handlePaymentStatus = (isPay) => {
+    return isPay ? 'Đã thanh toán' : 'Chưa thanh toán';
+  };
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
@@ -78,10 +108,12 @@ export default function index() {
       ) : (
         <Navbar />
       )}
-      <section className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50" style={{ height: "70px" }}>
+      <section
+        className="w-full bg-boat bg-cover bg-bottom bg-no-repeat h-[50vh] flex justify-center bg-color2 bg-blend-multiply bg-opacity-50"
+        style={{ height: '70px' }}
+      >
         <div className="w-full container flex justify-center items-center flex-col">
-          <p className="text-white font-secondary text-3xl 2xl:text-6xl">
-          </p>
+          <p className="text-white font-secondary text-3xl 2xl:text-6xl"></p>
         </div>
       </section>
 
@@ -100,7 +132,7 @@ export default function index() {
                 className="w-40 border-4 border-white rounded-full"
               />
               <div className="flex items-center space-x-2 mt-2">
-                <p className="text-2xl">{user.username}</p>
+                <p className="text-2xl text-white">{user.username}</p>
                 <span className="bg-blue-500 rounded-full p-1" title="Verified">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -119,17 +151,13 @@ export default function index() {
                 </span>
               </div>
               {isPopupVisible && (
-                <div className="popup">
-                  {
-                    <h1>Popup nek</h1>
-                  }
-                </div>
+                <div className="popup">{<h1>Popup nek</h1>}</div>
               )}
-              <p className="text-sm text-gray-500">{user.address}</p>
+              <p className="text-sm text-gray-100">{user.address}</p>
             </div>
             <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
               <div className="flex items-center space-x-4 mt-2">
-                <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                <button onClick={handleClickOpen} className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4"
@@ -138,8 +166,20 @@ export default function index() {
                   >
                     <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
                   </svg>
-                  <svg className="w-5 h-5 text-slate-50 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z" />
+                  <svg
+                    className="w-5 h-5 text-slate-50 dark:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"
+                    />
                   </svg>
                   <span>Edit</span>
                 </button>
@@ -160,7 +200,9 @@ export default function index() {
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Birthday:</span>
-                    <span className="text-gray-700">{moment(user.dob).format("DD/MM/YYYY")}</span>
+                    <span className="text-gray-700">
+                      {moment(user.dob).format('DD/MM/YYYY')}
+                    </span>
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Joined:</span>
@@ -174,9 +216,7 @@ export default function index() {
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Email:</span>
-                    <span className="text-gray-700">
-                      {user.email}
-                    </span>
+                    <span className="text-gray-700">{user.email}</span>
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Address:</span>
@@ -208,13 +248,17 @@ export default function index() {
                 </svg>
               </a>
             </div>
-            <div className="mt-10 mb-10 grid grid-cols-3">
+            <div className="grid grid-cols-3 gap-12" style={{ margin: '5rem' }}>
               {booked.length > 0 ? (
                 booked.map((tour) => (
-                  <Card key={tour?._id} className="w-full max-w-[26rem] shadow-lg px-6 py-6 mb-7 hover:bg-slate-100 hover:cursor-pointer">
+                  <Card
+                    key={tour?._id}
+                    className="w-full max-w-[26rem] shadow-lg px-6 py-6 mb-7 bg-slate-50 hover:bg-slate-200 hover:cursor-pointer"
+                  >
                     <CardHeader floated={false} color="blue-gray">
                       <img
                         src={tour.tour_id?.tour_img}
+                        style={{ width: '500px', height: '250px' }}
                       />
                       <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
                       <IconButton
@@ -238,31 +282,23 @@ export default function index() {
                         <Typography
                           variant="h5"
                           color="blue-gray"
-                          className="font-medium pb-2 pt-5"
+                          className="font-bold font-sans text-2xl text-center pb-2"
                         >
                           {tour.tour_id?.tour_name}
-                        </Typography>
-                        <Typography
-                          color="blue-gray"
-                          className="flex items-center gap-1.5 font-normal"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            className="-mt-0.5 h-5 w-5 text-yellow-700"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          {tour.tour_id?.duration}
                         </Typography>
                       </div>
                       <Typography color="gray">
                         {tour.tour_id?.tour_description}
+                      </Typography>
+                      <Typography
+                        color="gray"
+                        className="bg-slate-100 p-2"
+                        style={{ marginTop: '1rem', borderRadius: '5px' }}
+                      >
+                        <span>Payment status: </span>{' '}
+                        <span className="text-red-500">
+                          {handlePaymentStatus(tour?.tour_id?.isPay)}
+                        </span>
                       </Typography>
                       <div className="group mt-8 inline-flex flex-wrap items-center gap-3">
                         <Tooltip content="$129 per night">
@@ -345,21 +381,35 @@ export default function index() {
                             </svg>
                           </span>
                         </Tooltip>
-                        <Tooltip content="And +20 more">
-                          <span className="cursor-pointer rounded-full border border-gray-900/5 bg-gray-900/5 p-3 text-gray-900 transition-colors hover:border-gray-900/10 hover:bg-gray-900/10 hover:!opacity-100 group-hover:opacity-70">
-                            +20
-                          </span>
-                        </Tooltip>
                       </div>
                     </CardBody>
-                    <CardFooter className="pt-3">
-                      <Button 
-                      size="md" 
-                      fullWidth={true} 
-                      className='text-slate-500 hover:bg-slate-300 hover:text-slate-50'
-                      onClick={() => navigate(`/tour-detail/${tour.tour_id?._id}`)}
+                    <CardFooter className="pt-3 gap-6 grid grid-cols-2">
+                      {tour?.tour_id?.isPay !== 'true' && (
+                        <Button
+                          size="md"
+                          fullWidth={true}
+                          style={{
+                            boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)',
+                          }}
+                          className="text-slate-500 bg-slate-300 hover:bg-slate-600 hover:text-slate-50"
+                          onClick={() =>
+                            navigate(`/payment/${tour.tour_id?._id}`)
+                          }
+                        >
+                          Payment
+                        </Button>
+                      )}
+
+                      <Button
+                        size="md"
+                        fullWidth={true}
+                        style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.4)' }}
+                        className="text-slate-500 bg-slate-300 hover:bg-slate-600 hover:text-slate-50"
+                        onClick={() =>
+                          navigate(`/tour-detail/${tour.tour_id?._id}`)
+                        }
                       >
-                        Detour tour
+                        Detail Tour
                       </Button>
                     </CardFooter>
                   </Card>
@@ -367,9 +417,7 @@ export default function index() {
               ) : (
                 <Card className="w-full max-w-[26rem] shadow-lg px-6 py-6 mb-7 hover:bg-slate-100 hover:cursor-pointer">
                   <CardHeader floated={false} color="blue-gray">
-                    <img
-                      src="https://th.bing.com/th/id/OIP.d3Q4E84qw3LPQ2v4NugfDgHaFP?w=275&h=194&c=7&r=0&o=5&pid=1.7"
-                    />
+                    <img src="https://th.bing.com/th/id/OIP.d3Q4E84qw3LPQ2v4NugfDgHaFP?w=275&h=194&c=7&r=0&o=5&pid=1.7" />
                     <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
                   </CardHeader>
                   <CardBody>
@@ -384,11 +432,11 @@ export default function index() {
                     </div>
                   </CardBody>
                   <CardFooter className="pt-3">
-                    <Button 
-                    size="md" 
-                    fullWidth={true} 
-                    className='text-slate-500 hover:bg-slate-300 hover:text-slate-50'
-                    onClick={() => navigate('/list-tour')}
+                    <Button
+                      size="md"
+                      fullWidth={true}
+                      className="text-slate-500 hover:bg-slate-300 hover:text-slate-50"
+                      onClick={() => navigate('/list-tour')}
                     >
                       Go to booking now
                     </Button>
@@ -399,6 +447,43 @@ export default function index() {
           </div>
         </div>
       </section>
+
+      <React.Fragment>
+        <BootstrapDialog
+          onClose={handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={open}
+        >
+          <div className='flex gap-96 items-center'>
+            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+              Modal title
+            </DialogTitle>
+            <CloseIcon onClick={handleClose} className='hover:cursor-pointer'/>
+          </div>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+              dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
+              ac consectetur ac, vestibulum at eros.
+            </Typography>
+            <Typography gutterBottom>
+              Praesent commodo cursus magna, vel scelerisque nisl consectetur
+              et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
+              auctor.
+            </Typography>
+            <Typography gutterBottom>
+              Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
+              cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
+              dui. Donec ullamcorper nulla non metus auctor fringilla.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose}>
+              Save changes
+            </Button>
+          </DialogActions>
+        </BootstrapDialog>
+      </React.Fragment>
     </>
   );
 }
