@@ -69,7 +69,7 @@ const Index = () => {
   const handlePaymentStatus = (isPay) => {
     return isPay ? 'Đã thanh toán' : 'Chưa thanh toán';
   };
-  
+
 
   const [logPartner, setLogPartner] = useState(false);
   const [user, setUser] = useState({});
@@ -114,7 +114,7 @@ const Index = () => {
                 className="w-full max-w-[26rem] shadow-lg px-6 py-6 mb-7 bg-slate-50 hover:bg-slate-200 hover:cursor-pointer"
               >
                 <CardHeader floated={false} color="blue-gray">
-                  <img src={tour.tour_id?.tour_img} style={{ width: '500px', height: '300px' }}/>
+                  <img src={tour.tour_id?.tour_img} style={{ width: '500px', height: '300px' }} />
                   <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
                   <IconButton
                     size="sm"
@@ -150,9 +150,9 @@ const Index = () => {
                     className="bg-slate-100 p-2"
                     style={{ marginTop: '1rem', borderRadius: '5px' }}
                   >
-                    <span>Payment status: </span>{' '}
+                    <span>Payment status : </span>{' '}
                     <span className="text-red-500">
-                        {handlePaymentStatus(tour?.tour_id?.isPay)}
+                      {handlePaymentStatus(tour?.tour_id?.isPay)}
                     </span>
                   </Typography>
                   <div className="group mt-8 inline-flex flex-wrap items-center gap-3">

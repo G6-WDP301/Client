@@ -142,7 +142,6 @@ const Index = () => {
 
   useEffect(() => {
     console.log(searchTour);
-    // if(searchTour) 
   }, [searchTour]);
 
 

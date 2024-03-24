@@ -12,14 +12,6 @@ import {
 } from '@mui/material';
 import Navbar from '../../layout/Navbar';
 import NavbarLogin from '../../layout/NavbarLogin/index'
-import img from '../../images/image_hotel(1).jpg';
-import img1 from '../../images/image_hotel(2).jpg';
-import img2 from '../../images/image_hotel(3).jpg';
-import img3 from '../../images/image_hotel(4).jpg';
-import maldivies from '../../images/maldives1.jpg';
-import canada from '../../images/canada1.jpg';
-import map from '../../images/map.jpg';
-import france from '../../images/france1.jpg';
 import Footer from '../../layout/Footer';
 import { useState } from 'react';
 import EventIcon from '@mui/icons-material/Event';
@@ -56,10 +48,8 @@ const BookingTour = () => {
   const [email, setEmail] = useState('');
   const [telephone, setTelephone] = useState('');
   const [address, setAddress] = useState('');
-  const [fullNamePeople, setFullNamePeople] = useState('');
-  const [gender, setGender] = useState('Male');
-  const [numberPhone, setNumberPhone] = useState('');
-  const [addressPeople, setAddressPeople] = useState('');
+  const [tourData, setTourData] = useState([]);
+  const [user, setUser] = useState({});
 
   const handleBirthDateChange = (event) => {
     const selectedDate = new Date(event.target.value);
@@ -85,9 +75,6 @@ const BookingTour = () => {
     setOption2Checked(true);
     setOption1Checked(false);
   };
-
-  const [tourData, setTourData] = useState([]);
-  const [user, setUser] = useState({});
 
   const { id } = useParams();
 
@@ -129,7 +116,7 @@ const BookingTour = () => {
 
   useEffect(() => {
     localStorage.setItem('numberPeople', numberPeople);
-  }, [numberPeople]); 
+  }, [numberPeople]);
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -139,7 +126,6 @@ const BookingTour = () => {
       .then((response) => {
         const tours = Object.values(response.data.tour);
         setTourData(tours);
-        console.log(tours);
       })
       .catch(error => console.log(error));
   }, []);
@@ -157,7 +143,6 @@ const BookingTour = () => {
           const userData = response.data.data;
           setUser(userData);
           const rid = decodedToken.role;
-          console.log(decodedToken)
           if (rid === 'PARTNER') {
             setLogPartner(true);
           } else {
@@ -176,6 +161,15 @@ const BookingTour = () => {
     const value = event.target.value;
     setNumberPeople(value);
   };
+
+  useEffect(() => {
+    if (user) {
+      setFullName(user.username || '');
+      setEmail(user.email || '');
+      setTelephone(user.phoneNumber || '');
+      setAddress(user.address || '');
+    }
+  }, [user])
 
   return (
     <>
@@ -358,6 +352,7 @@ const BookingTour = () => {
                           id="additionalText1"
                           label="Họ và tên"
                           fullWidth
+                          InputLabelProps={{ shrink: true }}
                           sx={{
                             mt: 2,
                             display: 'flex',
@@ -376,6 +371,7 @@ const BookingTour = () => {
                           id="email"
                           label="Emai"
                           fullWidth
+                          InputLabelProps={{ shrink: true }}
                           sx={{
                             mt: 2,
                             display: 'flex',
@@ -394,6 +390,7 @@ const BookingTour = () => {
                           id="sdt"
                           label="Số điện thoại"
                           fullWidth
+                          InputLabelProps={{ shrink: true }}
                           sx={{
                             mt: 2,
                             display: 'flex',
@@ -412,6 +409,7 @@ const BookingTour = () => {
                           id="additionalText4"
                           label="Địa chỉ"
                           fullWidth
+                          InputLabelProps={{ shrink: true }}
                           sx={{
                             mt: 2,
                             display: 'flex',
@@ -428,6 +426,7 @@ const BookingTour = () => {
                     </Grid>
                   </FormGroup>
                 </Grid>
+
                 <Typography
                   variant="h3"
                   sx={{

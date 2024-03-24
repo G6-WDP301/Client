@@ -78,11 +78,11 @@
     box-shadow: 0 2px 4px 3px rgba(194, 193, 193, 0.2);
 }
 
-.rounded-lg {
-    border-radius: 5rem !important;
-
-}
-
 .inputStyle {
     width: 350px !important;
+    border-radius: 3rem !important;
+}
+
+.btnSearch {
+    border-radius: 100px !important;
 }
