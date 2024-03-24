@@ -15,16 +15,19 @@ import {
   Button,
   Paper,
   Box,
+  Tab,
 } from '@mui/material';
 import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+
 import { jwtDecode } from 'jwt-decode';
 import moment from 'moment';
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
-import { toast } from 'react-toastify';
+import { STATE_ADMIN_TOUR } from '../utils/components/StateAdmin.jsx';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -32,8 +35,8 @@ const Index = () => {
   const [user, setUser] = useState({});
   const [tours, setTours] = useState([]);
   const [schedule, setSchedule] = useState([]);
-  const [searchTour, setSearchTour] = useState([]);
-  const [status, setStatus] = useState(true);
+  const [tabValue, setTabValue] = useState('1');
+  const currentDate = new Date().toISOString();
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
@@ -66,8 +69,6 @@ const Index = () => {
     }
   }, []);
 
-
-
   const headCells = [
     { id: 'id', label: 'ID Number', filterable: true },
     { id: 'Name', label: 'Name', filterable: false },
@@ -78,6 +79,12 @@ const Index = () => {
     { id: 'Start Date', label: 'Start Date', filterable: false },
     { id: 'Start Positon', label: 'Start Positon', filterable: false },
     { id: 'End Positon', label: 'End Positon', filterable: false },
+    {
+      id: 'review-status',
+      label: 'Review Status',
+      filterable: false,
+      align: 'center',
+    },
     {
       id: 'action-button',
       label: 'Action Button',
@@ -107,7 +114,7 @@ const Index = () => {
       .get('http://localhost:8080/api/schedule/all')
       .then((response) => {
         const scheduleData = response.data.data;
-        setSchedule(scheduleData)
+        setSchedule(scheduleData);
       })
       .catch((error) => console.log(error));
   };
@@ -117,34 +124,11 @@ const Index = () => {
   }, []);
 
   const isTourSchedule = (tourId) => {
-    const scheduleCheck = schedule.find(tour => {
+    const scheduleCheck = schedule.find((tour) => {
       return tour.tour_id === tourId;
-    })
+    });
     return scheduleCheck ? true : false;
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.get(`http://localhost:8080/api/tour/search?page=1&pageSize=10&query=${searchTour}`);
-      const searchedTour = response.data.tours;
-      setSearchTour(searchedTour);
-      setStatus(false)
-      toast.success('Wait a few seconds ~')
-    } catch (error) {
-      const errorData = error.response.data.error;
-      console.log(errorData);
-      setStatus(true)
-      toast.error(errorData)
-    }
   };
-
-  useEffect(() => {
-    console.log(searchTour);
-    // if(searchTour) 
-  }, [searchTour]);
-
 
   const navigate = useNavigate();
 
@@ -198,8 +182,8 @@ const Index = () => {
                 </div>
               </Grid>
               <Grid item xs={3} style={{ textAlign: 'right' }}>
-                <div style={{ marginBottom: '1rem', textAlign: 'right' }} >
-                  <form className="max-w-sm" onSubmit={handleSubmit}>
+                <div style={{ marginBottom: '1rem', textAlign: 'right' }}>
+                  <form className="max-w-sm">
                     <label
                       for="default-search"
                       className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -228,9 +212,8 @@ const Index = () => {
                         type="search"
                         id="default-search"
                         className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search tour name..."
+                        placeholder="Search Tour Name..."
                         required
-                        onChange={(e) => { setSearchTour(e.target.value) }}
                       />
                       <button
                         type="submit"
@@ -251,178 +234,551 @@ const Index = () => {
               />
 
               <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer>
-                  <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
-                      <TableRow>
-                        {headCells.map((headCell) => (
-                          <TableCell
-                            key={headCell.id}
-                            align={headCell.align ?? 'left'}
-                            style={{ fontWeight: 'bold' }}
-                          >
-                            {headCell.label}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-
-                    {status ? (
-                      <TableBody>
-                        {tours.map((tour, index) => {
-                          return (
-                            <TableRow hover tabIndex={-1} key={tour?._id}>
-                              <TableCell align={'left'}>{index + 1}</TableCell>
-                              <TableCell>{tour?.tour_name}</TableCell>
-                              <TableCell>{tour?.tour_description}</TableCell>
-                              <TableCell>{tour?.tour_price}$</TableCell>
-                              <TableCell>{tour?.discount}</TableCell>
-                              <TableCell>{tour?.max_tourist}</TableCell>
-                              <TableCell>
-                                {moment(tour?.start_date).format('DD/MM/YYYY')}
+                <TabContext value={tabValue}>
+                  <TabList
+                    onChange={(event, newValue) => {
+                      setTabValue(newValue);
+                    }}
+                    aria-label="card navigation example"
+                  >
+                    <Tab value="1" label="Approved tour" />
+                    <Tab value="2" label="Pending tour" />
+                    <Tab value="3" label="rejected tour" />
+                    <Tab value="4" label="Overdue tour" />
+                  </TabList>
+                  <TabPanel value="1" sx={{ p: 0 }}>
+                    <TableContainer>
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            {headCells.map((headCell) => (
+                              <TableCell
+                                key={headCell.id}
+                                align={headCell.align ?? 'left'}
+                                style={{ fontWeight: 'bold' }}
+                              >
+                                {headCell.label}
                               </TableCell>
-                              <TableCell>{tour?.start_position?.location_name}</TableCell>
-                              {tour.end_position && tour.end_position.length !== 0 ? (
-                                <TableCell>{tour?.end_position[0]?.location_name}</TableCell>
-                              ) : (
-                                <TableCell>{tour?.end_position?.location_name}</TableCell>
-                              )}
-
-                              <TableCell align={'center'}>
-                                {isTourSchedule(tour?._id) ?
-                                  (
-                                    <Box display="flex" justifyContent="center">
-                                      <Tooltip title="View Detail">
-                                        <Button
-                                          variant="contained"
-                                          color="primary"
-                                          sx={{
-                                            minWidth: '32px',
-                                            marginRight: '4px',
-                                          }}
-                                          onClick={() => navigate(`/manage-detail-tour/${tour?._id}`)}
-                                        >
-                                          <VisibilityIcon />
-                                        </Button>
-                                      </Tooltip>
-                                      &nbsp;
-                                      <Tooltip title="Edit Tour">
-                                        <Button
-                                          variant="contained"
-                                          color="primary"
-                                          sx={{
-                                            minWidth: '32px',
-                                            marginRight: '4px',
-                                          }}
-                                          onClick={() => navigate(`/manage-edit-tour/${tour?._id}`)}
-                                        >
-                                          <EditIcon />
-                                        </Button>
-                                      </Tooltip>
-                                    </Box>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {tours.map((tour, index) => {
+                            if (
+                              tour.isAppove === 'APPROVE' &&
+                              tour.start_date > currentDate
+                            ) {
+                              return (
+                                <TableRow hover tabIndex={-1} key={tour?._id}>
+                                  <TableCell align={'left'}>
+                                    {index + 1}
+                                  </TableCell>
+                                  <TableCell>{tour?.tour_name}</TableCell>
+                                  <TableCell>
+                                    {tour?.tour_description}
+                                  </TableCell>
+                                  <TableCell>{tour?.tour_price}$</TableCell>
+                                  <TableCell>
+                                    {/* {tour?.discount} */}
+                                  </TableCell>
+                                  <TableCell>{tour?.max_tourist}</TableCell>
+                                  <TableCell>
+                                    {moment(tour?.start_date).format(
+                                      'DD/MM/YYYY'
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    {tour?.start_position?.location_name}
+                                  </TableCell>
+                                  {tour.end_position &&
+                                  tour.end_position.length !== 0 ? (
+                                    <TableCell>
+                                      {tour?.end_position[0]?.location_name}
+                                    </TableCell>
                                   ) : (
-                                    <Tooltip title="Create Schedule now ">
-                                      <Button
-                                        variant="contained"
-                                        color="primary"
-                                        sx={{
-                                          minWidth: '32px',
-                                          marginRight: '4px',
-                                        }}
-                                        onClick={() => navigate(`/create-schedule/${tour?._id}`)}
-                                      >
-                                        <CalendarMonthIcon />
-                                      </Button>
-                                    </Tooltip>
+                                    <TableCell>
+                                      {tour?.end_position?.location_name}
+                                    </TableCell>
                                   )}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    ) : (
-                      <TableBody>
-                        {Array.isArray(searchTour) && searchTour.map((tour, index) => {
-                          return (
-                            <TableRow hover tabIndex={-1} key={tour?._id}>
-                              <TableCell align={'left'}>{index + 1}</TableCell>
-                              <TableCell>{tour?.tour_name}</TableCell>
-                              <TableCell>{tour?.tour_description}</TableCell>
-                              <TableCell>{tour?.tour_price}$</TableCell>
-                              <TableCell>{tour?.discount}</TableCell>
-                              <TableCell>{tour?.max_tourist}</TableCell>
-                              <TableCell>
-                                {moment(tour?.start_date).format('DD/MM/YYYY')}
-                              </TableCell>
-                              <TableCell>{tour?.start_position?.location_name}</TableCell>
-                              {tour.end_position && tour.end_position.length !== 0 ? (
-                                <TableCell>{tour?.end_position[0]?.location_name}</TableCell>
-                              ) : (
-                                <TableCell>{tour?.end_position?.location_name}</TableCell>
-                              )}
+                                  <TableCell>
+                                    {STATE_ADMIN_TOUR.find(
+                                      (state) => state.value === tour.isAppove
+                                    )?.label || 'UNKNOWN'}
+                                  </TableCell>
 
-                              <TableCell align={'center'}>
-                                {isTourSchedule(tour?._id) ?
-                                  (
-                                    <Box display="flex" justifyContent="center">
-                                      <Tooltip title="View Detail">
-                                        <Button
-                                          variant="contained"
-                                          color="primary"
-                                          sx={{
-                                            minWidth: '32px',
-                                            marginRight: '4px',
-                                          }}
-                                          onClick={() => navigate(`/manage-detail-tour/${tour?._id}`)}
-                                        >
-                                          <VisibilityIcon />
-                                        </Button>
-                                      </Tooltip>
-                                      &nbsp;
-                                      <Tooltip title="Edit Tour">
-                                        <Button
-                                          variant="contained"
-                                          color="primary"
-                                          sx={{
-                                            minWidth: '32px',
-                                            marginRight: '4px',
-                                          }}
-                                          onClick={() => navigate(`/manage-edit-tour/${tour?._id}`)}
-                                        >
-                                          <EditIcon />
-                                        </Button>
-                                      </Tooltip>
-                                    </Box>
-                                  ) : (
-                                    <Tooltip title="Create Schedule now ">
-                                      <Button
-                                        variant="contained"
-                                        color="primary"
-                                        sx={{
-                                          minWidth: '32px',
-                                          marginRight: '4px',
-                                        }}
-                                        onClick={() => navigate(`/create-schedule/${tour?._id}`)}
+                                  <TableCell align={'center'}>
+                                    {isTourSchedule(tour?._id) ? (
+                                      <Box
+                                        display="flex"
+                                        justifyContent="center"
                                       >
-                                        <CalendarMonthIcon />
-                                      </Button>
-                                    </Tooltip>
-                                  )}
+                                        <Tooltip title="View Detail">
+                                          <Button
+                                            variant="contained"
+                                            color="primary"
+                                            sx={{
+                                              minWidth: '32px',
+                                              marginRight: '4px',
+                                            }}
+                                            onClick={() =>
+                                              navigate(
+                                                `/manage-detail-tour/${tour?._id}`
+                                              )
+                                            }
+                                          >
+                                            <VisibilityIcon />
+                                          </Button>
+                                        </Tooltip>
+                                        &nbsp;
+                                        <Tooltip title="Edit Tour">
+                                          <Button
+                                            variant="contained"
+                                            color="primary"
+                                            sx={{
+                                              minWidth: '32px',
+                                              marginRight: '4px',
+                                            }}
+                                            onClick={() =>
+                                              navigate(
+                                                `/manage-edit-tour/${tour?._id}`
+                                              )
+                                            }
+                                          >
+                                            <EditIcon />
+                                          </Button>
+                                        </Tooltip>
+                                      </Box>
+                                    ) : (
+                                      <Tooltip title="Create Schedule now ">
+                                        <Button
+                                          variant="contained"
+                                          color="primary"
+                                          sx={{
+                                            minWidth: '32px',
+                                            marginRight: '4px',
+                                          }}
+                                          onClick={() =>
+                                            navigate(
+                                              `/create-schedule/${tour?._id}`
+                                            )
+                                          }
+                                        >
+                                          <CalendarMonthIcon />
+                                        </Button>
+                                      </Tooltip>
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            } else {
+                              return null;
+                            }
+                          })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </TabPanel>
+                  <TabPanel value="2" sx={{ p: 0 }}>
+                    <TableContainer>
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            {headCells.map((headCell) => (
+                              <TableCell
+                                key={headCell.id}
+                                align={headCell.align ?? 'left'}
+                                style={{ fontWeight: 'bold' }}
+                              >
+                                {headCell.label}
                               </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    )}
-                  </Table>
-                </TableContainer>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {tours.map((tour, index) => {
+                            if (
+                              tour.isAppove === 'NOTAPPROVE' &&
+                              tour.start_date > currentDate
+                            ) {
+                              return (
+                                <TableRow hover tabIndex={-1} key={tour?._id}>
+                                  <TableCell align={'left'}>
+                                    {index + 1}
+                                  </TableCell>
+                                  <TableCell>{tour?.tour_name}</TableCell>
+                                  <TableCell>
+                                    {tour?.tour_description}
+                                  </TableCell>
+                                  <TableCell>{tour?.tour_price}$</TableCell>
+                                  <TableCell>
+                                    {/* {tour?.discount} */}
+                                  </TableCell>
+                                  <TableCell>{tour?.max_tourist}</TableCell>
+                                  <TableCell>
+                                    {moment(tour?.start_date).format(
+                                      'DD/MM/YYYY'
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    {tour?.start_position?.location_name}
+                                  </TableCell>
+                                  {tour.end_position &&
+                                  tour.end_position.length !== 0 ? (
+                                    <TableCell>
+                                      {tour?.end_position[0]?.location_name}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell>
+                                      {tour?.end_position?.location_name}
+                                    </TableCell>
+                                  )}
+                                  <TableCell>
+                                    {STATE_ADMIN_TOUR.find(
+                                      (state) => state.value === tour.isAppove
+                                    )?.label || 'UNKNOWN'}
+                                  </TableCell>
+
+                                  <TableCell align={'center'}>
+                                    {isTourSchedule(tour?._id) ? (
+                                      <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                      >
+                                        <Tooltip title="View Detail">
+                                          <Button
+                                            variant="contained"
+                                            color="primary"
+                                            sx={{
+                                              minWidth: '32px',
+                                              marginRight: '4px',
+                                            }}
+                                            onClick={() =>
+                                              navigate(
+                                                `/manage-detail-tour/${tour?._id}`
+                                              )
+                                            }
+                                          >
+                                            <VisibilityIcon />
+                                          </Button>
+                                        </Tooltip>
+                                        &nbsp;
+                                        <Tooltip title="Edit Tour">
+                                          <Button
+                                            variant="contained"
+                                            color="primary"
+                                            sx={{
+                                              minWidth: '32px',
+                                              marginRight: '4px',
+                                            }}
+                                            onClick={() =>
+                                              navigate(
+                                                `/manage-edit-tour/${tour?._id}`
+                                              )
+                                            }
+                                          >
+                                            <EditIcon />
+                                          </Button>
+                                        </Tooltip>
+                                      </Box>
+                                    ) : (
+                                      <Tooltip title="Create Schedule now ">
+                                        <Button
+                                          variant="contained"
+                                          color="primary"
+                                          sx={{
+                                            minWidth: '32px',
+                                            marginRight: '4px',
+                                          }}
+                                          onClick={() =>
+                                            navigate(
+                                              `/create-schedule/${tour?._id}`
+                                            )
+                                          }
+                                        >
+                                          <CalendarMonthIcon />
+                                        </Button>
+                                      </Tooltip>
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            } else {
+                              return null;
+                            }
+                          })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </TabPanel>
+                  <TabPanel value="3" sx={{ p: 0 }}>
+                    <TableContainer>
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            {headCells.map((headCell) => (
+                              <TableCell
+                                key={headCell.id}
+                                align={headCell.align ?? 'left'}
+                                style={{ fontWeight: 'bold' }}
+                              >
+                                {headCell.label}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {tours.map((tour, index) => {
+                            if (
+                              tour.isAppove === 'DECLINE' &&
+                              tour.start_date > currentDate
+                            ) {
+                              return (
+                                <TableRow hover tabIndex={-1} key={tour?._id}>
+                                  <TableCell align={'left'}>
+                                    {index + 1}
+                                  </TableCell>
+                                  <TableCell>{tour?.tour_name}</TableCell>
+                                  <TableCell>
+                                    {tour?.tour_description}
+                                  </TableCell>
+                                  <TableCell>{tour?.tour_price}$</TableCell>
+                                  <TableCell>
+                                    {/* {tour?.discount} */}
+                                  </TableCell>
+                                  <TableCell>{tour?.max_tourist}</TableCell>
+                                  <TableCell>
+                                    {moment(tour?.start_date).format(
+                                      'DD/MM/YYYY'
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    {tour?.start_position?.location_name}
+                                  </TableCell>
+                                  {tour.end_position &&
+                                  tour.end_position.length !== 0 ? (
+                                    <TableCell>
+                                      {tour?.end_position[0]?.location_name}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell>
+                                      {tour?.end_position?.location_name}
+                                    </TableCell>
+                                  )}
+                                  <TableCell>
+                                    {STATE_ADMIN_TOUR.find(
+                                      (state) => state.value === tour.isAppove
+                                    )?.label || 'UNKNOWN'}
+                                  </TableCell>
+
+                                  <TableCell align={'center'}>
+                                    {isTourSchedule(tour?._id) ? (
+                                      <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                      >
+                                        <Tooltip title="View Detail">
+                                          <Button
+                                            variant="contained"
+                                            color="primary"
+                                            sx={{
+                                              minWidth: '32px',
+                                              marginRight: '4px',
+                                            }}
+                                            onClick={() =>
+                                              navigate(
+                                                `/manage-detail-tour/${tour?._id}`
+                                              )
+                                            }
+                                          >
+                                            <VisibilityIcon />
+                                          </Button>
+                                        </Tooltip>
+                                        &nbsp;
+                                        <Tooltip title="Edit Tour">
+                                          <Button
+                                            variant="contained"
+                                            color="primary"
+                                            sx={{
+                                              minWidth: '32px',
+                                              marginRight: '4px',
+                                            }}
+                                            onClick={() =>
+                                              navigate(
+                                                `/manage-edit-tour/${tour?._id}`
+                                              )
+                                            }
+                                          >
+                                            <EditIcon />
+                                          </Button>
+                                        </Tooltip>
+                                      </Box>
+                                    ) : (
+                                      <Tooltip title="Create Schedule now ">
+                                        <Button
+                                          variant="contained"
+                                          color="primary"
+                                          sx={{
+                                            minWidth: '32px',
+                                            marginRight: '4px',
+                                          }}
+                                          onClick={() =>
+                                            navigate(
+                                              `/create-schedule/${tour?._id}`
+                                            )
+                                          }
+                                        >
+                                          <CalendarMonthIcon />
+                                        </Button>
+                                      </Tooltip>
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            } else {
+                              return null;
+                            }
+                          })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </TabPanel>
+                  <TabPanel value="4" sx={{ p: 0 }}>
+                    <TableContainer>
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            {headCells.map((headCell) => (
+                              <TableCell
+                                key={headCell.id}
+                                align={headCell.align ?? 'left'}
+                                style={{ fontWeight: 'bold' }}
+                              >
+                                {headCell.label}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {tours.map((tour, index) => {
+                            if (tour.start_date < currentDate) {
+                              return (
+                                <TableRow hover tabIndex={-1} key={tour?._id}>
+                                  <TableCell align={'left'}>
+                                    {index + 1}
+                                  </TableCell>
+                                  <TableCell>{tour?.tour_name}</TableCell>
+                                  <TableCell>
+                                    {tour?.tour_description}
+                                  </TableCell>
+                                  <TableCell>{tour?.tour_price}$</TableCell>
+                                  <TableCell>
+                                    {/* {tour?.discount} */}
+                                  </TableCell>
+                                  <TableCell>{tour?.max_tourist}</TableCell>
+                                  <TableCell>
+                                    {moment(tour?.start_date).format(
+                                      'DD/MM/YYYY'
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    {tour?.start_position?.location_name}
+                                  </TableCell>
+                                  {tour.end_position &&
+                                  tour.end_position.length !== 0 ? (
+                                    <TableCell>
+                                      {tour?.end_position[0]?.location_name}
+                                    </TableCell>
+                                  ) : (
+                                    <TableCell>
+                                      {tour?.end_position?.location_name}
+                                    </TableCell>
+                                  )}
+                                  <TableCell>
+                                    {STATE_ADMIN_TOUR.find(
+                                      (state) => state.value === tour.isAppove
+                                    )?.label || 'UNKNOWN'}
+                                  </TableCell>
+
+                                  <TableCell align={'center'}>
+                                    {isTourSchedule(tour?._id) ? (
+                                      <Box
+                                        display="flex"
+                                        justifyContent="center"
+                                      >
+                                        <Tooltip title="View Detail">
+                                          <Button
+                                            variant="contained"
+                                            color="primary"
+                                            sx={{
+                                              minWidth: '32px',
+                                              marginRight: '4px',
+                                            }}
+                                            onClick={() =>
+                                              navigate(
+                                                `/manage-detail-tour/${tour?._id}`
+                                              )
+                                            }
+                                          >
+                                            <VisibilityIcon />
+                                          </Button>
+                                        </Tooltip>
+                                        &nbsp;
+                                        <Tooltip title="Edit Tour">
+                                          <Button
+                                            variant="contained"
+                                            color="primary"
+                                            sx={{
+                                              minWidth: '32px',
+                                              marginRight: '4px',
+                                            }}
+                                            onClick={() =>
+                                              navigate(
+                                                `/manage-edit-tour/${tour?._id}`
+                                              )
+                                            }
+                                          >
+                                            <EditIcon />
+                                          </Button>
+                                        </Tooltip>
+                                      </Box>
+                                    ) : (
+                                      <Tooltip title="Create Schedule now ">
+                                        <Button
+                                          variant="contained"
+                                          color="primary"
+                                          sx={{
+                                            minWidth: '32px',
+                                            marginRight: '4px',
+                                          }}
+                                          onClick={() =>
+                                            navigate(
+                                              `/create-schedule/${tour?._id}`
+                                            )
+                                          }
+                                        >
+                                          <CalendarMonthIcon />
+                                        </Button>
+                                      </Tooltip>
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            } else {
+                              return null;
+                            }
+                          })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </TabPanel>
+                </TabContext>
               </Paper>
             </Card>
           </Grid>
         </Grid>
 
         <Footer style={{ marginTop: '4rem' }} />
-      </div >
+      </div>
     </>
   );
 };
