@@ -49,7 +49,7 @@ import { Link } from 'react-router-dom';
 const menuItems = [
   { text: 'Dashboard', link: '/dashboard' },
   { text: 'User Manage', link: '/admin/user-manage' },
-  { text: 'Booking Manage', link: '/admin/booking-manage' },
+  // { text: 'Booking Manage', link: '/admin/booking-manage' },
   { text: 'Tour Manage', link: '/admin/tour-manage' },
 ];
 

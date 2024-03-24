@@ -40,9 +40,8 @@ import { Link } from 'react-router-dom';
 const menuItems = [
   { text: 'Dashboard', link: '/dashboard' },
   { text: 'User Manage', link: '/admin/user-manage' },
-  { text: 'Booking Manage', link: '/admin/booking-manage' },
+  // { text: 'Booking Manage', link: '/admin/booking-manage' },
   { text: 'Tour Manage', link: '/admin/tour-manage' },
-  { text: 'Report', link: '/admin/report' },
 ];
 
 const menuSetting = [
@@ -259,7 +258,7 @@ const UserManage = () => {
 
                 >
                   <ListItemIcon
-                    onClick={handleLogout}
+                    // onClick={handleLogout}
                     sx={{
                       minWidth: 0,
                       mr: open ? 3 : 'auto',
