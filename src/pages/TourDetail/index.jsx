@@ -242,7 +242,7 @@ export default function index() {
 
           const bookedData = bookedResponse.data.tour;
           const bookedPaidData = bookedPaidResponse.data.tour;
-
+          console.log(bookedData);
           setBooked(bookedData);
           setBookedPaid(bookedPaidData);
           setMergedBooked(bookedData.concat(bookedPaidData));
@@ -290,9 +290,10 @@ export default function index() {
   }, [])
 
   const isPaid = (tourId) => {
-    const bookedData = mergedBooked.find(t => {
-      return t.tour_id._id === tourId && t.tour_id.isPay === true
+    const bookedData = booked?.find(t => {
+      return t.tour_id._id === tourId && t.isPay === true
     })
+    console.log(bookedData);
     return bookedData ? true : false
   }
 
@@ -367,7 +368,17 @@ export default function index() {
                     >
                       {tourData?.tour_price} $ / person
                     </Typography>
-                    <Button
+                    {isPaid(listBooked?._id) ? (<Typography
+                      sx={{
+                        marginBottom: '8px',
+                        fontFamily: 'Arial',
+                        fontSize: '20px',
+                        fontWeight: 'bold',
+                        color: '#fa4807',
+                      }}
+                    >
+                      Đã thanh toán
+                    </Typography>) : (<Button
                       style={{
                         background:
                           'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -381,7 +392,7 @@ export default function index() {
                       onClick={() => handleBooking(tourData?._id)}
                     >
                       Booking now
-                    </Button>
+                    </Button>)}
                   </Grid>
                 )}
               </Grid>

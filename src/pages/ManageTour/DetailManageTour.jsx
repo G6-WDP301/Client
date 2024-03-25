@@ -547,10 +547,16 @@ const DetailManageTour = () => {
                           color: '#333',
                         }}
                       >
-                        {tourItem.destTitle}
+                        {tourData?.tour_name}
                       </Typography>
                       <Typography variant="body1">
                         Thời gian: {tourItem.Time}
+                      </Typography>
+                      <Typography variant="body1">
+                        Ngày bắt đầu : {moment(tourData?.start_date).format('DD/MM/YYYY')}
+                      </Typography>
+                      <Typography variant="body1">
+                        Ngày kết thúc : {moment(tourData?.start_end).format('DD/MM/YYYY')}
                       </Typography>
                     </Grid>
                   </Grid>

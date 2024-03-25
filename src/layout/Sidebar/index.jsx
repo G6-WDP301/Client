@@ -33,14 +33,15 @@ import MonitorChart from '../../pages/Admin/ChartMonitor/MonitorChart.jsx';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import Chart from './chart.jsx';
-import BarChartComponent from './barChart.jsx';
+// import Chart from './chart.jsx';
+// import BarChartComponent from './barChart.jsx';
 import TableAvatarUSer from './tableAvatarUSer.jsx';
 import { useNavigate } from 'react-router-dom';
 import { SiYourtraveldottv } from 'react-icons/si';
 import './sidebar.scss';
 import avatar from '../../images/avatar.jpg';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const menuItems = [
   { text: 'Dashboard', link: '/dashboard' },
@@ -76,6 +77,8 @@ const closedMixin = (theme) => ({
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
 });
+
+
 
 function handleLogout() {
   localStorage.removeItem('token');
@@ -129,12 +132,33 @@ const Drawer = styled(MuiDrawer, {
 const Index = () => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [chart, setChart] = React.useState([]);
 
   const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+
+  function handleLogout() {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+  }
+
+  useEffect(() => {
+    const dataChart = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/tour/chart')
+        const chartData = response.data.data;
+        setChart(chartData)
+        console.log("chart ", chartData);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    dataChart();
+  }, [])
 
   const handleDrawerClose = () => {
     setOpen(false);
@@ -307,9 +331,9 @@ const Index = () => {
                           <div className="w-8/12">
                             <div className="numbers">
                               <p className="text-base mb-0 uppercase font-bold text-slate-400">
-                                Total &nbsp;user
+                                Total &nbsp; coming
                               </p>
-                              <h5 className="font-bold">300</h5>
+                              <h5 className="font-bold">{chart?.toursComming}</h5>
                               <p className="mb-0 mt-4 text-sm">
                                 <CheckCircleIcon className="text-green-600 text-xs font-bold" />
                                 &nbsp;
@@ -343,7 +367,7 @@ const Index = () => {
                               <p className="text-base mb-0 uppercase font-bold text-slate-400">
                                 Total &nbsp; tour
                               </p>
-                              <h5 className="font-bold">2,500</h5>
+                              <h5 className="font-bold">{chart?.tours}</h5>
                               <p className="mb-0 mt-4 text-sm">
                                 <CheckCircleIcon className="text-green-600 text-xs font-bold" />
                                 &nbsp;
@@ -375,9 +399,9 @@ const Index = () => {
                           <div className="w-8/12">
                             <div className="numbers">
                               <p className="text-base mb-0 uppercase font-bold text-slate-400">
-                                Total &nbsp; price
+                                Total &nbsp; overdate
                               </p>
-                              <h5 className="font-bold">4,300</h5>
+                              <h5 className="font-bold">{chart?.toursOutDate}</h5>
                               <p className="mb-0 mt-4 text-sm">
                                 <CheckCircleIcon className="text-green-600 text-xs font-bold" />
                                 &nbsp;
@@ -400,9 +424,9 @@ const Index = () => {
 
                 <div className="mt-8 flex justify-around">
                   {/* <MonitorChart /> */}
-                  <Chart />
+                  {/* <Chart />
                   <TableAvatarUSer />
-                  <BarChartComponent />
+                  <BarChartComponent /> */}
                 </div>
 
                 <div className="flex justify-between mb-10">
