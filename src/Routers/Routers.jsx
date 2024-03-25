@@ -19,11 +19,11 @@ import ManageTourEdit from '../pages/ManageTour/DetailTour.jsx';
 import ManageTourDetail from '../pages/ManageTour/DetailManageTour.jsx';
 import CreateTour from '../pages/ManageTour/CreateTour.jsx'
 import CreateSchedule from '../pages/ManageTour/CreateSchedule.jsx';
-
+import EditSchedule from '../pages/ManageTour/EditSchedule.jsx';
 import ProfileAdmin from '../layout/Sidebar/profileAdminNav.jsx'
 import HistoryTour from '../pages/HistoryTour/index.jsx'
+import ScheduleList from '../pages/ManageTour/ScheduleList.jsx';
 
- 
 export const routes = [
     {
         path: "/",
@@ -92,7 +92,7 @@ export const routes = [
         path: "/aboutus",
         page: AboutUs,
     },
-  {
+    {
         path: "/dashboard",
         page: Sidebar
     },
@@ -247,6 +247,14 @@ export const RoutesPartner = [
     {
         path: "/create-schedule/:id",
         page: CreateSchedule
+    },
+    {
+        path: "/schedule-list/:id",
+        page: ScheduleList
+    },
+    {
+        path: "/edit-schedule/:id",
+        page: EditSchedule,
     }
 ]
 
