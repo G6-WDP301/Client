@@ -12,6 +12,8 @@ import { jwtDecode } from 'jwt-decode';
 import NavbarPartnerLogin from '../../layout/NavbarPartnerLogin/index.jsx';
 import axios from 'axios';
 
+import { ToastContainer, toast } from 'react-toastify';
+
 export default function news() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -50,6 +52,8 @@ export default function news() {
 
   const [logPartner, setLogPartner] = useState(false);
   const [user, setUser] = useState({});
+
+  const notify = () => toast("Feature being updated, please come back later!");
 
   return (
     <>
@@ -95,7 +99,7 @@ export default function news() {
                     <p>Aug</p>
                     <p className="font-bold">02</p>
                   </div>
-                  <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-8 group-hover:bottom-10 transition-all duration-1000 ">
+                  <figcaption onClick={() => notify()} className="hover:cursor-pointer absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-8 group-hover:bottom-10 transition-all duration-1000 ">
                     <p className="uppercase text-color4 font-bold">Tours</p>
                     <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
                       most popular yacht charter routes{' '}
@@ -115,7 +119,7 @@ export default function news() {
                     <p>Aug</p>
                     <p className="font-bold">07</p>
                   </div>
-                  <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-3 group-hover:bottom-10 transition-all duration-1000 ">
+                  <figcaption onClick={() => notify()} className="hover:cursor-pointer absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-3 group-hover:bottom-10 transition-all duration-1000 ">
                     <p className="uppercase text-color4 font-bold">travel</p>
                     <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
                       practical information for travelling to egypt
@@ -135,7 +139,7 @@ export default function news() {
                     <p>Aug</p>
                     <p className="font-bold">02</p>
                   </div>
-                  <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-5 group-hover:bottom-10 transition-all duration-1000 ">
+                  <figcaption onClick={() => notify()} className="hover:cursor-pointer absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-5 group-hover:bottom-10 transition-all duration-1000 ">
                     <p className="uppercase text-color4 font-bold">Destinations</p>
                     <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
                       tips towards a flawless honeymoon{' '}
@@ -157,7 +161,7 @@ export default function news() {
                     <p>Aug</p>
                     <p className="font-bold">02</p>
                   </div>
-                  <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-8 group-hover:bottom-10 transition-all duration-1000 ">
+                  <figcaption onClick={() => notify()} className="hover:cursor-pointer absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-8 group-hover:bottom-10 transition-all duration-1000 ">
                     <p className="uppercase text-color4 font-bold">Tours</p>
                     <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
                       most popular yacht charter routes{' '}
@@ -177,7 +181,7 @@ export default function news() {
                     <p>Aug</p>
                     <p className="font-bold">07</p>
                   </div>
-                  <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-3 group-hover:bottom-10 transition-all duration-1000 ">
+                  <figcaption onClick={() => notify()} className="hover:cursor-pointer absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-3 group-hover:bottom-10 transition-all duration-1000 ">
                     <p className="uppercase text-color4 font-bold">travel</p>
                     <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
                       practical information for travelling to egypt
@@ -197,7 +201,7 @@ export default function news() {
                     <p>Aug</p>
                     <p className="font-bold">02</p>
                   </div>
-                  <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-5 group-hover:bottom-10 transition-all duration-1000 ">
+                  <figcaption onClick={() => notify()} className="hover:cursor-pointer absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-5 group-hover:bottom-10 transition-all duration-1000 ">
                     <p className="uppercase text-color4 font-bold">Destinations</p>
                     <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
                       tips towards a flawless honeymoon{' '}
@@ -219,7 +223,7 @@ export default function news() {
                     <p>Aug</p>
                     <p className="font-bold">02</p>
                   </div>
-                  <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-8 group-hover:bottom-10 transition-all duration-1000 ">
+                  <figcaption onClick={() => notify()} className="hover:cursor-pointer absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-8 group-hover:bottom-10 transition-all duration-1000 ">
                     <p className="uppercase text-color4 font-bold">Tours</p>
                     <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
                       most popular yacht charter routes{' '}
@@ -239,7 +243,7 @@ export default function news() {
                     <p>Aug</p>
                     <p className="font-bold">07</p>
                   </div>
-                  <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-3 group-hover:bottom-10 transition-all duration-1000 ">
+                  <figcaption onClick={() => notify()} className="hover:cursor-pointer absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-3 group-hover:bottom-10 transition-all duration-1000 ">
                     <p className="uppercase text-color4 font-bold">travel</p>
                     <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
                       practical information for travelling to egypt
@@ -259,7 +263,7 @@ export default function news() {
                     <p>Aug</p>
                     <p className="font-bold">02</p>
                   </div>
-                  <figcaption className=" absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-5 group-hover:bottom-10 transition-all duration-1000 ">
+                  <figcaption onClick={() => notify()} className="hover:cursor-pointer absolute h-[150px] w-[85%]  bg-white bottom-[-80px]  left-[8%] flex flex-col justify-center px-5 group-hover:bottom-10 transition-all duration-1000 ">
                     <p className="uppercase text-color4 font-bold">Destinations</p>
                     <p className="capitalize text-color3 font-secondary text-xl text-center mt-4 font-semibold">
                       tips towards a flawless honeymoon{' '}

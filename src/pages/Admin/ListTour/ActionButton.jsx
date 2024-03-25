@@ -3,8 +3,10 @@ import React, { useState, useContext, useEffect } from 'react'
 //MUI Imports
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { CustomButton } from '../../utils/components/CustomButton'
 import EditStateModal from './modals/Edit.jsx'
+import ViewStateModal from './modals/view.jsx'
 import DeleteTourAdminModal from './modals/Delete.jsx'
 import { Button, IconButton, Tooltip } from '@mui/material'
 import axios from 'axios'
@@ -17,6 +19,7 @@ const ActionButton = ({ row, statusTour }) => {
   const open = Boolean(anchorEl)
   const [showEditModal, setShowEditModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showViewModal, setShowViewModal] = useState(false)
   const [status, setStatus] = useState(false)
   const [tour, setTour] = useState([]);
   const [adminSelect, setAdminSelect] = useState([]);
@@ -103,6 +106,13 @@ const ActionButton = ({ row, statusTour }) => {
       </Tooltip>
       <CustomButton
         id='loadbalancer-action-resize'
+        title={'View'}
+        icon={<VisibilityIcon fontSize='small' />}
+        onClick={() => handleIconButtonOnClick(row, setShowViewModal)}
+        disabled={false}
+      />
+      <CustomButton
+        id='loadbalancer-action-resize'
         title={'Delete'}
         icon={<DeleteForeverIcon fontSize='small' />}
         onClick={() => handleIconButtonOnClick(row, setShowDeleteModal)}
@@ -114,6 +124,12 @@ const ActionButton = ({ row, statusTour }) => {
             row={tourDetail}
             openModal={showEditModal}
             setOpenModal={setShowEditModal}
+          />
+          <ViewStateModal
+            row={tourDetail}
+            rowID={tourDetail._id}
+            openModal={showViewModal}
+            setOpenModal={setShowViewModal}
           />
           <DeleteTourAdminModal
             row={row}
