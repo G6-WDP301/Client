@@ -119,3 +119,28 @@ React Folder Structure
 
 
 Feel free to explore the various directories and components to understand how everything fits together. This template provides a solid foundation, allowing you to focus on building features rather than setting up the project structure from scratch.
+
+
+# 🌐 Web Application with 4 User Roles
+
+## 📌 Overview
+This web application is designed with a **role-based access control** system, providing specific features and permissions for each user role. The four user roles are:
+
+1. **Guest**
+2. **Customer**
+3. **Partner**
+4. **Admin**
+
+![User Authorization](./Images/User%20Authorization.png)
+
+## 📌 Some images of the website screens when user login role guest.
+![HomePage](./Images/HomePage_Guest.png)
+![Gallery](./Images/Gallery_Guest.png)
+![News](./Images/News_Guest.png)
+![About us](./Images/About%20us_Guest.png)
+
+
+
+
+
+
