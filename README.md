@@ -134,13 +134,13 @@ This web application is designed with a **role-based access control** system, pr
 ![User Authorization](./Images/User%20Authorization.png)
 
 ## 📌 Some images of the website screens when user login role guest.
-1. 
+# 1. 
 ![HomePage](./Images/HomePage_Guest.png)
-2.
+# 2.
 ![Gallery](./Images/Gallery_Guest.png)
-3.
+# 3.
 ![News](./Images/News_Guest.png)
-4.
+# 4.
 ![About us](./Images/About%20us_Guest.png)
 
 
